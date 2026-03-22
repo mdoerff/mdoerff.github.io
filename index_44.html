@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michael Doerffler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linen:       #F2EBD9;
+  --sand:        #E8DCC4;
+  --sand-dark:   #D9CDB0;
+  --olive:       #4A5240;
+  --olive-deep:  #2C3326;
+  --tobacco:     #8C7355;
+  --tobacco-lt:  #B8966E;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Outfit', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --nav-h: 64px;
+  --max-w: 1140px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--linen); color: var(--olive-deep); font-family: var(--font-body); font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h); z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(242, 235, 217, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(74, 82, 64, 0.12);
+  transition: background 0.3s var(--ease);
+}
+.nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--olive-deep); }
+.nav-logo span { color: var(--tobacco); }
+.nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+.nav-links a {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--olive); position: relative; transition: color 0.2s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 1px; background: var(--tobacco); transition: width 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--olive-deep); }
+.nav-links a:hover::after { width: 100%; }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  padding: calc(var(--nav-h) + 60px) 48px 80px;
+  max-width: var(--max-w); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start;
+}
+
+/* LEFT */
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tobacco); margin-bottom: 24px;
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+.hero-name {
+  font-family: var(--font-display); font-size: clamp(46px, 5vw, 68px);
+  font-weight: 300; line-height: 1.1; letter-spacing: -0.01em;
+  color: var(--olive-deep); margin-bottom: 36px;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 0.9s var(--ease) 0.35s forwards;
+}
+.hero-name em { font-style: italic; color: var(--tobacco); }
+
+/* Rotating hooks */
+.hook-container {
+  margin-bottom: 44px;
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.9s var(--ease) 0.5s forwards;
+}
+.hooks-wrap { position: relative; min-height: 68px; margin-bottom: 16px; }
+.hook {
+  position: absolute; top: 0; left: 0;
+  font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--olive);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  pointer-events: none;
+}
+.hook.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.hook-dots { display: flex; gap: 6px; margin-top: 8px; }
+.hook-dot { width: 20px; height: 2px; background: var(--sand-dark); cursor: pointer; transition: background 0.3s, width 0.3s; }
+.hook-dot.active { background: var(--tobacco); width: 32px; }
+
+.hero-cta-row {
+  display: flex; align-items: center; gap: 24px;
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.9s var(--ease) 0.65s forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px; background: var(--olive-deep); color: var(--linen);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--olive); transform: translateY(-1px); }
+.btn-primary .arrow { transition: transform 0.2s var(--ease); }
+.btn-primary:hover .arrow { transform: translateX(4px); }
+.btn-ghost {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--tobacco);
+  border-bottom: 1px solid var(--tobacco-lt); padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--olive-deep); border-color: var(--olive-deep); }
+
+/* RIGHT */
+.hero-right {
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; transform: translateX(24px);
+  animation: fadeLeft 1s var(--ease) 0.4s forwards;
+}
+
+/* Photo */
+.hero-photo-wrap {
+  position: relative; width: 100%; aspect-ratio: 3/4;
+  overflow: hidden; background: var(--olive-deep);
+}
+.hero-photo-wrap img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 60%;
+  filter: brightness(0.9) contrast(1.05);
+  transition: transform 0.6s var(--ease);
+}
+.hero-photo-wrap:hover img { transform: scale(1.02); }
+.hero-photo-wrap::before {
+  content: ''; position: absolute; top: 12px; right: 12px;
+  width: 28px; height: 28px;
+  border-top: 2px solid var(--tobacco); border-right: 2px solid var(--tobacco); z-index: 2;
+}
+.photo-tag {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;
+  background: linear-gradient(to top, rgba(28,31,22,0.88) 0%, transparent 100%); z-index: 2;
+}
+.photo-tag-name { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--linen); }
+.photo-tag-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tobacco-lt); margin-top: 2px; }
+
+/* Testimonials */
+.testimonials { display: flex; flex-direction: column; gap: 2px; }
+.testimonial {
+  padding: 18px 22px; position: relative; cursor: default;
+  transition: filter 0.2s;
+}
+.testimonial:nth-child(1) { background: var(--olive-deep); }
+.testimonial:nth-child(2) { background: #232e1e; }
+.testimonial:nth-child(3) { background: #1a2416; }
+.testimonial:hover { filter: brightness(1.08); }
+.testimonial-quote {
+  font-family: var(--font-display); font-size: 13px; font-style: italic;
+  line-height: 1.65; color: var(--sand); margin-bottom: 8px;
+}
+.testimonial-quote::before {
+  content: '\201C'; font-family: var(--font-display); font-size: 26px;
+  line-height: 0; vertical-align: -7px; color: var(--tobacco); margin-right: 2px;
+}
+.testimonial-source { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--tobacco-lt); }
+.testimonial-context { font-family: var(--font-display); font-size: 11px; font-style: italic; color: rgba(184,150,110,0.55); margin-top: 3px; }
+
+/* Scroll hint */
+.scroll-hint {
+  position: fixed; bottom: 36px; left: 48px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeUp 1s var(--ease) 1.4s forwards; z-index: 10;
+}
+.scroll-line { width: 40px; height: 1px; background: var(--sand-dark); position: relative; overflow: hidden; }
+.scroll-line::after {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%; background: var(--tobacco);
+  animation: scanLine 2.4s ease-in-out 1.8s infinite;
+}
+.scroll-hint-text { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tobacco-lt); }
+
+/* Placeholders */
+.section-placeholder { min-height: 100vh; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--sand-dark); }
+.section-placeholder p { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tobacco-lt); }
+
+/* Animations */
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeLeft { to { opacity: 1; transform: translateX(0); } }
+@keyframes scanLine { 0% { left: -100%; } 50% { left: 0%; } 100% { left: 100%; } }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #hero { grid-template-columns: 1fr; padding: 120px 28px 80px; gap: 48px; }
+  .hero-right { order: -1; }
+  .hero-photo-wrap { aspect-ratio: 4/3; }
+  nav { padding: 0 28px; }
+  .nav-links { gap: 20px; }
+  .scroll-hint { display: none; }
+}
+@media (max-width: 600px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">M.<span>D</span></a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#beyond">Beyond</a></li>
+    <li><a href="#coursework">Coursework</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+
+  <div class="hero-left">
+    <p class="hero-eyebrow">Business Analytics & AI Strategy — USF '26</p>
+    <h1 class="hero-name">
+      Still learning.<br>
+      <em>Always building.</em>
+    </h1>
+
+    <div class="hook-container">
+      <div class="hooks-wrap">
+        <p class="hook active">A real estate team had years of client feedback and no way to read it. Built a pipeline that found the patterns.</p>
+        <p class="hook">Staged homes were outperforming the market. Nobody had the numbers to prove it. Found them.</p>
+        <p class="hook">A $1,000 video sat unused. Rebuilt it from spare clips. 20,000 people watched it.</p>
+        <p class="hook">A service business needed its first client. Had 40 within 10 weeks.</p>
+      </div>
+      <div class="hook-dots">
+        <div class="hook-dot active" onclick="goToHook(0)"></div>
+        <div class="hook-dot" onclick="goToHook(1)"></div>
+        <div class="hook-dot" onclick="goToHook(2)"></div>
+        <div class="hook-dot" onclick="goToHook(3)"></div>
+      </div>
+    </div>
+
+    <div class="hero-cta-row">
+      <a href="#work" class="btn-primary">See the work <span class="arrow">→</span></a>
+      <a href="#contact" class="btn-ghost">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <img src="michaelwater.jpg" alt="Michael Doerffler">
+      <div class="photo-tag">
+        <div class="photo-tag-name">Michael Doerffler</div>
+        <div class="photo-tag-title">Business Analytics & AI Strategy · USF '26</div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <p class="testimonial-quote">Critical thinking, strategy, building relationships, and connecting deeply with others. That's a mic drop moment right there.</p>
+        <div class="testimonial-source">Brad Noll — Broker/Owner, The Noll Team Real Estate</div>
+        <div class="testimonial-context">Said live on the Student of the Game podcast, after Michael explained how AI will reshape the future of work.</div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">Michael quickly assesses new situations and responds effectively. He's a proactive communicator who ensures he understands project scopes before execution — and follows up after delivery to ensure outcomes were achieved.</p>
+        <div class="testimonial-source">Chad — VP of Data Integrity, 3Rivers Federal Credit Union</div>
+        <div class="testimonial-context">LinkedIn recommendation following the Business Intelligence internship.</div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">Leveraged his network, landed two internships, and turned ambition into action.</p>
+        <div class="testimonial-source">USF Bellini Center — Student Spotlight</div>
+        <div class="testimonial-context">Featured as an example of what student success looks like at USF.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── WORK SECTION ─────────────────────────────────── -->
+<section id="work">
+  <div class="section-inner">
+
+    <div class="section-label-row">
+      <span class="section-mono">01</span>
+      <h2 class="section-title">Work</h2>
+      <span class="section-sub">Two internships. Two industries. Real deliverables.</span>
+    </div>
+
+    <!-- NOLL TEAM CARD -->
+    <div class="work-card" onclick="openModal('noll')">
+      <div class="work-card-image">
+        <img src="brad_photo.jpg" alt="Michael with Brad Noll" style="object-position:center top;">
+        <div class="work-card-overlay">
+          <div class="work-card-logo">
+            <img src="ntre_logo.jpg" alt="Noll Team Real Estate">
+          </div>
+          <div class="work-card-meta">
+            <div class="work-card-org">The Noll Team Real Estate</div>
+            <div class="work-card-role">Business Analytics & AI Strategy Intern · May 2025 – Jan 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="work-card-body">
+        <div class="cascade-lines" data-cascade="noll">
+          <p class="cascade-line" data-delay="0">No formal program. No set agenda.</p>
+          <p class="cascade-line" data-delay="1">Just a chance to be useful.</p>
+          <p class="cascade-line" data-delay="2">A broken spreadsheet became a live intelligence system.</p>
+          <p class="cascade-line" data-delay="3">400 client surveys, analyzed with AI.</p>
+          <p class="cascade-line" data-delay="4">A data case that launched a luxury division.</p>
+          <p class="cascade-line" data-delay="5">A market analysis that led to Fort Wayne's highest listing.</p>
+          <p class="cascade-line" data-delay="6">SOPs written so the work would outlast the internship.</p>
+          <p class="cascade-line" data-delay="7">Eight months of showing up and figuring it out.</p>
+        </div>
+        <div class="work-card-cta">
+          <span class="cta-text">Read the full story</span>
+          <span class="cta-arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3RIVERS CARD -->
+    <div class="work-card" onclick="openModal('rivers')">
+      <div class="work-card-image">
+        <img src="chad_photo.jpg" alt="Michael with 3Rivers team">
+        <div class="work-card-overlay">
+          <div class="work-card-meta">
+            <div class="work-card-org">3Rivers Federal Credit Union</div>
+            <div class="work-card-role">Business Intelligence Intern · May – Aug 2025</div>
+          </div>
+        </div>
+      </div>
+      <div class="work-card-body">
+        <div class="cascade-lines" data-cascade="rivers">
+          <p class="cascade-line" data-delay="0">Found the role through networking.</p>
+          <p class="cascade-line" data-delay="1">Interviewed for it. Earned it.</p>
+          <p class="cascade-line" data-delay="2">Real data work inside a federally regulated institution.</p>
+          <p class="cascade-line" data-delay="3">Three enterprise systems. Sensitive member data. No hand-holding.</p>
+          <p class="cascade-line" data-delay="4">Learned more from the people around me than any classroom.</p>
+          <p class="cascade-line" data-delay="5">Showed up curious. Asked the right questions.</p>
+          <p class="cascade-line" data-delay="6">Left with skills I carried into everything that followed.</p>
+        </div>
+        <div class="work-card-cta">
+          <span class="cta-text">Read the full story</span>
+          <span class="cta-arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── NOLL MODAL ───────────────────────────────────── -->
+<div class="modal-backdrop" id="modal-noll" onclick="closeModalOutside(event, 'noll')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('noll')">✕</button>
+
+    <!-- Modal hero -->
+    <div class="modal-hero">
+      <img src="brad_photo.jpg" alt="Michael with Brad Noll" class="modal-hero-img" style="object-position:center top;">
+      <div class="modal-hero-overlay">
+        <img src="ntre_logo.jpg" alt="Noll Team" class="modal-hero-logo">
+        <div>
+          <h2 class="modal-hero-title">The Noll Team Real Estate</h2>
+          <p class="modal-hero-sub">Business Analytics & AI Strategy Intern · Fort Wayne, IN · May 2025 – Jan 2026</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Context -->
+    <div class="modal-section">
+      <p class="modal-context">I reached out to Brad before there was a formal internship program. I didn't have a specific pitch — I just wanted to be useful. He gave me a chance, and I spent eight months showing up and figuring things out. Every project on this page came from noticing a problem and asking if I could work on it.</p>
+    </div>
+
+    <!-- Deliverable 01 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">01</span>
+        <h3 class="modal-del-title">Power BI Intelligence System</h3>
+      </div>
+      <p class="modal-del-body">The team was tracking performance in a Google Sheet that had been broken for a while. I fixed the data, took over weekly entry, connected it to Power BI through Power Query, and built a dashboard that showed the full team picture — filterable by agent, refreshable every week, and branded to match the Noll Team. What started as cleaning up a spreadsheet became the central reporting tool for the business.</p>
+      <div class="modal-img-wrap">
+        <img src="dashboard.png" alt="Noll Team Power BI Dashboard" class="modal-img">
+        <p class="modal-img-caption">Live Power BI dashboard tracking agent performance, connections, sales, and pipeline progress across the full team.</p>
+        <p style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--tobacco);margin-top:8px;">Certain KPI values and agent-level figures have been redacted for confidentiality — this is proprietary business data belonging to The Noll Team.</p>
+      </div>
+    </div>
+
+    <!-- Deliverable 02 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">02</span>
+        <h3 class="modal-del-title">NTI Analysis</h3>
+      </div>
+      <p class="modal-del-body">The Noll Interiors team wanted realtors to use their staging services more, but nobody had data to back up why it mattered. I pulled 12 closings across three zip codes, compared MLS data for staged versus non-staged homes in the same areas, and found that NTI homes sold in 9 days on average versus 38 — and hit 100.8% of list price compared to 97.9%. I put those findings into a slide and presented them at the weekly team meeting.</p>
+      <div class="modal-img-wrap">
+        <img src="nti_slide.png" alt="NTI vs Non-NTI Analysis" class="modal-img">
+        <p class="modal-img-caption">NTI vs. Non-NTI — Real Results in Fort Wayne. Presented live to the full agent team.</p>
+      </div>
+      <div class="modal-highlight-row">
+        <div class="modal-highlight">
+          <div class="mh-num">9 days</div>
+          <div class="mh-label">Avg. days to sale — NTI homes</div>
+        </div>
+        <div class="modal-highlight">
+          <div class="mh-num">38 days</div>
+          <div class="mh-label">Avg. days to sale — Non-NTI</div>
+        </div>
+        <div class="modal-highlight">
+          <div class="mh-num">100.8%</div>
+          <div class="mh-label">Avg. list price achieved — NTI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deliverable 03 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">03</span>
+        <h3 class="modal-del-title">AI Survey Pipeline</h3>
+      </div>
+      <p class="modal-del-body">The team had been collecting RealSatisfied client surveys for years — 400 responses across buyers and sellers going back six years — but nobody had ever looked at them all together. I built a prompt pipeline in ChatGPT to batch-process the files, surface keyword patterns in positive and negative reviews, and break down insights by agent. It took a lot of iteration to get the prompting right, but the output gave Brad something he could actually use in coaching conversations. He asked me to write SOPs for the process so it could be repeated after I was gone.</p>
+      <div class="modal-quote">
+        <div class="modal-quote-mark">"</div>
+        <p class="modal-quote-text">An intern uploads PDFs into chat, works on the prompts multiple times — and now Brad as the CEO is going to be meeting with agents and going over the results to improve their performance, impact their coaching, impact their businesses. All from a small project you thought wasn't going to matter.</p>
+        <span class="modal-quote-source">Brad Noll — live on the Student of the Game podcast</span>
+      </div>
+    </div>
+
+    <!-- Deliverable 04 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">04</span>
+        <h3 class="modal-del-title">Luxury Market Analysis</h3>
+      </div>
+      <p class="modal-del-body">Brad was thinking about building a dedicated luxury division. I pulled together 143 luxury transactions from 2019 to 2025, analyzed where the volume was concentrating, and built the data case for why it made sense. The analysis showed that luxury represented about 11% of deals but closer to 31% of total dollar volume — a meaningful gap. Noll Reserve launched as a result, and their first major listing was The Hamilton at $6.75M.</p>
+      <div class="modal-highlight-row" style="margin-top:20px; grid-template-columns: 1fr 1fr;">
+        <div class="modal-highlight">
+          <div class="mh-num">$6.75M</div>
+          <div class="mh-label">The Hamilton — first Noll Reserve listing</div>
+        </div>
+        <div class="modal-highlight">
+          <div class="mh-num">143</div>
+          <div class="mh-label">Luxury transactions analyzed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Podcast / Bellini -->
+    <div class="modal-section modal-podcast">
+      <div class="modal-podcast-label">Beyond the deliverables</div>
+      <p class="modal-podcast-text">Midway through the internship Brad invited me onto the <em>Student of the Game</em> podcast to talk about AI strategy for small businesses. While working on building out their podcast production system — SOPs, content calendars, speaker outreach — I reached out to USF's Bellini Center to share the episode and explore whether there was a way to connect it to students on campus. That conversation led to me being featured in a student success spotlight and a Mini Mic Moment reel on their channels.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 3RIVERS MODAL ─────────────────────────────────── -->
+<div class="modal-backdrop" id="modal-rivers" onclick="closeModalOutside(event, 'rivers')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('rivers')">✕</button>
+
+    <!-- Modal hero -->
+    <div class="modal-hero">
+      <img src="chad_photo.jpg" alt="Michael with 3Rivers team" class="modal-hero-img">
+      <div class="modal-hero-overlay">
+        <div>
+          <h2 class="modal-hero-title">3Rivers Federal Credit Union</h2>
+          <p class="modal-hero-sub">Business Intelligence Intern · Fort Wayne, IN · May – Aug 2025</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Context -->
+    <div class="modal-section">
+      <p class="modal-context">I found 3Rivers through networking rather than a job board, got the interview, and made the most of it. The work itself was real: enterprise systems, protected member data, and a team of experienced professionals who expected you to figure things out. It was the first time I learned from people who had been doing this for years instead of teaching myself everything from scratch.</p>
+    </div>
+
+    <!-- Office photo -->
+    <div class="modal-img-wrap">
+      <img src="3riversoffice.jpg" alt="3Rivers Federal Credit Union" class="modal-img">
+      <p class="modal-img-caption">3Rivers Federal Credit Union — Fort Wayne, IN.</p>
+    </div>
+
+    <!-- Confidentiality note -->
+    <div class="modal-callout">
+      <div class="modal-callout-icon">⚿</div>
+      <p class="modal-callout-text">The work here involved sensitive member financial data at a federally regulated institution. Dashboards and outputs aren't shown — the data was never mine to share publicly, and that's the right call.</p>
+    </div>
+
+    <!-- Deliverable 1 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">01</span>
+        <h3 class="modal-del-title">Strategic Growth Intelligence Dashboard</h3>
+      </div>
+      <p class="modal-del-body">3Rivers wanted to understand where they had room to grow across Indiana. I worked on building the data foundation for a county-level market intelligence dashboard — pulling demographic, geographic, and financial datasets from three separate enterprise systems: Alkami, Exasol, and internal network servers. The scope of the project went beyond the internship timeline, but I documented the architecture and handed off a clean foundation for whoever continued it.</p>
+    </div>
+
+    <!-- Deliverable 2 -->
+    <div class="modal-deliverable">
+      <div class="modal-del-header">
+        <span class="modal-del-num">02</span>
+        <h3 class="modal-del-title">Mortgage Inquiry Intelligence Report</h3>
+      </div>
+      <p class="modal-del-body">Loan officers needed a way to know when members were actively looking at mortgages — before they made a decision elsewhere. I joined SavvyMoney alert data with member and loan officer records across three systems, standardized the fields so they could be compared cleanly, and built a report that gave officers a list of warm leads they could actually act on.</p>
+    </div>
+
+    <!-- Chad quote -->
+    <div class="modal-quote">
+      <div class="modal-quote-mark">"</div>
+      <p class="modal-quote-text">Michael quickly assesses new situations and responds effectively. He's a proactive communicator who ensures he understands project scopes before execution — and follows up after delivery to ensure outcomes were achieved.</p>
+      <span class="modal-quote-source">Chad — VP of Data Integrity, 3Rivers Federal Credit Union · LinkedIn Recommendation</span>
+    </div>
+
+    <!-- What it meant -->
+    <div class="modal-section modal-podcast">
+      <div class="modal-podcast-label">What this internship meant</div>
+      <p class="modal-podcast-text">Before 3Rivers, most of what I knew I'd taught myself. Here I had meetings with people working across AI, IT, and Finance — people who had been doing this work for years. I asked a lot of questions and listened more than I talked. The skills I carried into the Noll Team work came directly from what I absorbed here.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── WORK SECTION STYLES ──────────────────────────── -->
+<style>
+#work {
+  background: var(--linen);
+  padding: 120px 0 80px;
+}
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.section-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 56px;
+  border-bottom: 1px solid var(--sand-dark);
+  padding-bottom: 20px;
+}
+.section-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--tobacco);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 300;
+  color: var(--olive-deep);
+  letter-spacing: -0.01em;
+}
+.section-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--tobacco-lt);
+  margin-left: auto;
+}
+
+/* Work Cards */
+.work-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease);
+}
+.work-card:hover { transform: translateY(-2px); }
+.work-card:hover .cta-arrow { transform: translateX(6px); }
+
+.work-card-image {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--olive-deep);
+}
+.work-card-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.75);
+  transition: transform 0.6s var(--ease), filter 0.3s;
+}
+.work-card:hover .work-card-image img {
+  transform: scale(1.03);
+  filter: brightness(0.65);
+}
+.work-card-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(to top, rgba(28,31,22,0.7) 0%, transparent 60%);
+}
+.work-card-logo {
+  width: 52px; height: 52px;
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.work-card-logo img { width: 100%; height: 100%; object-fit: cover; }
+.work-card-org {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--linen);
+  line-height: 1.2;
+}
+.work-card-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--tobacco-lt);
+  margin-top: 4px;
+}
+
+.work-card-body {
+  background: var(--sand);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.work-card-hook {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--olive);
+  margin-bottom: 32px;
+}
+.work-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 28px;
+}
+.work-stat {
+  background: var(--linen);
+  padding: 16px;
+}
+.work-stat-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--olive-deep);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.work-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tobacco);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+.work-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--olive-deep);
+  border-top: 1px solid var(--sand-dark);
+  padding-top: 20px;
+}
+.cta-arrow {
+  transition: transform 0.3s var(--ease);
+}
+
+/* Modal */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 31, 22, 0.82);
+  z-index: 200;
+  overflow-y: auto;
+  padding: 40px 20px;
+  backdrop-filter: blur(4px);
+}
+.modal-backdrop.open { display: block; }
+.modal {
+  background: var(--linen);
+  max-width: 820px;
+  margin: 0 auto;
+  position: relative;
+  animation: modalIn 0.4s var(--ease);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: var(--olive-deep);
+  color: var(--linen);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: var(--olive); }
+
+.modal-hero {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background: var(--olive-deep);
+}
+.modal-hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: brightness(0.6);
+}
+.modal-hero-overlay {
+  position: absolute;
+  inset: 0; padding: 28px;
+  display: flex; align-items: flex-end; gap: 16px;
+  background: linear-gradient(to top, rgba(28,31,22,0.75) 0%, transparent 60%);
+}
+.modal-hero-logo {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: white;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.modal-hero-title {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 400;
+  color: var(--linen); line-height: 1.2;
+}
+.modal-hero-sub {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--tobacco-lt); margin-top: 4px;
+}
+
+.modal-section { padding: 28px 36px; }
+.modal-context {
+  font-size: 15px; font-weight: 300;
+  line-height: 1.8; color: var(--olive);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+.modal-stats-bar {
+  display: flex;
+  background: var(--olive-deep);
+  padding: 0;
+}
+.modal-stat {
+  flex: 1;
+  padding: 20px 16px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+}
+.modal-stat:last-child { border-right: none; }
+.msn {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 500;
+  color: var(--linen); line-height: 1;
+  letter-spacing: -0.02em;
+}
+.msl {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tobacco-lt);
+  margin-top: 6px; line-height: 1.4;
+}
+
+.modal-deliverable {
+  padding: 28px 36px;
+  border-top: 1px solid var(--sand-dark);
+}
+.modal-del-header {
+  display: flex; align-items: center;
+  gap: 14px; margin-bottom: 14px;
+}
+.modal-del-num {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.14em;
+  color: var(--tobacco);
+}
+.modal-del-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 500;
+  color: var(--olive-deep);
+}
+.modal-del-body {
+  font-size: 14px; font-weight: 300;
+  line-height: 1.8; color: var(--olive);
+}
+
+.modal-img-wrap { padding: 0 36px 28px; }
+.modal-img {
+  width: 100%;
+  border: 1px solid var(--sand-dark);
+}
+.modal-img-caption {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--tobacco-lt);
+  margin-top: 8px; line-height: 1.5;
+}
+
+.modal-highlight-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px; margin-top: 20px;
+}
+.modal-highlight {
+  background: var(--sand);
+  padding: 20px;
+  text-align: center;
+}
+.mh-num {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 500;
+  color: var(--olive-deep);
+  letter-spacing: -0.02em;
+}
+.mh-label {
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--tobacco);
+  margin-top: 6px; line-height: 1.4;
+}
+
+.modal-quote {
+  margin: 0 36px 28px;
+  background: var(--olive-deep);
+  padding: 24px 28px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.modal-quote-mark {
+  font-family: var(--font-display);
+  font-size: 40px; line-height: 0.7;
+  color: var(--tobacco); flex-shrink: 0; margin-top: 4px;
+}
+.modal-quote-text {
+  font-family: var(--font-display);
+  font-size: 14px; font-style: italic;
+  line-height: 1.7; color: var(--sand); flex: 1;
+}
+.modal-quote-source {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--tobacco-lt);
+  margin-top: 10px; font-style: normal;
+}
+
+.modal-callout {
+  margin: 0 36px 0;
+  background: var(--sand);
+  border-left: 3px solid var(--tobacco);
+  padding: 18px 20px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.modal-callout-icon {
+  font-size: 18px; color: var(--tobacco); flex-shrink: 0;
+}
+.modal-callout-text {
+  font-size: 13px; font-weight: 300;
+  line-height: 1.7; color: var(--olive);
+  font-family: var(--font-display); font-style: italic;
+}
+
+.modal-podcast {
+  background: var(--sand);
+  margin-top: 2px;
+}
+.modal-podcast-label {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--tobacco);
+  margin-bottom: 10px;
+}
+.modal-podcast-text {
+  font-size: 14px; font-weight: 300;
+  line-height: 1.8; color: var(--olive);
+}
+
+/* Cascade lines */
+.cascade-lines {
+  margin-bottom: 32px;
+  min-height: 200px;
+}
+.cascade-line {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--olive-deep);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  margin-bottom: 6px;
+}
+.cascade-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cascade-line:nth-child(odd) {
+  color: var(--olive-deep);
+  font-weight: 400;
+}
+.cascade-line:nth-child(even) {
+  color: var(--tobacco);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .work-card { grid-template-columns: 1fr; }
+  .work-card-image { aspect-ratio: 16/9; }
+  .modal-stats-bar { flex-wrap: wrap; }
+  .modal-stat { flex: 0 0 50%; }
+  .modal-highlight-row { grid-template-columns: 1fr; }
+  .section-sub { display: none; }
+  .section-inner { padding: 0 24px; }
+}
+</style>
+
+<script>
+function openModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e, id) {
+  if (e.target === document.getElementById('modal-' + id)) closeModal(id);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.open').forEach(m => {
+      m.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+});
+</script>
+<!-- ── BEYOND THE WORK ──────────────────────────────── -->
+<section id="beyond">
+  <div class="section-inner">
+
+    <div class="section-label-row">
+      <span class="section-mono">02</span>
+      <h2 class="section-title">Beyond the Work</h2>
+      <span class="section-sub">What runs underneath everything else.</span>
+    </div>
+
+    <div class="beyond-grid">
+
+      <!-- DELT FULL WIDTH CARD -->
+      <div class="beyond-card beyond-card-wide" onclick="openModal('delt')">
+        <div class="beyond-card-img beyond-card-img-wide"><img src="deltgroup.jpg" alt="Delta Tau Delta" style="object-position:center 30%;"></div>
+        <div class="beyond-card-body">
+          <div class="beyond-card-label">Leadership & Growth</div>
+          <h3 class="beyond-card-title">Delta Tau Delta — ΔΤΔ @ USF</h3>
+          <p class="beyond-card-hook">Where everything I'd been building — design instincts, analytical thinking, leadership — got tested in the most human way possible. 80+ people. Real stakes. No manual.</p>
+          <div class="beyond-card-stats-row">
+            <div class="beyond-card-stat"><span class="bcs-num">500K+</span><span class="bcs-label">Views in 90 days</span></div>
+            <div class="beyond-card-stat"><span class="bcs-num">20K</span><span class="bcs-label">Rush video views</span></div>
+            <div class="beyond-card-stat"><span class="bcs-num">$60K</span><span class="bcs-label">Semester budget</span></div>
+            <div class="beyond-card-stat"><span class="bcs-num">80+</span><span class="bcs-label">Members led</span></div>
+          </div>
+          <div class="beyond-card-cta">Expand <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="beyond-card" onclick="openModal('bm')">
+        <div class="beyond-card-img bm-card-flyer"><img src="bm_flyer.jpg" alt="BM Solutions" style="object-fit:contain;background:#4a5240;padding:8px;"></div>
+        <div class="beyond-card-body">
+          <div class="beyond-card-label">Venture</div>
+          <h3 class="beyond-card-title">BM Solutions</h3>
+          <p class="beyond-card-hook">A business started with a best friend. Idea to first client in under a week.</p>
+          <div class="beyond-card-cta">Expand <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="beyond-card" onclick="openModal('finedu')">
+        <div class="beyond-card-img"><img src="club_classroom.jpg" alt="Investment Club"></div>
+        <div class="beyond-card-body">
+          <div class="beyond-card-label">Origin story</div>
+          <h3 class="beyond-card-title">The Financial Literacy Thread</h3>
+          <p class="beyond-card-hook">Started with a high school club. Still building three years later.</p>
+          <div class="beyond-card-cta">Expand <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="beyond-card" onclick="openModal('bbc')">
+        <div class="beyond-card-img"><img src="bbc_group.jpg" alt="Bulls Business Community"></div>
+        <div class="beyond-card-body">
+          <div class="beyond-card-label">Community</div>
+          <h3 class="beyond-card-title">Bulls Business Community</h3>
+          <p class="beyond-card-hook">Where I started building my professional network on campus from day one.</p>
+          <div class="beyond-card-cta">Expand <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="beyond-card" onclick="openModal('media')">
+        <div class="beyond-card-img"><img src="sog_thumbnail.jpg" alt="Student of the Game Podcast"></div>
+        <div class="beyond-card-body">
+          <div class="beyond-card-label">Media</div>
+          <h3 class="beyond-card-title">A podcast. A reel. A feature.</h3>
+          <p class="beyond-card-hook">How one summer of work traveled further than the room it was done in.</p>
+          <div class="beyond-card-cta">Expand <span>→</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BM MODAL -->
+<div class="modal-backdrop" id="modal-bm" onclick="closeModalOutside(event, 'bm')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('bm')">✕</button>
+    <div class="modal-hero">
+      <img src="bm_flyer.jpg" alt="BM Solutions" class="modal-hero-img" style="object-position:center center;">
+      <div class="modal-hero-overlay"><div><h2 class="modal-hero-title">BM Solutions</h2><p class="modal-hero-sub">Home Services · Fort Wayne, IN · Summer 2024</p></div></div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-context">Brady and I met in 7th grade. We played sports together, worked our first jobs at Wendy's together, spent every summer at the lake. We even tried DJing once. Even after we went to different colleges, we came back that summer and went from idea to first paying client in under a week. From there we were busy every single day from sunrise to sunset.</p>
+    </div>
+    <div class="bm-reveal-grid">
+      <div class="bm-col">
+        <div class="bm-reveal-wrap" onclick="this.classList.toggle('revealed')">
+          <img src="bm_top_after.jpg" alt="After" class="bm-reveal-after">
+          <img src="bm_top_before.jpg" alt="Before" class="bm-reveal-before">
+          <span class="bm-tag bm-tag-before">Before</span>
+          <span class="bm-tag after bm-tag-after">After</span>
+        </div>
+        <div class="bm-reveal-wrap" onclick="this.classList.toggle('revealed')">
+          <img src="bm_bottom_after.jpg" alt="After" class="bm-reveal-after">
+          <img src="bm_bottom_before.jpg" alt="Before" class="bm-reveal-before">
+          <span class="bm-tag bm-tag-before">Before</span>
+          <span class="bm-tag after bm-tag-after">After</span>
+        </div>
+      </div>
+    </div>
+    <p class="bm-reveal-hint">Tap either photo to reveal the transformation</p>
+    <div class="modal-section" style="display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:start;">
+      <div>
+        <img src="bm_brady.jpg" alt="Michael and Brady" style="width:100%;object-fit:cover;">
+        <p style="font-family:var(--font-display);font-size:11px;font-style:italic;color:var(--tobacco);margin-top:6px;text-align:center;">That's us. Long before we ran a business together.</p>
+      </div>
+      <p class="modal-context" style="font-style:normal;">On top of all our one-off jobs throughout the summer, one of our regulars was an elderly man who had moved into a villa but still owned his original property — a large lot he couldn't keep up with on his own. We were out there consistently all summer helping him maintain it. He'd work alongside us some days, even when it was hard for him. We built a real relationship with him. That connection led to him contracting us to power wash the exterior of the commercial property where he ran his masonry business in Fort Wayne. That one meant something.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINEDU MODAL -->
+<div class="modal-backdrop" id="modal-finedu" onclick="closeModalOutside(event, 'finedu')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('finedu')">✕</button>
+    <div class="modal-hero">
+      <img src="club_classroom.jpg" alt="Investment Club" class="modal-hero-img">
+      <div class="modal-hero-overlay"><div><h2 class="modal-hero-title">The Financial Literacy Thread</h2><p class="modal-hero-sub">Homestead High School, 2022 → USF → Still going.</p></div></div>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">01</span><h3 class="modal-del-title">The origin — Homestead Investment Club</h3></div>
+      <p class="modal-del-body">The Finance & Investment Club at Homestead existed before I got involved — but barely. It had no real structure, meetings were inconsistent, and most weeks only 5 or 6 kids showed up. I stepped in, rebuilt how it was run, and turned it into something people actually wanted to be part of. By the time I left it had grown to 20–30 active members, a real curriculum, and a track record that still holds — every member who graduated from that club went on to land an internship. It's still running today under a new name: the HHS Business Club.</p>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">02</span><h3 class="modal-del-title">The connection — USF Investment Club</h3></div>
+      <p class="modal-del-body">In my senior year of high school, while still running the club and weighing my college options, I reached out to USF's Investment Club cold. I wanted to give my members exposure to a more advanced program — but honestly, I also wanted to meet the people and get a real feel for what USF was like. We did a virtual joint session with our club in Indiana and theirs in Tampa. Those conversations played a real part in my decision to commit to USF.</p>
+      <p class="modal-del-body" style="margin-top:12px;">As soon as I decided, I reached back out and asked how to get involved. I went through an interview process and earned a role as an incoming freshman — which wasn't typical. I was placed in a special cohort for high-achieving underclassmen with a dedicated mentor to help us get ahead and position ourselves to compete for difficult, hard-to-get internships. The group photo below is from my first month on campus — surrounded by motivated people with goals I could learn from.</p>
+      <div class="modal-img-wrap" style="margin-bottom:3px;">
+        <img src="club_usf_graphic.jpg" alt="USF x Homestead" style="width:60%;display:block;margin:0 auto;border:1px solid var(--sand-dark);">
+        <p class="modal-img-caption" style="text-align:center;">The virtual collaboration — Homestead Investment Club × USF Investment Club.</p>
+      </div>
+      <div class="modal-img-wrap" style="margin-top:3px;">
+        <img src="usfic_group.jpg" alt="USF Investment Club" class="modal-img" style="width:100%;height:320px;object-fit:cover;object-position:center 20%;">
+        <p class="modal-img-caption">First month at USF. USF Investment Club — Global Markets Division.</p>
+      </div>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">03</span><h3 class="modal-del-title">The idea — FinEdu</h3></div>
+      <p class="modal-del-body">My passion for financial literacy started during COVID. With time on my hands, I started doing my own research and discovered a world of concepts — investing, credit, compounding, budgeting — that I had never been taught in school. I kept thinking about how many people never get exposed to any of this, especially in communities that need it most. That thought never left. I started building FinEdu as a business concept in high school, formalized it through DECA, and have kept adding to it every semester at USF — a business plan, a KPI framework, an operating structure, and a full SQL database designed as if the company were real.</p>
+      <div style="text-align:center;margin-top:16px;">
+        <img src="finedu_logo.png" alt="FinEdu logo" style="width:140px;background:var(--sand);padding:16px;box-sizing:border-box;display:inline-block;">
+      </div>
+      <div class="modal-img-wrap" style="margin-top:8px;">
+        <img src="finedu_plan.png" alt="FinEdu business plan overview" style="width:100%;display:block;border:1px solid var(--sand-dark);">
+        <p class="modal-img-caption">FinEdu business plan overview.</p>
+      </div>
+      <div class="modal-img-wrap" style="margin-top:3px;">
+        <img src="finedu_sql.png" alt="FinEdu ERD" style="width:75%;display:block;margin:0 auto;border:1px solid var(--sand-dark);">
+        <p class="modal-img-caption" style="text-align:center;">FinEdu ERD — 6 normalized tables, proper foreign key relationships. This database is fully functional and queryable.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BBC MODAL -->
+<div class="modal-backdrop" id="modal-bbc" onclick="closeModalOutside(event, 'bbc')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('bbc')">✕</button>
+    <div class="modal-hero">
+      <img src="bbc_group.jpg" alt="Bulls Business Community" class="modal-hero-img" style="object-position:center top;">
+      <div class="modal-hero-overlay"><div><h2 class="modal-hero-title">Bulls Business Community</h2><p class="modal-hero-sub">USF Muma College of Business</p></div></div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-context" style="font-style:normal;">Going into freshman year I made a deliberate decision — I chose to live in the Business Learning Living Community so I'd be surrounded by people with similar goals and motivations from day one. It worked. I made connections immediately and felt like I had a place at USF before the first week was over.</p>
+      <p class="modal-context" style="font-style:normal; margin-top:12px;">The experience was good enough that I came back as a Sophomore Peer Leader the following year. Instead of just participating, I was on the other side — mentoring incoming students, helping the advisor plan and run events, and tracking progress across the cohort. It shifted from something I joined to something I helped build.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:start;padding:20px 36px 28px;">
+      <div>
+        <img src="bbc_seby.jpg" alt="Michael at BBC" style="width:100%;object-fit:contain;display:block;border:1px solid var(--sand-dark);">
+      </div>
+      <div>
+        <img src="bbc_flyer.jpg" alt="BBC Fashion Show Flyer" style="width:100%;display:block;border:1px solid var(--sand-dark);">
+        <p class="modal-img-caption" style="margin-top:6px;">An example of an event we put on for students. I designed this flyer. We hosted an in-person fashion show to walk students through different types of business attire — what to wear, when, and why it matters.</p>
+      </div>
+    </div>
+</div>
+</div>
+
+<!-- MEDIA MODAL -->
+<div class="modal-backdrop" id="modal-media" onclick="closeModalOutside(event, 'media')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('media')">✕</button>
+    <div class="modal-section" style="background:var(--olive-deep);padding:32px 36px;">
+      <p style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--tobacco-lt);margin-bottom:8px;">Personal Endeavors</p>
+      <h2 style="font-family:var(--font-display);font-size:28px;font-weight:300;color:var(--linen);line-height:1.3;">How one summer of work traveled further than the room it was done in.</h2>
+    </div>
+
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">01</span><h3 class="modal-del-title">Student of the Game — Guest Appearance</h3></div>
+      <p class="modal-del-body">Alongside the analytical work at the Noll Team, I helped Brad build out his podcast operation — episode structure, speaker outreach, Notion-based SOPs, content calendars, and a full marketing workflow developed together with Josh from the Noll Interiors team. In the middle of that process, Brad invited me to be a guest.</p>
+      <p class="modal-del-body" style="margin-top:12px;">The conversation covered AI and what it actually means for small businesses — how it shows up in real work, what it does well, where people get it wrong, and where I think it's heading. It was an honest conversation between two people who had spent months working through these questions together in a real business context.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <iframe width="100%" height="220" src="https://www.youtube.com/embed/bNVGTTFgNog" frameborder="0" allowfullscreen style="display:block;border:1px solid var(--sand-dark);"></iframe>
+      </div>
+    </div>
+
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">02</span><h3 class="modal-del-title">What happened next</h3></div>
+      <p class="modal-del-body">Following the marketing plan Josh, Brad, and I had built together, we pushed story content and reels to drive traction around the episode. The reel pulled over 6,000 organic views and contributed to a 20% increase in listeners compared to previous episodes.</p>
+      <div class="modal-img-wrap" style="margin-top:12px;">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DM0RPAvxXdD/" data-instgrm-version="14" style="width:100%;min-width:unset;"></blockquote>
+      </div>
+      <p class="modal-del-body" style="margin-top:16px;">I wanted to take the marketing plan a step further. I thought about what platforms I actually had access to — and my collegiate network at USF was the obvious answer. I reached out to the Bellini Center while I was still in Indiana. One thing led to another, and by the time I got back to Tampa I had a student spotlight interview scheduled. That turned into a Mini Mic Moment they posted across their LinkedIn and Instagram channels.</p>
+      <div class="modal-img-wrap" style="margin-top:12px;">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOLrchXEbgK/" data-instgrm-version="14" style="width:100%;min-width:unset;"></blockquote>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELT MODAL -->
+<div class="modal-backdrop" id="modal-delt" onclick="closeModalOutside(event, 'delt')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('delt')">✕</button>
+    <div class="modal-hero">
+      <img src="deltgroup.jpg" alt="Delta Tau Delta" class="modal-hero-img" style="object-position:center 35%;">
+      <div class="modal-hero-overlay"><div>
+        <h2 class="modal-hero-title">Delta Tau Delta — ΔΤΔ @ USF</h2>
+        <p class="modal-hero-sub">Social Media Chair → VP of Programming · Epsilon Pi Chapter · 2024 – Present</p>
+      </div></div>
+    </div>
+    <div class="modal-section">
+      <p class="modal-context">Delt has been one of the most genuinely challenging and rewarding experiences I've had — and one of the most useful. Leading and collaborating with 80+ people who all think differently, have different priorities, and bring completely different perspectives to the table teaches you things no classroom can. Some of the most important lessons I've learned about working with people, communicating across different personalities, and building something that a group actually believes in have come from here.</p>
+    </div>
+
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">01</span><h3 class="modal-del-title">VP of Programming</h3></div>
+      <p class="modal-del-body">I came in as Social Media Chair, built that role into something real, and eventually transitioned into VP of Programming — which is a different kind of challenge. It's less about creating and more about operating. I manage a $60K semester budget, oversee a 15-chair executive team, and coordinate everything from vendor relationships to event logistics to how the chapter shows up publicly. The hardest part isn't the planning. It's the people side — keeping a team aligned, resolving disagreements, and getting 80 guys with different priorities moving in the same direction. That's where I've grown the most.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <img src="execpost.jpg" alt="Executive Board 2026" class="modal-img" style="width:100%;max-height:340px;object-fit:cover;object-position:center 40%;">
+        <p class="modal-img-caption">Executive Board 2026 — outside Marshall Student Center, USF.</p>
+      </div>
+    </div>
+
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">02</span><h3 class="modal-del-title">Brand & Content</h3></div>
+      <p class="modal-del-body">When I started as Social Media Chair the account had no cohesive identity. I treated it like a brand problem. Each recruitment cycle I rebuilt the visual language from scratch — new aesthetic, new theme, everything coordinated across posts, reels, flyers, and merch. The goal was always the same: make everything feel intentional and make people want to be part of it.</p>
+      <p class="modal-del-body" style="margin-top:12px;">What surprised me was how much I cared about the craft of it — the way a flyer communicates energy before anyone reads a word, how consistency across platforms builds trust, how video editing tells a story differently than static content. These weren't skills I set out to build. They just came from caring about the work.</p>
+
+      <p class="modal-del-body" style="margin-top:20px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--tobacco);">The account — tap to see the transformation.</p>
+      <div class="insta-stack" id="instaStack">
+        <div class="insta-frame active" onclick="goToInsta(1)">
+          <img src="insta1.png" alt="Instagram — before">
+          <span class="insta-label">When I started · tap →</span>
+        </div>
+        <div class="insta-frame" onclick="goToInsta(2)">
+          <img src="insta2.png" alt="Instagram — fall 2025">
+          <span class="insta-label">Fall 2025 · tap →</span>
+        </div>
+        <div class="insta-frame" onclick="goToInsta(0)">
+          <img src="insta3.png" alt="Instagram — now">
+          <span class="insta-label">Now · tap to go back</span>
+        </div>
+        <div class="insta-nav">
+          <span class="insta-dot active" onclick="event.stopPropagation();goToInsta(0)"></span>
+          <span class="insta-dot" onclick="event.stopPropagation();goToInsta(1)"></span>
+          <span class="insta-dot" onclick="event.stopPropagation();goToInsta(2)"></span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:20px;">
+        <div>
+          <img src="deltopiaflyer.jpg" alt="Deltopia flyer" style="width:100%;display:block;">
+        </div>
+        <div>
+          <img src="deltopiashirt.jpg" alt="Deltopia shirt design" style="width:100%;display:block;object-fit:cover;height:100%;">
+        </div>
+      </div>
+      <p class="modal-img-caption" style="margin-top:6px;">Deltopia, Spring 2026 — flyer and merch design. Every semester built around a full theme.</p>
+
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DTnrlrBgOWw/" data-instgrm-version="14" style="width:100%;min-width:unset;"></blockquote>
+        <p class="modal-img-caption">DELTØPIA — Spring Rush | ΔΤΔ @ USF. Self-produced after the paid video wasn't usable. 20K views, 200 shares, 100 comments.</p>
+      </div>
+    </div>
+
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">03</span><h3 class="modal-del-title">What I took away</h3></div>
+      <p class="modal-del-body">Delt gave me a real environment to develop skills I use everywhere else. Video editing, graphic design, brand cohesiveness, budget management, communicating energy through digital channels — none of it was planned. It came from being in a leadership role that required those things and caring enough to figure them out.</p>
+      <p class="modal-del-body" style="margin-top:12px;">The website came from a design problem. Our whole Instagram felt cluttered and generic — it needed to be refined and optimized. Part of that was building a dedicated place for recruitment contacts, somewhere clean and branded that rush chairs could actually send people to. No other chapter had something like that. It became a point of differentiation that also reflected one of our biggest priorities as a chapter: professional development. That's also why I still give LinkedIn and networking presentations every semester. I want the guys around me to be thinking about their futures seriously.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <a href="https://mdoerff.github.io/FallRushContacts/" target="_blank" style="display:block;background:var(--sand);padding:20px;text-align:center;border:1px solid var(--sand-dark);font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--olive);text-decoration:none;">
+          View the recruitment site — mdoerff.github.io/FallRushContacts/ →
+        </a>
+      </div>
+      <p class="modal-del-body" style="margin-top:28px;">The opportunities that have come from Delt have been unexpected. Meeting alumni, getting on calls with executives who are just as curious about what I'm building as I am about what they've built. I recently attended an alumni event alongside my fellow executive board members where I sat down to dinner next to the international president of Delta Tau Delta. Around that room were the CEO, multiple executives, and members of the education foundation — and 21 different Delt chapters were represented by alumni who had all ended up in Tampa. I networked across the room and had many meaningful conversations. Watching the happiness and sense of connection they all felt with each other, years removed from college, was genuinely inspiring. That's what a fraternity can be when it's done right. I want to be the kind of member who still shows up to those rooms decades from now.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.delt-card { display:block; margin-top:3px; cursor:pointer; overflow:hidden; transition:transform 0.3s var(--ease); }
+.delt-card:hover { transform:translateY(-2px); }
+.delt-card-image { position:relative; height:320px; overflow:hidden; background:var(--olive-deep); }
+.delt-card-image img { width:100%; height:100%; object-fit:cover; object-position:center 25%; filter:brightness(0.65); transition:transform 0.6s var(--ease); }
+.delt-card:hover .delt-card-image img { transform:scale(1.02); }
+.delt-card-overlay { position:absolute; inset:0; padding:32px; display:flex; flex-direction:column; justify-content:flex-end; background:linear-gradient(to top, rgba(28,31,22,0.82) 0%, transparent 55%); }
+.delt-card-meta { margin-bottom:20px; }
+.delt-card-label { font-family:var(--font-mono); font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--tobacco-lt); margin-bottom:8px; }
+.delt-card-title { font-family:var(--font-display); font-size:28px; font-weight:400; color:var(--linen); line-height:1.2; }
+.delt-card-role { font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--tobacco-lt); margin-top:4px; }
+.delt-card-stats-inline { display:flex; gap:3px; margin-bottom:16px; }
+.delt-stat-inline { background:rgba(28,31,22,0.5); padding:10px 14px; flex:1; }
+.delt-stat-inline .delt-stat-num { font-family:var(--font-display); font-size:20px; font-weight:500; color:var(--linen); line-height:1; letter-spacing:-0.02em; display:block; }
+.delt-stat-inline .delt-stat-label { font-family:var(--font-mono); font-size:8px; letter-spacing:0.1em; text-transform:uppercase; color:var(--tobacco-lt); margin-top:3px; display:block; }
+.delt-card-cta-row { display:flex; }
+.insta-stack { position:relative; margin-top:12px; max-width:300px; margin-left:auto; margin-right:auto; }
+.insta-frame { display:none; cursor:pointer; }
+.insta-frame.active { display:block; }
+.insta-frame img { width:100%; height:auto; display:block; border:1px solid var(--sand-dark); }
+.insta-label { display:block; text-align:center; font-family:var(--font-mono); font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--tobacco-lt); margin-top:6px; }
+.insta-nav { display:flex; justify-content:center; gap:8px; margin-top:12px; }
+.insta-dot { width:20px; height:2px; background:var(--sand-dark); cursor:pointer; transition:background 0.2s, width 0.2s; display:inline-block; }
+.insta-dot.active { background:var(--tobacco); width:32px; }
+@media (max-width:800px) { .delt-card-image { height:220px; } .delt-card-stats-inline { display:grid; grid-template-columns:1fr 1fr; } }
+</style>
+
+<script>
+let instaIndex = 0;
+function goToInsta(index) {
+  document.querySelectorAll('.insta-frame').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.insta-dot').forEach(d => d.classList.remove('active'));
+  instaIndex = index;
+  document.querySelectorAll('.insta-frame')[index].classList.add('active');
+  document.querySelectorAll('.insta-dot')[index].classList.add('active');
+}
+</script>
+
+<style>
+#beyond { background:var(--sand); padding:120px 0 80px; border-top:1px solid var(--sand-dark); }
+.beyond-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+.beyond-card-wide { grid-column: 1 / -1; display:grid; grid-template-columns:1.4fr 1fr; }
+.beyond-card-wide .beyond-card-body { display:flex; flex-direction:column; justify-content:space-between; }
+.beyond-card-img-wide { aspect-ratio:unset !important; min-height:280px; }
+.beyond-card-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-bottom:4px; }
+.beyond-card-stat { background:var(--sand); padding:10px 12px; }
+.bcs-num { font-family:var(--font-display); font-size:20px; font-weight:500; color:var(--olive-deep); line-height:1; letter-spacing:-0.02em; display:block; }
+.bcs-label { font-family:var(--font-mono); font-size:8px; letter-spacing:0.1em; text-transform:uppercase; color:var(--tobacco); margin-top:3px; display:block; }
+.beyond-card { background:var(--linen); cursor:pointer; transition:transform 0.3s var(--ease); overflow:hidden; }
+.beyond-card:hover { transform:translateY(-2px); }
+.beyond-card:hover .beyond-card-cta span { transform:translateX(4px); }
+.beyond-card-img { aspect-ratio:16/10; overflow:hidden; background:var(--olive-deep); }
+.beyond-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s var(--ease); filter:brightness(0.92); }
+.beyond-card:hover .beyond-card-img img { transform:scale(1.03); }
+.beyond-card-img-dark { display:flex; align-items:center; justify-content:center; background:var(--olive-deep); }
+.media-card-inner { padding:24px; width:100%; }
+.media-chain-preview { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--sand); }
+.mcp-arrow { color:var(--tobacco); }
+.beyond-card-body { padding:24px; }
+.beyond-card-label { font-family:var(--font-mono); font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--tobacco); margin-bottom:8px; }
+.beyond-card-title { font-family:var(--font-display); font-size:22px; font-weight:500; color:var(--olive-deep); line-height:1.2; margin-bottom:10px; }
+.beyond-card-hook { font-size:13px; font-weight:300; line-height:1.65; color:var(--olive); margin-bottom:16px; }
+.beyond-card-cta { font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--tobacco); display:flex; align-items:center; gap:6px; border-top:1px solid var(--sand-dark); padding-top:14px; }
+.beyond-card-cta span { transition:transform 0.2s var(--ease); }
+.bm-modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin:0 0 3px; }
+.bm-modal-pair { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+.bm-modal-img-wrap { position:relative; aspect-ratio:4/3; overflow:hidden; }
+.bm-modal-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.bm-reveal-grid { margin:0 0 8px; }
+.bm-col { display:flex; flex-direction:column; gap:3px; }
+.bm-reveal-wrap { position:relative; overflow:hidden; cursor:pointer; display:block; height:260px; }
+.bm-reveal-after { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; background:var(--olive-deep); }
+.bm-reveal-before { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; background:var(--linen); transition:opacity 0.7s ease; z-index:2; }
+.bm-reveal-wrap.revealed .bm-reveal-before { opacity:0; }
+.bm-reveal-wrap .bm-tag-before { z-index:3; transition:opacity 0.4s ease; }
+.bm-reveal-wrap .bm-tag-after { opacity:0; z-index:3; transition:opacity 0.7s ease; }
+.bm-reveal-wrap.revealed .bm-tag-before { opacity:0; }
+.bm-reveal-wrap.revealed .bm-tag-after { opacity:1; }
+.bm-reveal-hint { font-family:var(--font-mono); font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--tobacco-lt); text-align:center; padding:6px 0 0; }
+.bm-tag { position:absolute; bottom:8px; left:8px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.14em; text-transform:uppercase; background:rgba(28,31,22,0.78); color:var(--linen); padding:3px 8px; }
+.bm-tag.after { background:rgba(74,82,64,0.88); }
+@media (max-width:700px) { .beyond-grid { grid-template-columns:1fr; } .bm-modal-grid { grid-template-columns:1fr; } .bm-modal-pair { grid-template-columns:1fr 1fr; } }
+</style>
+
+<script>
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://www.instagram.com/embed.js';
+  s.async = true;
+  document.body.appendChild(s);
+})();
+</script>
+
+<section id="coursework">
+  <div class="section-inner">
+
+    <div class="section-label-row">
+      <span class="section-mono">03</span>
+      <h2 class="section-title">Technical</h2>
+      <span class="section-sub">Proof of daily learning.</span>
+    </div>
+
+    <div class="tech-intro">
+      <div class="tech-intro-text">
+        <p>Switching my major from Entrepreneurship to AI and Business Analytics was one of the best decisions I've made — and one of the harder ones to get through. It's a new STEM-designated degree at USF, and it's not easy. Some of my courses are cross-listed with graduate school. My professors are deliberate about what they're building: not just technical skills, but the business judgment to know when to use them, how to interpret what you find, and what it actually takes in the modern world to stay ahead. As one of them put it — they're preparing us to be data leaders, not data operators.</p>
+        <p>These projects aren't the most exciting things on this site. But they're honest proof that I'm showing up to hard classes, learning real technical concepts, and applying them to real business problems every semester.</p>
+      </div>
+    </div>
+
+    <div class="tech-grid">
+
+      <div class="tech-card" onclick="openModal('python')">
+        <div class="tech-card-img"><img src="california_ml.png" alt="Python Projects"></div>
+        <div class="tech-card-body">
+          <div class="tech-card-tag">Python · Machine Learning · Data Engineering</div>
+          <h3 class="tech-card-title">Python — Three Projects</h3>
+          <p class="tech-card-desc">Machine learning model comparison, sales analysis with business recommendations, and end-to-end data cleaning. Three of many Python projects — chosen because they reflect the real work I do and the problems I'm drawn to.</p>
+          <div class="beyond-card-cta">View projects <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="tech-card" onclick="openModal('opioid')">
+        <div class="tech-card-img"><img src="opioid_dashboard.png" alt="Opioid Crisis Dashboard"></div>
+        <div class="tech-card-body">
+          <div class="tech-card-tag">Tableau · Data Visualization</div>
+          <h3 class="tech-card-title">U.S. Opioid Crisis Dashboard</h3>
+          <p class="tech-card-desc">Four-view Tableau dashboard using CDC data from 2015–2021. Choropleth map, trend line, pie chart, and ranked bar chart. Synthetic opioids account for 57.26% of total deaths — 28,260 at the 2017 peak.</p>
+          <div class="beyond-card-cta">View project <span>→</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tech-footer-note">
+      <p>These projects represent a slice of the technical work. Other coursework includes R for statistical programming, additional SQL and database administration, decision trees, KNN modeling, and data mining. The broader technical range — Power BI, Tableau, Power Query, DAX, ArcGIS — is demonstrated through the internship work and projects above.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- PYTHON MODAL -->
+<div class="modal-backdrop" id="modal-python" onclick="closeModalOutside(event, 'python')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('python')">✕</button>
+    <div class="modal-section" style="background:var(--olive-deep);padding:32px 36px;">
+      <p style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--tobacco-lt);margin-bottom:8px;">Python</p>
+      <h2 style="font-family:var(--font-display);font-size:28px;font-weight:300;color:var(--linen);line-height:1.3;">Three of many. Chosen because they reflect the work I'm actually drawn to.</h2>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">01</span><h3 class="modal-del-title">California Housing Price Forecasting</h3></div>
+      <p class="modal-del-body">Used geographic, demographic, and economic features from California census districts to predict median home value categories. Built three classification models — Logistic Regression, Random Forest, and XGBoost — and evaluated each on accuracy, Macro F1, precision, and recall. XGBoost outperformed both others across every metric at 77.8% accuracy, which makes sense given the non-linear relationships in housing data that boosting handles better than regression or bagging alone.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <img src="ism_4543.png" alt="California Housing Project" class="modal-img" style="background:var(--olive-deep);padding:16px;box-sizing:border-box;">
+      </div>
+      <div class="modal-img-wrap" style="margin-top:3px;">
+        <img src="california_ml.png" alt="Model comparison results" class="modal-img">
+        <p class="modal-img-caption">Final model comparison. XGBoost — 77.8% accuracy, highest across all metrics.</p>
+      </div>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">02</span><h3 class="modal-del-title">GlobalTech Q1 2024 Sales Analysis</h3></div>
+      <p class="modal-del-body">Regional performance breakdown across North America, Europe, Asia, and Latin America. Category-level analysis by average units sold. Promotion effectiveness comparison. Data quality audit with missing value identification and percentage calculations. Three prioritized business recommendations — the same analytical pattern I followed at every internship: understand the data, find the insight, translate it into action.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <img src="globaltech.png" alt="GlobalTech Sales Analysis" class="modal-img">
+      </div>
+    </div>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">03</span><h3 class="modal-del-title">UrbanStyle Customer Data Cleaning</h3></div>
+      <p class="modal-del-body">End-to-end data standardization pipeline — missing value imputation using median and forward-fill, phone number standardization to (XXX) XXX-XXXX format, currency symbol and comma removal, duplicate detection by exact match and ID, column renaming, and full type conversion. The kind of unglamorous foundational work that makes everything downstream actually reliable. Same skills that made the 3Rivers and Noll Team dashboards possible.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <img src="python_cleaning.png" alt="UrbanStyle Data Cleaning" class="modal-img">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OPIOID MODAL -->
+<div class="modal-backdrop" id="modal-opioid" onclick="closeModalOutside(event, 'opioid')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('opioid')">✕</button>
+    <div class="modal-deliverable">
+      <div class="modal-del-header"><span class="modal-del-num">Tableau</span><h3 class="modal-del-title">U.S. Opioid Crisis Dashboard</h3></div>
+      <p class="modal-del-body">Built in Tableau using CDC mortality data from 2015–2021. The dashboard is fully interactive, filterable, and dynamic — users can drill as broad or as specific as they want. Filters cascade across all four views simultaneously, so selecting a state or year updates every chart in real time. Complex calculated fields power the underlying logic, enabling the dashboard to handle aggregations, group comparisons, and proportional breakdowns dynamically rather than relying on static numbers.</p>
+      <p class="modal-del-body" style="margin-top:12px;">The four coordinated views are designed to tell a single coherent story from different angles. The choropleth map encodes death counts by state using a color gradient, immediately revealing geographic concentration in Appalachia and the Midwest. The trend line tracks synthetic opioid deaths year-over-year, showing the spike to 28,260 in 2017 and the subsequent recovery. The pie chart breaks total deaths into synthetic vs. other opioid categories — 57.26% synthetic. The ranked bar chart lets viewers compare individual opioid subtypes by average reported deaths.</p>
+      <p class="modal-del-body" style="margin-top:12px;">I chose this dataset deliberately. A dashboard about sales or website traffic is easy to build and easy to ignore. This one required thinking carefully about how to represent human loss accurately without sensationalizing it. Every design decision — color scale, chart type, label placement — had to serve the data, not decorate it.</p>
+      <div class="modal-img-wrap" style="margin-top:16px;">
+        <img src="opioid_dashboard.png" alt="Opioid Crisis Dashboard" class="modal-img">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+#coursework { background:var(--linen); padding:120px 0 80px; border-top:1px solid var(--sand-dark); }
+.tech-intro { max-width:720px; margin-bottom:48px; }
+.tech-intro-text p { font-size:15px; font-weight:300; line-height:1.8; color:var(--olive); margin-bottom:16px; }
+.tech-intro-text p:last-child { margin-bottom:0; }
+.tech-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+.tech-card { background:var(--sand); cursor:pointer; overflow:hidden; transition:transform 0.3s var(--ease); display:flex; flex-direction:column; }
+.tech-card:hover { transform:translateY(-2px); }
+.tech-card:hover .beyond-card-cta span { transform:translateX(4px); }
+.tech-card-wide { grid-column:1 / -1; flex-direction:row; }
+.tech-card-wide .tech-card-img { width:50%; flex-shrink:0; }
+.tech-card-wide .tech-card-body { flex:1; }
+.tech-card-img { aspect-ratio:16/10; overflow:hidden; background:var(--olive-deep); }
+.tech-card-wide .tech-card-img { aspect-ratio:unset; min-height:220px; }
+.tech-card-img img { width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform 0.4s var(--ease); }
+.tech-card:hover .tech-card-img img { transform:scale(1.02); }
+.tech-card-body { padding:24px; display:flex; flex-direction:column; gap:10px; }
+.tech-card-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--tobacco); }
+.tech-card-title { font-family:var(--font-display); font-size:20px; font-weight:500; color:var(--olive-deep); line-height:1.2; }
+.tech-card-desc { font-size:13px; font-weight:300; line-height:1.7; color:var(--olive); flex:1; }
+.tech-footer-note { margin-top:24px; padding:20px 24px; background:var(--sand); border-left:3px solid var(--tobacco); }
+.tech-footer-note p { font-size:13px; font-weight:300; line-height:1.75; color:var(--olive); font-family:var(--font-display); font-style:italic; }
+</style>
+<section id="contact">
+  <div class="contact-inner">
+
+    <div class="contact-left">
+      <div class="contact-photo-wrap">
+        <img src="michael.jpg" alt="Michael Doerffler" class="contact-photo">
+      </div>
+      <p class="contact-mono">Let's talk</p>
+      <h2 class="contact-heading">Graduating December 2026<br>and actively looking for<br><em>what's next.</em></h2>
+      <p class="contact-sub">If something here stood out, I'd genuinely love to talk.</p>
+    </div>
+
+    <div class="contact-right">
+      <a href="mailto:michael@rmtdco.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-value">michael@rmtdco.com <span class="contact-arrow">→</span></span>
+      </a>
+      <a href="https://linkedin.com/in/michael-doerffler" target="_blank" class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        <span class="contact-link-value">michael-doerffler <span class="contact-arrow">→</span></span>
+      </a>
+      <a href="resume.pdf" target="_blank" download class="contact-link contact-link-resume">
+        <span class="contact-link-label">Resume</span>
+        <span class="contact-link-value">Download PDF <span class="contact-arrow">↓</span></span>
+      </a>
+      <div class="contact-meta">
+        <span>Tampa, FL</span>
+        <span>·</span>
+        <span>B.S. AI & Business Analytics</span>
+        <span>·</span>
+        <span>USF Muma College of Business</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+#contact {
+  background: var(--olive-deep);
+  padding: 100px 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.contact-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.contact-mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tobacco-lt);
+  margin-bottom: 20px;
+}
+.contact-heading {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--linen);
+  margin-bottom: 20px;
+}
+.contact-heading em {
+  font-style: italic;
+  color: var(--tobacco-lt);
+}
+.contact-sub {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(232,220,196,0.6);
+}
+.contact-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.contact-link {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.contact-link:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(184,150,110,0.3);
+}
+.contact-link:hover .contact-arrow { transform: translateX(4px); }
+.contact-link-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tobacco-lt);
+  margin-bottom: 4px;
+}
+.contact-link-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--linen);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.contact-arrow {
+  font-size: 16px;
+  color: var(--tobacco-lt);
+  transition: transform 0.2s var(--ease);
+  display: inline-block;
+}
+.contact-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(184,150,110,0.45);
+  flex-wrap: wrap;
+}
+.contact-photo-wrap {
+  margin-bottom: 28px;
+}
+.contact-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 15%;
+  border: 2px solid rgba(184,150,110,0.3);
+  display: block;
+}
+.contact-photo-wrap { margin-bottom:28px; }
+.contact-photo { width:120px; height:120px; border-radius:50%; object-fit:cover; object-position:center center; border:2px solid rgba(184,150,110,0.3); display:block; }
+.contact-link-resume { border-color:rgba(184,150,110,0.2); background:rgba(184,150,110,0.06); }
+@media (max-width: 800px) {
+  .contact-inner { grid-template-columns: 1fr; gap: 48px; padding: 0 28px; }
+}
+</style>
+
+<div class="scroll-hint">
+  <div class="scroll-line"></div>
+  <span class="scroll-hint-text">Scroll to explore</span>
+</div>
+
+<script>
+let currentHook = 0;
+const hooks = document.querySelectorAll('.hook');
+const dots = document.querySelectorAll('.hook-dot');
+let hookTimer = setInterval(() => goToHook((currentHook + 1) % hooks.length), 4500);
+
+function goToHook(index) {
+  hooks[currentHook].classList.remove('active');
+  dots[currentHook].classList.remove('active');
+  currentHook = index;
+  hooks[currentHook].classList.add('active');
+  dots[currentHook].classList.add('active');
+  clearInterval(hookTimer);
+  hookTimer = setInterval(() => goToHook((currentHook + 1) % hooks.length), 4500);
+}
+
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.background = window.scrollY > 40
+    ? 'rgba(232, 220, 196, 0.97)'
+    : 'rgba(242, 235, 217, 0.92)';
+});
+
+// Cascade line animations
+const cascadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const lines = entry.target.querySelectorAll('.cascade-line');
+    lines.forEach((line, i) => {
+      setTimeout(() => line.classList.add('visible'), i * 500);
+    });
+    cascadeObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.cascade-lines').forEach(g => cascadeObserver.observe(g));
+</script>
+</body>
+</html>
