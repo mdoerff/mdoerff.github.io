@@ -1,0 +1,170 @@
+---
+import '../styles/global.css';
+import portrait from '../assets/portrait.jpg';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Michael Doerffler — Business Analytics & AI',
+  description = 'Michael Doerffler builds decision systems for agencies, sales teams, and portfolios. Business Analytics & AI, USF, Dec 2026.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rmtdco.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Entrance gate: runs before first paint. Plays once per session. -->
+    <script is:inline>
+      (function () {
+        try {
+          if (sessionStorage.getItem('dfl-entrance-v1') !== '1') {
+            document.documentElement.classList.add('entrance');
+            sessionStorage.setItem('dfl-entrance-v1', '1');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <!-- Full-viewport atmosphere: the portrait's own colors, blurred wide,
+         under a cream veil — one color world across the whole screen -->
+    <div class="photo-atmosphere" aria-hidden="true" style={`background-image: url(${portrait.src});`}></div>
+    <div class="page-wash" aria-hidden="true"></div>
+
+    <!-- Base paper tooth — always on (canonical turbulence data-URI) -->
+    <div class="paper-tooth" aria-hidden="true"></div>
+
+    <main class="page-content">
+      <slot />
+    </main>
+
+    <!-- Printer's crop marks, four viewport corners -->
+    <div class="crop-marks fx-marks" aria-hidden="true">
+      <div class="cm cm-tl"></div>
+      <div class="cm cm-tr"></div>
+      <div class="cm cm-bl"></div>
+      <div class="cm cm-br"></div>
+    </div>
+
+    <!-- Fine film grain — over everything, type included (canonical data-URI) -->
+    <div class="film-grain" aria-hidden="true"></div>
+
+    <!-- Reveal-on-scroll: toggles on every viewport entry/exit, so it replays.
+         astro:page-load fires on first load and after every client-side swap. -->
+    <script>
+      function initReveals() {
+        const els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) e.target.classList.toggle('is-visible', e.isIntersecting);
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+      document.addEventListener('astro:page-load', initReveals);
+      // Entrance is a first-paint effect only; never replay it on SPA swaps.
+      document.addEventListener('astro:after-swap', () => {
+        document.documentElement.classList.remove('entrance');
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  /* Rendered at quarter size and scaled up: same soft atmosphere,
+     a fraction of the GPU cost of blurring the full viewport */
+  .photo-atmosphere {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: 25%;
+    z-index: 0;
+    pointer-events: none;
+    background-size: cover;
+    background-position: 50% 42%;
+    filter: blur(17px) saturate(1.15) brightness(1.4);
+    transform: scale(4.4);
+    transform-origin: 0 0;
+    opacity: 0.62;
+  }
+
+  /* Cream veil + refined depth over the atmosphere: keeps the page light and
+     readable while the photo's dusk tones glow through. The dark ocean/night
+     sky from the portrait is pulled out as its own gradient and dispersed
+     from the photo's corner across the page, so the deep teal-black unifies
+     with the cream rather than stopping at the portrait's edge. */
+  .page-wash {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(70% 55% at 50% 0%, rgba(238, 231, 214, 0.5), transparent 72%),
+      radial-gradient(64% 56% at 72% 50%, rgba(201, 122, 62, 0.16), transparent 88%),
+      radial-gradient(85% 76% at 84% 44%, rgba(13, 20, 20, 0.24), transparent 92%),
+      radial-gradient(58% 52% at 14% 74%, rgba(46, 74, 58, 0.12), transparent 88%),
+      linear-gradient(180deg, rgba(233, 225, 207, 0.62), rgba(233, 225, 207, 0.44) 46%, rgba(233, 225, 207, 0.58)),
+      radial-gradient(135% 135% at 50% 42%, transparent 60%, rgba(41, 33, 23, 0.08) 100%);
+  }
+
+  .paper-tooth {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.34;
+    background-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22900%22%20height=%22900%22%3E%3Cfilter%20id=%22m%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.006%22%20numOctaves=%223%22%20stitchTiles=%22stitch%22%20seed=%2211%22/%3E%3CfeColorMatrix%20type=%22matrix%22%20values=%220%200%200%200%200.26%200%200%200%200%200.21%200%200%200%200%200.13%200%200%200%200.4%200%22/%3E%3C/filter%3E%3Crect%20width=%22900%22%20height=%22900%22%20filter=%22url(%23m)%22/%3E%3C/svg%3E');
+    background-size: 1400px 1400px;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .crop-marks {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+  }
+  .cm { position: absolute; width: 15px; height: 15px; }
+  .cm-tl { top: 10px; left: 10px; border-top: 1px solid rgba(41, 33, 23, 0.6); border-left: 1px solid rgba(41, 33, 23, 0.6); }
+  .cm-tr { top: 10px; right: 10px; border-top: 1px solid rgba(41, 33, 23, 0.6); border-right: 1px solid rgba(41, 33, 23, 0.6); }
+  .cm-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.6); border-left: 1px solid rgba(41, 33, 23, 0.6); }
+  .cm-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.6); border-right: 1px solid rgba(41, 33, 23, 0.6); }
+
+  .film-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: var(--grain-o);
+    background-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22300%22%20height=%22300%22%3E%3Cfilter%20id=%22g%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.72%22%20numOctaves=%222%22%20stitchTiles=%22stitch%22%20seed=%227%22/%3E%3CfeColorMatrix%20type=%22matrix%22%20values=%220%200%200%200%200.16%200%200%200%200%200.13%200%200%200%200%200.09%200%200%200%200.62%200%22/%3E%3C/filter%3E%3Crect%20width=%22300%22%20height=%22300%22%20filter=%22url(%23g)%22/%3E%3C/svg%3E');
+    background-size: 300px 300px;
+  }
+</style>

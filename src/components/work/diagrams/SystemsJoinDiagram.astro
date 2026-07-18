@@ -1,0 +1,120 @@
+---
+// 3Rivers: three enterprise systems that were never designed to be joined,
+// normalized into one warm-lead report. Connector paths self-draw when the
+// figure reveals (skipped under prefers-reduced-motion).
+import DiagramDefs from './DiagramDefs.astro';
+---
+
+<figure class="fig" data-reveal>
+  <figcaption class="fig-label">
+    THE MORTGAGE INQUIRY INTELLIGENCE REPORT · THREE SYSTEMS INTO ONE
+  </figcaption>
+  <div class="fig-hint" aria-hidden="true">SCROLL SIDEWAYS FOR THE FULL DIAGRAM &rarr;</div>
+  <div class="fig-scroll">
+    <svg
+      viewBox="0 0 1600 520"
+      role="img"
+      aria-label="Diagram: three disconnected enterprise systems, Alkami, Exasol, and network server files, flow into a normalization and join step where field lengths are standardized and identifiers matched, producing the mortgage inquiry intelligence report that gives loan officers early visibility into members shopping for a mortgage."
+      style="font-family: var(--font-sans); width: 100%; height: auto; display: block;"
+    >
+      <DiagramDefs prefix="sj" />
+
+      <use href="#sj-reg" x="22" y="22" width="18" height="18" />
+      <use href="#sj-reg" x="1560" y="22" width="18" height="18" />
+      <use href="#sj-reg" x="22" y="480" width="18" height="18" />
+      <use href="#sj-reg" x="1560" y="480" width="18" height="18" />
+
+      <!-- the three systems -->
+      {[
+        { y: 80, t: 'ALKAMI', s: 'SAVVYMONEY MORTGAGE ALERTS' },
+        { y: 210, t: 'EXASOL', s: 'MEMBER RECORDS' },
+        { y: 340, t: 'NETWORK SERVER FILES', s: 'LOAN OFFICER DATA' },
+      ].map((b) => (
+        <g>
+          <rect x="70" y={b.y} width="330" height="84" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.2" />
+          <rect x="70" y={b.y} width="330" height="84" fill="url(#sj-ht)" opacity="0.4" />
+          <text x="92" y={b.y + 36} font-size="12.5" font-weight="700" letter-spacing="1.4" fill="var(--ink)">{b.t}</text>
+          <text x="92" y={b.y + 58} font-size="9.5" letter-spacing="0.9" fill="var(--grey-label)">{b.s}</text>
+        </g>
+      ))}
+      <text x="70" y="62" font-size="10.5" letter-spacing="1.6" fill="var(--grey-label)">THREE SYSTEMS · NEVER DESIGNED TO BE JOINED</text>
+
+      <!-- converging connectors (self-drawing) -->
+      <g fill="none" stroke="var(--ink-muted-4)" stroke-width="1">
+        <path class="draw-path" d="M402 122 C 520 122, 560 220, 660 244" />
+        <path class="draw-path draw-2" d="M402 252 H 660" />
+        <path class="draw-path draw-3" d="M402 382 C 520 382, 560 284, 660 262" />
+      </g>
+
+      <!-- normalize + join -->
+      <g class="fade-late">
+        <rect x="664" y="196" width="330" height="116" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="664" y="196" width="330" height="116" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.3" />
+        <text x="688" y="232" font-size="12.5" font-weight="700" letter-spacing="1.4" fill="var(--ink)">NORMALIZE + JOIN</text>
+        <text x="688" y="256" font-size="9.5" letter-spacing="0.9" fill="var(--ink-muted-3)">FIELD LENGTHS STANDARDIZED</text>
+        <text x="688" y="274" font-size="9.5" letter-spacing="0.9" fill="var(--ink-muted-3)">IDENTIFIERS MATCHED ACROSS SCHEMAS</text>
+        <text x="688" y="292" font-size="9.5" letter-spacing="0.9" fill="var(--ink-muted-3)">PROTECTED MEMBER DATA · REGULATED ENVIRONMENT</text>
+      </g>
+
+      <path class="draw-path draw-4" d="M996 254 H 1146 m0 0 l-9 -5 m9 5 l-9 5" fill="none" stroke="var(--ink-muted-4)" stroke-width="1" />
+
+      <!-- the report -->
+      <g class="fade-late">
+        <rect x="1150" y="188" width="380" height="132" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="1150" y="188" width="380" height="132" fill="var(--bone)" stroke="var(--accent)" stroke-width="1.6" />
+        <text x="1174" y="228" font-size="13" font-weight="700" letter-spacing="1.2" fill="var(--ink)">MORTGAGE INQUIRY</text>
+        <text x="1174" y="250" font-size="13" font-weight="700" letter-spacing="1.2" fill="var(--ink)">INTELLIGENCE REPORT</text>
+        <text x="1174" y="276" font-size="9.5" letter-spacing="0.9" fill="var(--accent)">WARM LEADS · EARLY VISIBILITY</text>
+        <text x="1174" y="294" font-size="9.5" letter-spacing="0.9" fill="var(--grey-label)">LOAN OFFICERS REACH OUT BEFORE THE MEMBER LEAVES</text>
+      </g>
+
+      <text x="70" y="486" font-size="11" letter-spacing="1.4" fill="var(--ink-muted-4)">THE SIGNAL EXISTED · IT JUST LIVED IN SYSTEMS THAT DIDN'T TALK</text>
+    </svg>
+  </div>
+</figure>
+
+<style>
+  .fig { margin: 6vh 0 0; }
+  .fig-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--grey-label);
+    margin-bottom: 4vh;
+  }
+  .fig-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .fig-hint { display: none; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .draw-path {
+      stroke-dasharray: 620;
+      stroke-dashoffset: 620;
+    }
+    .fade-late { opacity: 0; }
+    .fig.is-visible .draw-path {
+      animation: sj-draw 1.1s var(--ease-mech) forwards;
+    }
+    .fig.is-visible .draw-2 { animation-delay: 0.15s; }
+    .fig.is-visible .draw-3 { animation-delay: 0.3s; }
+    .fig.is-visible .draw-4 { animation-delay: 0.9s; }
+    .fig.is-visible .fade-late {
+      animation: sj-fade 0.6s ease 1s forwards;
+    }
+  }
+  @keyframes sj-draw { to { stroke-dashoffset: 0; } }
+  @keyframes sj-fade { to { opacity: 1; } }
+
+  @media (max-width: 720px) {
+    .fig-scroll svg { min-width: 1500px; }
+    .fig-hint {
+      display: block;
+      margin-bottom: 2vh;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--grey-label);
+    }
+  }
+</style>

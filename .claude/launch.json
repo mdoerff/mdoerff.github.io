@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astro-dev",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["./node_modules/astro/astro.js", "dev"],
+      "port": 4321
+    },
+    {
+      "name": "noll-preview",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["./node_modules/astro/astro.js", "dev", "--port", "4331"],
+      "port": 4331
+    },
+    {
+      "name": "doh-preview",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["./node_modules/astro/astro.js", "dev", "--port", "4341"],
+      "port": 4341
+    },
+    {
+      "name": "built-preview",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["./node_modules/astro/astro.js", "preview", "--port", "4332"],
+      "port": 4332
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CaseStudyLayout from '../../../components/work/CaseStudyLayout.astro';
+import CaseColophon from '../../../components/work/CaseColophon.astro';
+import CaseSteps from '../../../components/work/CaseSteps.astro';
+import CaseStats from '../../../components/work/CaseStats.astro';
+import SurveyPipelineDiagram from '../../../components/work/diagrams/SurveyPipelineDiagram.astro';
+
+const colophon = [
+  { label: 'CLIENT', value: 'The Noll Team · Fort Wayne, IN' },
+  { label: 'PART OF', value: 'The Noll Team internship' },
+  { label: 'ROLE', value: 'Applied AI · LLM pipeline' },
+  { label: 'TIMELINE', value: '2025' },
+  { label: 'STACK', value: 'LLM prompt pipeline · batch processing · sentiment analysis · SOPs' },
+  { label: 'STATUS', value: 'Built, documented, and adopted into coaching', accent: true },
+];
+
+const steps = [
+  {
+    phase: 'THE BACKLOG',
+    title: 'A dormant asset',
+    body: 'The surveys spanned 2019 to 2025 and lived as separate files. Read one at a time they were anecdotes. Read together they were a picture of the business that no one had ever assembled, because no one had the time to.',
+    artifact: '400 SURVEYS · 2019 TO 2025 · INDIVIDUAL PDFS',
+  },
+  {
+    phase: 'THE PIPELINE',
+    title: 'Read all of it, at once',
+    body: 'I designed and iterated an LLM prompt pipeline to batch-process the full backlog and run sentiment analysis, tuning the prompts until the output was consistent and specific enough to trust rather than generic.',
+    artifact: 'BATCH LLM · ITERATED PROMPTS · SENTIMENT',
+  },
+  {
+    phase: 'PER-AGENT INSIGHT',
+    title: 'Map it to real people',
+    body: 'The pipeline broke the findings down agent by agent, so the results pointed to specific people and specific coaching conversations rather than a single aggregate the team could not act on.',
+    artifact: 'FINDINGS BROKEN DOWN, AGENT BY AGENT',
+  },
+  {
+    phase: 'BUILT TO RUN WITHOUT ME',
+    title: 'Leave it rerunnable',
+    body: 'I documented the process in SOPs so it could keep running after I left, and so the team could rerun it on new surveys without needing me to be in the loop.',
+    artifact: 'SOPs · RERUNNABLE AFTER HANDOFF',
+  },
+];
+
+const stats = [
+  { value: '400', label: 'SURVEYS PROCESSED' },
+  { value: '6', label: 'YEARS OF FEEDBACK, 2019 TO 2025' },
+  { value: '9', label: 'AGENTS, INSIGHT FOR EACH' },
+];
+---
+
+<Base
+  title="Six years of client feedback, read — The Noll Team | Michael Doerffler"
+  description="Case study: an LLM pipeline that batch-processed 400 unread client surveys into per-agent insight a real estate CEO adopted directly into how he coaches his agents."
+>
+  <CaseStudyLayout
+    caseLabel="THE NOLL TEAM · SIX YEARS OF CLIENT FEEDBACK"
+    eyebrow="REAL ESTATE · APPLIED AI"
+    titleLine1="Six years of feedback,"
+    titleLine2="finally read."
+    standfirst="The team had 400 client surveys going back six years, sitting in individual PDFs that no one had ever looked at as a whole. I built an LLM pipeline to work through all of them and turn a dormant asset into per-agent insight leadership could act on. What made it matter was not the technique. It was that the CEO started using the results directly in how he coached his agents."
+    nextLabel="QUESTIONS LEADERSHIP COULD ACT ON"
+    nextNote=""
+  >
+    <CaseColophon items={colophon} />
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE SITUATION</div>
+      <p class="situation-stmt" data-reveal>
+        Four hundred client surveys, collected over six years, sat in individual PDFs. The feedback
+        was real and specific, but no one had the time to read it as a whole, so a genuine asset
+        <span class="situation-key">stayed dormant</span>.
+      </p>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>WHAT I BUILT · IN SEQUENCE</div>
+      <CaseSteps steps={steps} />
+    </section>
+
+    <SurveyPipelineDiagram />
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE RESULT</div>
+      <CaseStats
+        stats={stats}
+        note="The value was not the technique. It was the change in behavior: the CEO adopted the findings directly into how he coached his agents, and thought the project significant enough to feature on his podcast as a small piece of work that changed how he ran his business."
+        disclaimer="RESULTS DESCRIBE ADOPTION AND SCOPE, NOT INDEPENDENTLY MEASURED OUTCOMES."
+      />
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>WHAT I'D DO DIFFERENTLY</div>
+      <p class="diff-body" data-reveal>
+        The pipeline did what it needed to, but I judged its output mostly by reading samples. Next
+        time I set aside a small hand-labeled check set early, so I can measure the sentiment step
+        against a known answer instead of trusting a spot read.
+      </p>
+    </section>
+
+    <nav class="case-jump" data-reveal aria-label="More from this engagement">
+      <a href="/work/noll-team/intelligence-system">&larr;&nbsp; Prev · A live view of the business</a>
+      <a href="/work/noll-team/decision-analytics">Next · Questions leadership could act on&nbsp; &rarr;</a>
+    </nav>
+  </CaseStudyLayout>
+</Base>
+
+<style>
+  .case-section { margin-top: 12vh; }
+
+  .situation-stmt {
+    margin: 5vh 0 0;
+    max-width: 1050px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 36px);
+    line-height: 1.35;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .situation-key { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+  .diff-body {
+    margin: 5vh 0 0;
+    max-width: 700px;
+    font-family: var(--font-sans);
+    font-size: clamp(16px, 1.35vw, 20px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+
+  .case-jump {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 12vh;
+    padding-top: 4vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.12);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .case-jump a { color: var(--ink-muted-3); transition: color 0.15s; }
+  .case-jump a:hover { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .case-section { margin-top: 9vh; }
+    .case-jump { flex-direction: column; gap: 14px; }
+  }
+</style>

@@ -1,0 +1,345 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
+import CaseColophon from '../../components/work/CaseColophon.astro';
+import CaseApproach from '../../components/work/CaseApproach.astro';
+import PermittingDiagram from '../../components/work/diagrams/PermittingDiagram.astro';
+
+const facts = [
+  { label: 'CLIENT', value: 'Florida DOH · Manatee County (via Troubadour Health)' },
+  { label: 'SECTOR', value: 'Government · Environmental public health' },
+  { label: 'ROLE', value: 'Primary responsibility · system architecture and implementation' },
+  { label: 'TIMELINE', value: 'Spring to Summer 2026' },
+  { label: 'STATUS', value: 'Built, validated, handed off', accent: true },
+];
+
+const workstreams = [
+  {
+    title: 'Discovery',
+    body: `Before building anything, I worked to understand how permitting actually ran, not how it was supposed to. I sat with the consultant leading the engagement, then with the people who work the system every day: the EPH manager, the clerical staff who retype every application, the inspectors. I read the department's own documentation and the DH 4159 state form that governs what a pool permit application has to contain. And I studied how a sister county had solved the same problem, so I wasn't inventing a pattern that already existed.`,
+  },
+  {
+    title: 'Design the intake',
+    body: `I designed a Microsoft Form against two things at once: the Excel tracking sheet the staff already lived in, and the DH 4159. Matching both meant the new system produced records staff would recognize and the state would accept. Because the form is public-facing, I built branching logic so each of the four permit types routes down only its relevant questions, rather than showing an applicant a wall of fields that don't apply to them.`,
+  },
+  {
+    title: 'Build the record',
+    body: `The SharePoint list becomes the department's first real system of record. Fifty-one historical records were migrated in, with status values rebuilt to match the milestones the manager already used rather than generic labels.`,
+  },
+  {
+    title: 'Automate what ran on memory',
+    body: `Seven flows now handle the steps that previously moved only when someone remembered. The biggest time saver is the intake itself: every completed form submission maps automatically into the SharePoint list, ending the retyping of every application. The rest carry the follow-through: receipt confirmations to the applicant, staff notifications with permit-specific next steps, a thirty-day statutory review clock that sets itself on status change, issued-permit and re-inspection reminders, and an enforcement flag.`,
+  },
+  {
+    title: 'Right-size against reality',
+    body: [
+      `I planned for more than I built. The original design called for heavier automation and a much larger SharePoint list with more fields and more capability.`,
+      `I pulled back. Three reasons, all about the client rather than the code. The team maintaining it is small. There is no dedicated technical staff to fix it when something breaks. And this was an active production project in a government tenant, where the consequences of a broken automation are considerably worse than the inconvenience of a simple one.`,
+      `So I went back to the staff, and I tested every piece of it against them: does this field earn its place, or is it a column nobody will ever fill? Does this automation add value, or is it complexity we're adding because we can? Every decision to keep something, and every decision to cut it, was made with the people who would have to live with it.`,
+      `What got built is smaller than what was drawn. That was the point.`,
+    ],
+  },
+];
+
+const unlocks = [
+  ['Leadership reporting', 'volume, cycle time, and throughput on a program that ran on memory'],
+  ['Bottleneck detection', 'timestamped status shows where permits stall, not just that they do'],
+  ['Compliance visibility', 'a statutory thirty-day clock that can be monitored, not hoped for'],
+  ['Forward-looking tools', 'demand forecasting and certifications flagged before they lapse'],
+];
+---
+
+<Base
+  title="Florida DOH permit modernization · Michael Doerffler"
+  description="Case study: rebuilding a county health department's pool permitting into a single automated system of record, and giving the department data it could manage the work with for the first time."
+>
+  <CaseStudyLayout
+    caseLabel="FLORIDA DOH · PERMIT MODERNIZATION"
+    eyebrow="GOVERNMENT · PROCESS AUTOMATION"
+    titleLine1="From a shared inbox"
+    titleLine2="to a system of record."
+    standfirst="A county health department's pool permitting modernization had stalled. I took it over, rebuilt the program as a single automated system of record, and in doing so gave the department something it had never had: data it could actually manage the work with."
+    nextLabel="A-LIGN"
+    nextHref="/work/prospecting-automation"
+  >
+    <CaseColophon items={facts} />
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE CHALLENGE</div>
+      <p class="body" data-reveal>
+        More than fifty pool permits a year arrived by email. Staff retyped the details into a
+        spreadsheet, tracked status by inbox and memory, and hand-wrote every letter that went back
+        out. Applications routinely arrived incomplete, and nobody knew until someone opened them.
+      </p>
+      <p class="situation-stmt" data-reveal>
+        But the deeper problem wasn't the manual labor. It was that the department
+        <span class="situation-key">couldn't see its own work</span>.
+      </p>
+      <p class="body" data-reveal>
+        Status lived in four places at once and none of them agreed, which meant leadership could not
+        answer a single basic management question:
+      </p>
+      <ul class="questions" data-reveal>
+        <li>How long does a permit actually take?</li>
+        <li>Where do they stall?</li>
+        <li>Which step is the bottleneck?</li>
+        <li>How many are overdue right now?</li>
+        <li>Is the statutory thirty-day review clock being met?</li>
+      </ul>
+      <p class="body" data-reveal>
+        Those answers weren't hard to get. They were structurally impossible, because the data didn't
+        exist in any form you could ask a question of.
+      </p>
+      <p class="body-muted" data-reveal>
+        The department had known this needed to change for years. An earlier internal effort never
+        delivered. When it was finally revived with an outside consultant, the build stalled again in
+        its first weeks, with no clear owner driving it.
+      </p>
+    </section>
+
+    <section class="case-section case-exhibit">
+      <PermittingDiagram />
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE APPROACH</div>
+      <CaseApproach workstreams={workstreams} />
+    </section>
+
+    <section class="case-section quote-band" data-reveal>
+      <div class="sec-label quote-band-label">FROM THE ENGAGEMENT LEAD</div>
+      <blockquote class="client-quote">
+        <p class="cq-text">
+          "The technical requirements ultimately exceeded the initial scope of the engagement and
+          those typically expected of an internship. Michael effectively assumed primary
+          responsibility for the system architecture and implementation."
+        </p>
+        <footer class="cq-attr">
+          Joshua T. Barnett, PhD
+          <span class="cq-role">CEO, Troubadour Health</span>
+        </footer>
+      </blockquote>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE IMPACT</div>
+      <div class="impact-grid" data-reveal>
+        <div class="compartment">
+          <p class="compartment-label">THE RECORD</p>
+          <p class="compartment-body">
+            A structured electronic intake system feeding one centralized record. Every permit is
+            timestamped and moving through defined milestones, in place of four disagreeing copies.
+            Clean data the department can finally query.
+          </p>
+        </div>
+        <div class="compartment">
+          <p class="compartment-label">WHAT IT UNLOCKS</p>
+          <ul class="unlocks">
+            {unlocks.map(([term, desc]) => (
+              <li>
+                <span class="u-term">{term}</span>
+                <span class="u-desc">{desc}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="compartment">
+          <p class="compartment-label">EFFICIENCY</p>
+          <p class="compartment-body">
+            It improves efficiency while preserving regulatory oversight. Work that ran on staff
+            memory now runs on its own: confirmations, notifications, reminders, and the review clock.
+            Letters are no longer typed by hand, and incomplete applications are rejected at intake.
+          </p>
+        </div>
+        <div class="compartment">
+          <p class="compartment-label">SCALE</p>
+          <p class="compartment-body">
+            Pools is phase one of a planned rollout across more than ten of the department's
+            regulated Environmental Public Health programs. The same architecture extends to the
+            rest.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>HOW IT CLOSED</div>
+      <p class="body" data-reveal>
+        I didn't stop when the build worked. I delivered two documents in the client's branding: a
+        leadership summary covering the work, the collaboration, an honest account of where the
+        project stalled, and the scalability path across the other EPH programs. And a staff
+        operational guide covering what changed, how applications flow now, and what each automated
+        reminder means, closing with an invitation for staff to suggest improvements.
+      </p>
+      <p class="body" data-reveal>Then I ran a live walkthrough to train the team.</p>
+      <p class="closing-note" data-reveal>
+        Engagements are supposed to end this way. The difference between a system that gets used and
+        one that gets abandoned is almost entirely what happens in the last week.
+      </p>
+    </section>
+  </CaseStudyLayout>
+</Base>
+
+<style>
+  .case-section { margin-top: 12vh; }
+  .case-exhibit { margin-top: 6vh; }
+
+  /* Big display statement (the pivot / lead lines) */
+  .situation-stmt {
+    margin: 5vh 0 0;
+    max-width: 1050px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 36px);
+    line-height: 1.35;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .situation-key {
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  /* Standard body copy */
+  .body {
+    margin: 3.5vh 0 0;
+    max-width: 900px;
+    font-family: var(--font-sans);
+    font-size: clamp(16px, 1.3vw, 18px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .body-muted {
+    margin: 4vh 0 0;
+    max-width: 880px;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.1vw, 16px);
+    line-height: 1.6;
+    color: var(--ink-muted-4);
+    text-wrap: pretty;
+  }
+
+  /* The unanswerable management questions */
+  .questions {
+    margin: 4vh 0 0;
+    max-width: 900px;
+    padding: 2px 0 2px 26px;
+    border-left: 2px solid rgba(46, 74, 58, 0.35);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .questions li {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 22px);
+    line-height: 1.3;
+    color: var(--ink-muted-2);
+  }
+
+  /* Impact: four-compartment grid */
+  .impact-grid {
+    margin: 5vh 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid rgba(41, 33, 23, 0.16);
+    border-left: 1px solid rgba(41, 33, 23, 0.16);
+  }
+  .compartment {
+    padding: 4.5vh 3vw;
+    border-right: 1px solid rgba(41, 33, 23, 0.16);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.16);
+  }
+  .compartment-label {
+    margin: 0 0 18px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .compartment-body {
+    margin: 0;
+    max-width: 42ch;
+    font-family: var(--font-sans);
+    font-size: clamp(15px, 1.15vw, 16.5px);
+    line-height: 1.6;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .unlocks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .u-term {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .u-desc {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-muted-3);
+  }
+
+  /* Closing statement */
+  .closing-note {
+    margin: 5vh 0 0;
+    max-width: 820px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.35;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  /* Client pull-quote: green panel */
+  .quote-band {
+    background: rgba(46, 74, 58, 0.88);
+    border-radius: 14px;
+    padding: 4.5vh 3.5vw;
+    max-width: 1000px;
+  }
+  .quote-band .quote-band-label { color: rgba(233, 225, 207, 0.75); }
+  .client-quote {
+    margin: 2.5vh 0 0;
+    max-width: 820px;
+  }
+  .cq-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.55;
+    color: var(--bone);
+    text-wrap: pretty;
+  }
+  .cq-attr {
+    margin-top: 2.5vh;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+  }
+  .cq-role { color: rgba(233, 225, 207, 0.6); font-weight: 400; }
+
+  @media (max-width: 720px) {
+    .case-section { margin-top: 9vh; }
+    .impact-grid { grid-template-columns: 1fr; }
+  }
+</style>

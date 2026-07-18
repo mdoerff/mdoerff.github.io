@@ -1,0 +1,283 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import CaseStudyLayout from '../../../components/work/CaseStudyLayout.astro';
+import CaseColophon from '../../../components/work/CaseColophon.astro';
+import CaseApproach from '../../../components/work/CaseApproach.astro';
+import MaturityDiagram from '../../../components/work/diagrams/MaturityDiagram.astro';
+import dashboard from '../../../assets/noll-dashboard.png';
+
+const colophon = [
+  { label: 'CLIENT', value: 'The Noll Team · Fort Wayne, IN' },
+  { label: 'ENGAGEMENT', value: 'First collegiate intern · hired through direct conversation with the CEO' },
+  { label: 'ROLE', value: 'AI and Business Strategy Intern' },
+  { label: 'TIMELINE', value: 'May to December 2025' },
+  { label: 'STATUS', value: 'Built and adopted · systems still in use', accent: true },
+];
+
+const workstreams = [
+  {
+    title: 'Infrastructure',
+    body: 'The tracking existed; it just ran on hands. I restructured the weekly market and activity tracking into a self-computing system with linked tabs and automated calculation logic, built so it could be handed back and keep running, and standardized the cleaning so the data could actually be analyzed. It returned more than an hour a week, and it became the source everything above it runs on.',
+  },
+  {
+    title: 'Visibility',
+    body: "On that feed I built a live Power BI system: Power Query ingestion and a star-schema model with DAX measures underneath an interactive report of volume, revenue, connections, and per-agent performance. The team's existing goal and pipeline metrics surface there live, filterable to any agent or sub-team, in one place leadership can open and trust.",
+  },
+  {
+    title: 'Insight',
+    body: "With the data usable and visible, it could finally answer questions. A revenue-per-connection model put a number on the firm's core belief that relationships drive revenue. And an analysis of twenty years of historical transaction data found that a small share of sales drove a disproportionate share of revenue, validating a dedicated luxury segment.",
+  },
+  {
+    title: 'Intelligence',
+    body: 'Six years of client surveys, about four hundred of them, sat unread in individual PDFs. I built an LLM pipeline that read all of them and turned them into per-agent coaching insight, which the CEO adopted directly into how he runs the team.',
+  },
+];
+
+const impact = [
+  {
+    label: 'THE PHILOSOPHY, TESTED',
+    body: 'Relationships drive revenue went from founding belief to measured number. Revenue per connection is now a metric leadership can watch move and manage against.',
+  },
+  {
+    label: 'A SEGMENT, VALIDATED',
+    body: 'The luxury division stopped being a hunch. Twenty years of historical transaction data showed a small share of sales carrying a disproportionate share of revenue.',
+  },
+  {
+    label: 'FEEDBACK, OPERATIONALIZED',
+    body: 'Six years of unread client surveys now coach agents. The CEO uses the per-agent insight directly in how he develops his team.',
+  },
+  {
+    label: 'A LIVE VIEW',
+    body: 'Leadership sees the whole business in one place, current on its own, where every answer used to wait on someone assembling it.',
+  },
+];
+---
+
+<Base
+  title="The Noll Team — Michael Doerffler"
+  description="Case study: as a real estate brokerage's first collegiate intern, in a role with no defined mandate, Michael built the analytics, infrastructure, and reporting that took the business from data-rich to data-driven."
+>
+  <CaseStudyLayout
+    caseLabel="THE NOLL TEAM · ANALYTICS & INFRASTRUCTURE"
+    eyebrow="REAL ESTATE · DATA & ANALYTICS · AI"
+    titleLine1="From data-rich"
+    titleLine2="to data-driven."
+    standfirst="The Noll Team had years of valuable data and was only scratching the surface of what it could do. As their first collegiate intern, I built the analytics, infrastructure, and reporting that turned that data into decisions the business could actually make. The work walked the business up a maturity ladder: infrastructure, then visibility, then insight, then intelligence."
+    nextLabel="FLORIDA DOH"
+    nextHref="/work/permit-modernization"
+  >
+    <CaseColophon items={colophon} />
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE CHALLENGE</div>
+      <div class="challenge-grid" data-reveal>
+        <p class="body">
+          The business was data-rich by any standard: years of records, a CRM, tracking
+          spreadsheets kept faithfully every week. Real assets. But they were manual, scattered,
+          and only surface-deep in what they yielded, and no one's job was to change that.
+        </p>
+        <p class="body">
+          I was the first collegiate intern the team had hired, brought on through a direct
+          conversation with the CEO to bring a combination of AI, analytics, and strategy to the
+          operation. The shape of the work came from a loop I ran across the business:
+          conversations with the CEO, the office manager, and the interiors sector to find where
+          the pain points were, what would increase efficiency, and where I could add value. Each
+          build surfaced the next one worth doing.
+        </p>
+      </div>
+      <p class="situation-stmt" data-reveal>
+        A data-rich business with <span class="situation-key">no defined way</span> to use what it
+        had.
+      </p>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE APPROACH · FOUR LAYERS</div>
+      <CaseApproach workstreams={workstreams} />
+    </section>
+
+    <MaturityDiagram />
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE DASHBOARD</div>
+      <figure class="dash" data-reveal>
+        <div class="dash-frame">
+          <Image
+            src={dashboard}
+            alt="The live Power BI dashboard: KPI tiles for total volume, net revenue, sales, connections, and pipeline score; a key-metrics-by-month trend; a monthly revenue-per-connection view by agent; and progress bars toward annual goals. Dollar figures and agent names are redacted."
+          />
+        </div>
+        <figcaption class="dash-cap">
+          THE LIVE POWER BI REPORT · DOLLAR FIGURES AND AGENT NAMES REDACTED · GOAL AND PIPELINE
+          METRICS ARE THE TEAM'S OWN MEASURES, SURFACED LIVE
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>THE IMPACT</div>
+      <p class="impact-thesis" data-reveal>
+        From scratching the surface of its data
+        <span class="thesis-key">to deciding with it.</span>
+      </p>
+      <div class="impact-band" data-reveal>
+        {impact.map((col) => (
+          <div class="impact-col">
+            <p class="impact-label">{col.label}</p>
+            <p class="impact-body">{col.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>WHAT IT TAUGHT ME</div>
+      <div class="diff-grid" data-reveal>
+        <p class="diff-lead">The lessons outlasted the systems.</p>
+        <p class="diff-body">
+          Nine months inside a running business taught me things no coursework had: maintaining
+          relationships while working in someone else's operation, creating value instead of
+          waiting for direction, managing projects end to end, communicating ideas throughout a
+          build rather than only at the finish, tailoring each solution to the person who would
+          use it, and translating technical concepts for non-technical stakeholders.
+        </p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>WHAT I'D DO DIFFERENTLY</div>
+      <div class="diff-grid" data-reveal>
+        <p class="diff-lead">Plumbing first, analysis second.</p>
+        <p class="diff-body">
+          I built the dashboard once I was already deep in the data, which was the right moment to
+          see the gap but a late one to start the plumbing. Next time I set up the automated feed
+          in the first week, not the fifth month, so every analysis after it inherits a clean
+          source instead of me standardizing the same data twice.
+        </p>
+      </div>
+    </section>
+  </CaseStudyLayout>
+</Base>
+
+<style>
+  .case-section { margin-top: 12vh; }
+
+  .challenge-grid {
+    margin-top: 3.5vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5vh 4vw;
+  }
+  .body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(16px, 1.3vw, 18px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+
+  .situation-stmt {
+    margin: 5vh 0 0;
+    max-width: 900px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(18px, 1.8vw, 26px);
+    line-height: 1.4;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .situation-key { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+  /* The dashboard artifact */
+  .dash { margin: 5vh 0 0; }
+  .dash-frame {
+    border: 1px solid rgba(41, 33, 23, 0.24);
+    background: #fff;
+  }
+  .dash-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .dash-cap {
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.8;
+    color: var(--grey-label);
+  }
+
+  /* Impact */
+  .impact-thesis {
+    margin: 5vh 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(24px, 2.8vw, 42px);
+    line-height: 1.3;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .thesis-key { color: var(--accent); }
+  .impact-band {
+    margin: 5vh 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 3vw;
+    padding-top: 4vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.2);
+  }
+  .impact-label {
+    margin: 0 0 12px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+  .impact-body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(13.5px, 1.1vw, 15px);
+    line-height: 1.6;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  /* What I'd do differently */
+  .diff-grid {
+    margin-top: 5vh;
+    display: grid;
+    grid-template-columns: minmax(220px, 380px) 1fr;
+    gap: 2.5vh 4vw;
+  }
+  .diff-lead {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.3;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .diff-body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .challenge-grid { grid-template-columns: 1fr; }
+    .impact-band { grid-template-columns: 1fr 1fr; gap: 3.5vh 6vw; }
+    .diff-grid { grid-template-columns: 1fr; gap: 2vh 0; }
+  }
+  @media (max-width: 720px) {
+    .case-section { margin-top: 9vh; }
+    .impact-band { grid-template-columns: 1fr; gap: 3.5vh 0; }
+  }
+</style>

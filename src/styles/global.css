@@ -1,0 +1,106 @@
+/* ============================================================
+   rmtdco.com — Proof 0.1 foundation
+   Palette + motion are canonical from the design handoff.
+   Type system per Michael: Libre Baskerville (display, roman
+   weights only) + Inter (everything else). No italics anywhere.
+   ============================================================ */
+
+:root {
+  --bone: #E9E1CF;
+  --ink: #292117;
+  --accent: #2E4A3A;
+  --accent-hover: #21382C;
+  --ink-muted-1: #3A3222;
+  --ink-muted-2: #453D2F;
+  --ink-muted-3: #4E4536;
+  --ink-muted-4: #57503F;
+  --grey-label: #6C6250;
+  --grey-faint: #8A7F6A;
+
+  --font-display: 'Libre Baskerville', Georgia, serif;
+  --font-sans: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  /* Label font: no monospace anywhere, per Michael. Kept as its own token
+     so labels can diverge from body sans later without another sweep. */
+  --font-mono: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  --ease-mech: cubic-bezier(0.85, 0, 0.15, 1);
+  --grain-o: 0.3;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bone); }
+
+body {
+  margin: 0;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--accent); }
+button { font: inherit; }
+
+::selection { background: var(--accent); color: var(--bone); }
+
+/* ---- Entrance keyframes (canonical, from the prototype) ---- */
+@keyframes dfl-develop {
+  0%   { filter: blur(10px) contrast(0.8) saturate(0.8); }
+  30%  { filter: blur(7px) contrast(0.85) saturate(0.85); }
+  32%  { filter: blur(4px) contrast(0.9) saturate(0.92); }
+  64%  { filter: blur(2.5px) contrast(0.95) saturate(0.97); }
+  66%  { filter: blur(1px) contrast(0.98) saturate(1); }
+  100% { filter: none; }
+}
+@keyframes dfl-stamp { 0%, 82% { opacity: 0; } 84%, 100% { opacity: 1; } }
+@keyframes dfl-marks { 0%, 55% { opacity: 0; } 57%, 100% { opacity: 1; } }
+@keyframes dfl-settle {
+  0%   { transform: perspective(1400px) rotateX(20deg) translateY(48px) scale(0.96); opacity: 0; }
+  55%  { opacity: 1; }
+  100% { transform: perspective(1400px) rotateX(0deg) translateY(0) scale(1); opacity: 1; }
+}
+
+/* Entrance plays only when <html> carries .entrance (once per session,
+   set by the inline gate script before first paint). Without the class,
+   every element renders at its final state with no animation. */
+html.entrance .fx-develop { animation: dfl-develop 1.7s var(--ease-mech) both; }
+html.entrance .fx-settle  { animation: dfl-settle 1.5s var(--ease-mech) both; }
+html.entrance .fx-stamp   { animation: dfl-stamp 2s linear both; }
+html.entrance .fx-marks   { animation: dfl-marks 2s linear both; }
+
+/* ---- Reveal on scroll: re-fires on every entry (unlike the entrance) ---- */
+[data-reveal] {
+  opacity: 0;
+  filter: blur(7px);
+  transition: opacity 0.45s steps(3, end), filter 0.7s var(--ease-mech);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  filter: none;
+}
+
+/* ---- Page-to-page cross-blur (view transitions) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out 0.28s var(--ease-mech) both; }
+  ::view-transition-new(root) { animation: vt-in 0.4s var(--ease-mech) both; }
+}
+@keyframes vt-out { to { opacity: 0; filter: blur(8px); } }
+@keyframes vt-in { from { opacity: 0; filter: blur(8px); } }
+
+/* ---- Case study shared typography ---- */
+.sec-label {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  [data-reveal] { opacity: 1 !important; filter: none !important; }
+}

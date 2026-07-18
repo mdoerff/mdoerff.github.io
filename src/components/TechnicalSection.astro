@@ -1,0 +1,705 @@
+---
+// Technical: the homepage's third chapter. One screen of surface (a featured
+// 3Rivers dossier card, three coursework cards, a slim toolkit strip); the
+// depth lives in <dialog> overlays. The blueprint grid layer fades in as the
+// green Case Studies chapter fades out (driven by WorkIndex's scroll handler).
+import SystemsJoinDiagram from './work/diagrams/SystemsJoinDiagram.astro';
+
+// Content per Michael's complete handoff. Hard rule: no em dashes anywhere.
+// Labels follow one convention: domain · context.
+const projects = [
+  {
+    hash: 'default-risk',
+    tag: 'MACHINE LEARNING · GRADUATE COURSEWORK (ISM 6136)',
+    title: 'Modeling Default Risk',
+    paras: [
+      'An end-to-end pipeline predicting loan defaults, and using the results to propose an actual lending strategy, not just a model.',
+      'After EDA, I ran k-Means clustering (k=4, silhouette 0.514) to segment borrowers, then compared Decision Trees against neural networks for the prediction task. I selected a reduced neural network on recall (0.83) and F1 (0.72), because in default prediction, missing a defaulter costs far more than flagging a good borrower, so recall matters more than raw accuracy.',
+      'The clusters mapped to default rates ranging from 7.6% to 73.7%, which let me propose a two-stage lending pipeline: segment first, then score, turning the model into a decision the business could act on.',
+    ],
+    stack: 'Python · scikit-learn · Keras · pandas',
+    method: 'EDA · k-Means clustering (k=4, silhouette 0.514) · Decision Tree vs. neural network · model selection on recall/F1 over accuracy · cluster-to-default-rate mapping into a two-stage pipeline',
+  },
+  {
+    hash: 'sports-cities',
+    tag: 'DATA INTEGRATION & VISUALIZATION · GROUP PROJECT (ISM 4930)',
+    title: 'Do Sports Teams Make Cities Richer?',
+    paras: [
+      "Cities spend billions in public money on stadiums, betting that teams drive local growth. We tested whether that's actually true: 90 teams across three leagues, four seasons, joined to federal income and employment data for 40 metro areas.",
+      "The hard part was the data, not the analysis. Teams belong to metro areas; government economic data is published by county; and mid-project, the BEA discontinued the metric we'd planned to use. We rebuilt around personal income, aggregated counties up to metros using OMB delineations, and joined 360 team-seasons to the economic data on a shared key in Tableau.",
+      "The finding: teams cluster in cities that were already wealthy. Payroll growth and income growth move independently over time, so the correlation is city size, not cause. The money doesn't follow the teams.",
+    ],
+    stack: 'Tableau · Excel · public data (Spotrac, Sports Reference, BEA, BLS, Census, OMB)',
+    method: 'County-to-MSA aggregation via OMB delineations · shared Metro Area join key · three-table model (360 team-seasons across 40 metros) · correlation vs. causation via growth comparison',
+  },
+  {
+    hash: 'finedu',
+    tag: 'DATABASE DESIGN · SQL · PASSION PROJECT',
+    title: 'FinEdu',
+    paras: [
+      "Not a class prompt. FinEdu is the financial-literacy venture I've carried since founding an investment club in high school and writing a 16-page DECA business plan around making financial education accessible to underserved communities. This is where I gave that mission a real backend.",
+      'A normalized relational database (6 tables: Customer, Product, Order, OrderDetail, Instructor, CommunityPartner) modeling how the business would actually run: customers referred by community partners, services delivered by instructors, orders resolved through a many-to-many bridge. Designed to Third Normal Form for data integrity and clean scaling.',
+      'Then the queries the business would actually ask: top-selling services, average order value ranked per customer, cumulative spend over time, customers spanning multiple categories, using JOINs, nested subqueries, and window functions (RANK, PARTITION BY).',
+    ],
+    stack: 'MySQL · SQL',
+    method: 'ERD and schema design · 3NF normalization · PK/FK constraints · many-to-many resolution via bridge table · complex queries (multi-table JOINs, nested subqueries, window functions)',
+  },
+];
+
+// The skill stream: the whole technical profile in motion. Four lanes of
+// tools (serif), each pulling its own techniques (chips) along with it, so
+// the tool-to-technique relationship is visible without reading a caption.
+// Each lane's content is duplicated for a seamless loop.
+const lanes = [
+  {
+    dur: 62, reverse: false,
+    clusters: [
+      { tool: 'Power BI', chips: ['STAR SCHEMA', 'DAX · SUMX / RELATED', 'INTERACTIVE DASHBOARDS'] },
+      { tool: 'Power Query', chips: ['ETL', 'MULTI-SOURCE JOINS', 'SCHEMA NORMALIZATION'] },
+      { tool: 'Excel', chips: ['PIVOT TABLES', 'DATA CLEANING'] },
+    ],
+  },
+  {
+    dur: 78, reverse: true,
+    clusters: [
+      { tool: 'Python', chips: ['KMEANS CLUSTERING', 'MODEL EVALUATION', 'EDA'] },
+      { tool: 'SQL', chips: ['WINDOW FUNCTIONS', 'NORMALIZED SCHEMA DESIGN'] },
+      { tool: 'R', chips: ['STATISTICAL PROGRAMMING', 'DATA MIGRATION', 'CROSSWALK JOINS'] },
+    ],
+  },
+  {
+    dur: 56, reverse: false,
+    clusters: [
+      { tool: 'LLM pipelines', chips: ['PROMPT ENGINEERING', 'BATCH PROCESSING', 'SENTIMENT ANALYSIS'] },
+      { tool: 'Claude Code', chips: ['AGENTIC WORKFLOWS'] },
+      { tool: 'Power Automate', chips: ['CONDITIONAL AUTOMATION', 'NULL-CHECK GUARDS'] },
+      { tool: 'Sheets', chips: ['SHEETS AUTOMATION', 'FORMULA-DRIVEN SYSTEMS'] },
+    ],
+  },
+  {
+    dur: 70, reverse: true,
+    clusters: [
+      { tool: 'Salesforce', chips: ['DASHBOARD DESIGN', 'SLICERS + CROSS-FILTERING'] },
+      { tool: 'Outreach', chips: ['SOP DOCUMENTATION'] },
+      { tool: 'Apollo', chips: [] },
+      { tool: 'Notion systems', chips: [] },
+      { tool: 'Web', chips: ['HTML + CSS', 'GITHUB PAGES', 'DNS CONFIGURATION'] },
+    ],
+  },
+];
+---
+
+<!-- Opaque bone ground: fades in with the technical chapter and stays put
+     for the timeline below, so both read as clean paper instead of the
+     photographic atmosphere. The drafting grid rides on top of it. -->
+<div class="bone-field" id="bone-field" aria-hidden="true"></div>
+<div class="blueprint-field" id="blueprint-field" aria-hidden="true"></div>
+
+<section id="technical" class="tech" aria-label="Technical">
+  <div class="tech-head" data-reveal>
+    <div class="sec-label">FEATURED TECHNICAL PROJECTS</div>
+    <h2 class="tech-title">The machinery <span class="tech-title-2">behind the case studies.</span></h2>
+    <p class="tech-intro">
+      The case studies are where all of it came together: recent, real engagements that drew on
+      everything built up before them. This section gives a bit of depth into that foundation:
+      the data engineering, modeling, and analysis underneath the client work.
+    </p>
+  </div>
+
+  <div class="featured" data-reveal>
+    <span class="cm cm-tl" aria-hidden="true"></span><span class="cm cm-tr" aria-hidden="true"></span>
+    <span class="cm cm-bl" aria-hidden="true"></span><span class="cm cm-br" aria-hidden="true"></span>
+
+    <button class="feat-hero" data-dialog="3rivers">
+      <span class="fh-body">
+        <span class="fr-chip">DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION</span>
+        <span class="fh-title">3Rivers Federal Credit Union</span>
+        <span class="fh-desc">
+          A mortgage inquiry intelligence report built on protected member data, shaped directly
+          with the team that uses it.
+        </span>
+      </span>
+      <span class="fr-slip">VIEW THE DETAILS &rarr;</span>
+    </button>
+
+    <div class="feat-cols">
+      {projects.map((p) => (
+        <button class="feat-col" data-dialog={p.hash}>
+          <span class="fr-chip">{p.tag}</span>
+          <span class="fc-title">{p.title}</span>
+          <span class="fr-slip">+ EXPAND</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="tk-label" data-reveal>THE SKILL SET, IN MOTION</div>
+  <div class="stream" data-reveal role="img" aria-label="A continuous flowing stream of technical skills: Power BI, Power Query, DAX, star schemas, ETL, pivot tables, Python, SQL, R, machine learning, LLM pipelines, Claude Code, Power Automate, Salesforce, Outreach, Apollo, and web deployment.">
+    {lanes.map((lane) => (
+      <div class={`lane ${lane.reverse ? 'lane-rev' : ''}`} style={`--dur: ${lane.dur}s;`} aria-hidden="true">
+        <div class="lane-inner">
+          {[0, 1].map(() => (
+            lane.clusters.map((c) => (
+              <span class="sk-cluster">
+                <span class="sk-major">{c.tool}</span>
+                {c.chips.map((chip) => <span class="sk-chip">{chip}</span>)}
+              </span>
+            ))
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <p class="stream-note" data-reveal>
+    Each tool moves with the techniques underneath it: Power Query pulling ETL and schema
+    normalization, Python pulling clustering and model evaluation, and so on across what I've
+    used in classes, internships, and personal projects. Rest on the stream to pause it.
+  </p>
+</section>
+
+<!-- ============ THE DOSSIER · 3RIVERS ============ -->
+<dialog class="dlg dlg-dossier" data-hash="3rivers" aria-labelledby="dossier-title">
+  <div class="dlg-inner">
+    <span class="cm cm-tl" aria-hidden="true"></span><span class="cm cm-tr" aria-hidden="true"></span>
+    <span class="cm cm-bl" aria-hidden="true"></span><span class="cm cm-br" aria-hidden="true"></span>
+    <button class="dlg-close" data-close aria-label="Close">&#10005;</button>
+
+    <div class="sec-label">DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION</div>
+    <h3 id="dossier-title" class="dlg-title">3Rivers Federal Credit Union</h3>
+
+    <div class="dlg-cols">
+      <p class="dlg-body">
+        3Rivers is a federally regulated credit union: real member data, enterprise systems, and
+        compliance obligations, staffed by people who had been doing data, AI, and finance work for
+        years. I spent a summer there as a Business Intelligence intern, working close to the data
+        layer on protected systems.
+      </p>
+      <p class="dlg-body">
+        It was also the room where I was the least experienced person present. I spent it asking
+        questions, absorbing how experienced practitioners scope problems and handle data, and
+        carrying what I learned directly into the internship I was running in parallel that same
+        summer.
+      </p>
+    </div>
+
+    <div class="dlg-proj">
+      <div>
+        <p class="dlg-status">SHIPPED</p>
+        <h4 class="dlg-proj-title">Mortgage Inquiry Intelligence Report</h4>
+      </div>
+      <div>
+        <p class="dlg-body">
+          Delivered in Power BI. Joined SavvyMoney mortgage alerts with member and loan officer
+          data across three enterprise systems (Alkami, Exasol, network files), cleaning and
+          reconciling mismatched schemas in Power Query, normalizing SSN fields and identifiers. I
+          set up meetings with the mortgage team to learn what would make it genuinely valuable to
+          them, then took their feedback and iterated, building a tool they'd actually want to
+          use, giving officers early visibility into members shopping for a mortgage.
+        </p>
+      </div>
+    </div>
+
+    <div class="spec-block">
+      <p class="spec-line"><span class="spec-key">STACK</span> Power BI · Power Query · Exasol</p>
+      <p class="spec-line"><span class="spec-key">METHOD</span> Stakeholder-driven build with the mortgage team · multi-source sourcing · schema reconciliation · normalized identifiers across mismatched schemas</p>
+    </div>
+
+    <SystemsJoinDiagram />
+
+    <div class="endorse">
+      <p class="endorse-label">FROM MY MANAGER</p>
+      <p class="endorse-body">
+        "Michael is exceptionally adaptive, with a keen ability to quickly assess new situations
+        and respond effectively. He is a proactive communicator who ensures he understands project
+        scopes before execution and follows up after delivery to ensure outcomes were achieved.
+        Also, his positive energy helps assure a great team vibe, making him a great addition to
+        any team."
+      </p>
+      <p class="endorse-attr">Chad Gramling, AVP Business Intelligence</p>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============ PROJECT MODALS ============ -->
+{projects.map((p) => (
+  <dialog class="dlg dlg-proj-modal" data-hash={p.hash} aria-label={p.title}>
+    <div class="dlg-inner">
+      <span class="cm cm-tl" aria-hidden="true"></span><span class="cm cm-tr" aria-hidden="true"></span>
+      <span class="cm cm-bl" aria-hidden="true"></span><span class="cm cm-br" aria-hidden="true"></span>
+      <button class="dlg-close" data-close aria-label="Close">&#10005;</button>
+      <p class="dlg-status">{p.tag}</p>
+      <h3 class="dlg-title dlg-title-sm">{p.title}</h3>
+      {p.paras.map((para) => <p class="dlg-body">{para}</p>)}
+      <div class="spec-block">
+        <p class="spec-line"><span class="spec-key">STACK</span> {p.stack}</p>
+        <p class="spec-line"><span class="spec-key">METHOD</span> {p.method}</p>
+      </div>
+    </div>
+  </dialog>
+))}
+
+<script>
+  // Modal architecture: openers carry data-dialog, dialogs carry data-hash.
+  // Deep-linkable (#3rivers etc.), back-button closes, backdrop/ESC/✕ close.
+  function initTechnical() {
+    const dialogs = new Map<string, HTMLDialogElement>(
+      [...document.querySelectorAll<HTMLDialogElement>('dialog[data-hash]')].map((d) => [d.dataset.hash!, d])
+    );
+    if (!dialogs.size) return;
+    let open: HTMLDialogElement | null = null;
+
+    const openDlg = (hash: string, push: boolean) => {
+      const d = dialogs.get(hash);
+      if (!d || d.open) return;
+      if (open) open.close();
+      d.showModal();
+      document.body.style.overflow = 'hidden';
+      open = d;
+      if (push) history.pushState({ dlg: hash }, '', '#' + hash);
+      requestAnimationFrame(() =>
+        d.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'))
+      );
+    };
+
+    dialogs.forEach((d, hash) => {
+      d.addEventListener('close', () => {
+        document.body.style.overflow = '';
+        d.querySelectorAll('[data-reveal]').forEach((el) => el.classList.remove('is-visible'));
+        if (open === d) open = null;
+        if (location.hash === '#' + hash) history.replaceState(null, '', '#technical');
+      });
+      d.addEventListener('click', (e) => {
+        if (e.target === d) d.close();
+      });
+      d.querySelector('[data-close]')?.addEventListener('click', () => d.close());
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-dialog]').forEach((btn) => {
+      btn.addEventListener('click', () => openDlg(btn.dataset.dialog!, true));
+    });
+
+    window.addEventListener('popstate', () => {
+      const h = location.hash.slice(1);
+      if (dialogs.has(h)) openDlg(h, false);
+      else if (open) open.close();
+    });
+
+    const initial = location.hash.slice(1);
+    if (dialogs.has(initial)) setTimeout(() => openDlg(initial, false), 350);
+  }
+  document.addEventListener('astro:page-load', initTechnical);
+</script>
+
+<style>
+  .bone-field {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+    background: var(--bone);
+  }
+
+  /* Blueprint chapter field: fades in via WorkIndex's scroll handler */
+  .blueprint-field {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+    background-image:
+      linear-gradient(rgba(41, 33, 23, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(41, 33, 23, 0.055) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .tech {
+    position: relative;
+    z-index: 2;
+    padding: 16vh 4vw 14vh;
+    scroll-margin-top: 4vh;
+  }
+
+  .tech-title {
+    margin: 22px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 3.9vw, 52px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .tech-title-2 { color: var(--accent); }
+  .tech-intro {
+    margin: 26px 0 0;
+    max-width: 720px;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.15vw, 16px);
+    line-height: 1.6;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+
+  /* Featured technical projects: an index plate. Typography and rules carry
+     the design: stamped chips, letterpress title, newspaper columns,
+     crop-mark corners. No background fills anywhere. */
+  .featured {
+    position: relative;
+    margin-top: 7vh;
+    padding: 30px 28px 34px;
+  }
+
+  .feat-hero {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4vw;
+    text-align: left;
+    padding: 0 0 0 26px;
+    background: none;
+    border: none;
+    border-left: 3px solid var(--accent);
+    cursor: pointer;
+  }
+  .fh-body { min-width: 0; max-width: 860px; }
+  .fr-chip {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    border: 1px solid rgba(41, 33, 23, 0.45);
+    padding: 5px 10px;
+    margin-bottom: 16px;
+  }
+  .fh-title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(26px, 2.6vw, 38px);
+    line-height: 1.12;
+    color: var(--ink);
+    text-shadow: 1.5px 1.5px 0 rgba(46, 74, 58, 0.16);
+    transition: color 0.2s;
+  }
+  .fh-desc {
+    display: block;
+    margin-top: 12px;
+    max-width: 62ch;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.1vw, 15.5px);
+    line-height: 1.6;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .fr-slip {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-muted-3);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(41, 33, 23, 0.4);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .feat-hero:hover .fh-title { color: var(--accent); }
+  .feat-hero:hover .fr-slip,
+  .feat-col:hover .fr-slip {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Coursework: newspaper columns, hairline dividers, open paper */
+  .feat-cols {
+    margin-top: 5.5vh;
+    padding-top: 3.5vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.18);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .feat-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    text-align: left;
+    padding: 0 28px;
+    background: none;
+    border: none;
+    border-left: 1px solid rgba(41, 33, 23, 0.18);
+    cursor: pointer;
+  }
+  .feat-col:first-child { border-left: none; padding-left: 0; }
+  .feat-col .fr-chip { margin-bottom: 14px; color: var(--ink-muted-2); border-color: rgba(41, 33, 23, 0.35); }
+  .fc-title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.25;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .feat-col:hover .fc-title { color: var(--accent); }
+  .feat-col .fr-slip { margin-top: 18px; }
+
+  .tk-label {
+    margin: 4vh 0 0;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--grey-label);
+  }
+
+  /* The skill stream: layered marquee lanes, edge-faded, pausable */
+  .stream-note {
+    margin: 3vh 0 0;
+    max-width: 820px;
+    font-family: var(--font-sans);
+    font-size: clamp(13px, 1.05vw, 14.5px);
+    line-height: 1.6;
+    color: var(--ink-muted-4);
+    text-wrap: pretty;
+  }
+  .stream {
+    margin-top: 2vh;
+    padding: 3vh 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.18);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.18);
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  }
+  .lane { overflow: hidden; }
+  .lane + .lane { margin-top: 2.6vh; }
+  .lane-inner {
+    display: flex;
+    align-items: center;
+    gap: 56px;
+    width: max-content;
+    padding-right: 56px;
+  }
+  /* Each cluster ties a tool to the techniques it pulls with it: tight gap
+     inside a cluster, a wider gap (from .lane-inner) between clusters. */
+  .sk-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sk-major {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(19px, 1.9vw, 27px);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .sk-chip {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted-3);
+    border: 1px solid rgba(41, 33, 23, 0.28);
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lane-inner { animation: lane-flow var(--dur) linear infinite; }
+    .lane-rev .lane-inner { animation-direction: reverse; }
+    .stream:hover .lane-inner { animation-play-state: paused; }
+  }
+  @keyframes lane-flow {
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lane-inner { flex-wrap: wrap; width: 100%; }
+    .lane-inner > *:nth-child(n + 12) { display: none; }
+  }
+
+  /* ---- Dialogs: pulled documents ---- */
+  .dlg {
+    border: 1px solid rgba(41, 33, 23, 0.4);
+    padding: 0;
+    background: var(--bone);
+    color: var(--ink);
+  }
+  .dlg::backdrop {
+    background: rgba(41, 33, 23, 0.45);
+    backdrop-filter: blur(6px);
+  }
+  .dlg-dossier {
+    width: min(1150px, 94vw);
+    max-height: 90vh;
+  }
+  .dlg-proj-modal {
+    width: min(660px, 92vw);
+    max-height: 84vh;
+  }
+  .dlg-inner {
+    position: relative;
+    padding: 6vh 4vw;
+  }
+  .dlg-proj-modal .dlg-inner { padding: 5vh 40px; }
+
+  .cm { position: absolute; width: 14px; height: 14px; pointer-events: none; }
+  .cm-tl { top: 10px; left: 10px; border-top: 1px solid rgba(41, 33, 23, 0.55); border-left: 1px solid rgba(41, 33, 23, 0.55); }
+  .cm-tr { top: 10px; right: 10px; border-top: 1px solid rgba(41, 33, 23, 0.55); border-right: 1px solid rgba(41, 33, 23, 0.55); }
+  .cm-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.55); border-left: 1px solid rgba(41, 33, 23, 0.55); }
+  .cm-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.55); border-right: 1px solid rgba(41, 33, 23, 0.55); }
+
+  .dlg-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid rgba(41, 33, 23, 0.35);
+    color: var(--ink-muted-2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .dlg-close:hover { background: var(--accent); color: var(--bone); border-color: var(--accent); }
+
+  .dlg-title {
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .dlg-title-sm { font-size: clamp(20px, 1.9vw, 26px); margin-top: 10px; }
+  /* STACK / METHOD spec metadata: true mono, small, scannable */
+  .spec-block {
+    margin-top: 4vh;
+    padding: 2.2vh 0 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.2);
+  }
+  .spec-line {
+    margin: 0;
+    font-family: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Consolas, monospace;
+    font-size: 11.5px;
+    line-height: 1.75;
+    color: var(--ink-muted-2);
+  }
+  .spec-line + .spec-line { margin-top: 10px; }
+  .spec-key {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 1px 7px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+    background: var(--accent);
+  }
+  .dlg-cols {
+    margin-top: 3.5vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vh 3vw;
+  }
+  .dlg-body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.1vw, 15.5px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .dlg-proj-modal .dlg-body { margin-top: 2.5vh; }
+  .dlg-proj {
+    margin-top: 4.5vh;
+    padding-top: 3.5vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.14);
+    display: grid;
+    grid-template-columns: minmax(220px, 340px) 1fr;
+    gap: 1.5vh 3vw;
+  }
+  .dlg-status {
+    margin: 0 0 8px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+  .dlg-proj-modal .dlg-status { margin-top: 8px; }
+  .dlg-proj-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 22px);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .endorse {
+    margin: 5vh 0 0;
+    padding: 3.5vh 3vw;
+    background: rgba(46, 74, 58, 0.88);
+    border-radius: 14px;
+  }
+  .endorse-label {
+    margin: 0 0 12px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: rgba(233, 225, 207, 0.75);
+  }
+  .endorse-body {
+    margin: 0;
+    max-width: 820px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(14.5px, 1.25vw, 17px);
+    line-height: 1.55;
+    color: var(--bone);
+    text-wrap: pretty;
+  }
+  .endorse-attr {
+    margin: 14px 0 0;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(233, 225, 207, 0.7);
+  }
+
+  @media (max-width: 900px) {
+    .dlg-cols { grid-template-columns: 1fr; }
+    .dlg-proj { grid-template-columns: 1fr; }
+    .feat-hero { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .feat-cols { grid-template-columns: 1fr; gap: 3.5vh 0; }
+    .feat-col {
+      border-left: none;
+      padding: 0 0 3.5vh;
+      border-bottom: 1px solid rgba(41, 33, 23, 0.14);
+    }
+    .feat-col:last-child { border-bottom: none; padding-bottom: 0; }
+  }
+  @media (max-width: 720px) {
+    .tech { padding: 12vh 6vw 10vh; }
+    .featured { padding: 24px 16px 28px; }
+    .dlg-dossier, .dlg-proj-modal {
+      width: 100vw;
+      height: 100dvh;
+      max-height: none;
+      max-width: none;
+      margin: 0;
+      border: none;
+    }
+    .dlg-inner, .dlg-proj-modal .dlg-inner { padding: 8vh 6vw; }
+  }
+</style>

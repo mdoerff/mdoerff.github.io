@@ -1,0 +1,16 @@
+# build
+node_modules/
+dist/
+.astro/
+
+# personal documents — never publish
+*.docx
+*.zip
+Master Context*.pdf
+newfile730/
+
+# legacy root assets from the old site (old site lives in portfoliorepo/)
+/*.jpg
+/*.png
+/*.pdf
+/index.html

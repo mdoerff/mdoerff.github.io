@@ -1,0 +1,197 @@
+---
+// Case Studies index — homepage section. Rows are named, never numbered.
+const cases = [
+  {
+    title: 'IT System Modernization',
+    desc: 'A county permit office ran on email, paper, and spreadsheet copies. I ran an end-to-end engagement transforming their operations, architecting and executing on the build.',
+    meta: 'FLORIDA DEPARTMENT OF HEALTH · GOVERNMENT · 2026',
+    href: '/work/permit-modernization',
+    live: true,
+  },
+  {
+    title: 'AI Prospecting Automation',
+    desc: 'A stalled AI platform evaluation with a vendor contract at stake. I am actively building and scaling it into our daily work.',
+    meta: 'A-LIGN · COMPLIANCE · 2026',
+    href: '/work/prospecting-automation',
+    live: true,
+  },
+  {
+    title: 'Data & Analytics in Real Estate',
+    desc: 'A team of real estate agents ran on relationships and instinct, with years of data going unused. I built the analytics and infrastructure that put it to work.',
+    meta: 'THE NOLL TEAM · DATA & ANALYTICS · AI · 2025',
+    href: '/work/noll-team',
+    live: true,
+  },
+];
+---
+
+<!-- The green chapter: fixed field that crossfades in as you scroll out of
+     the hero. Lives here (homepage only) so case pages stay on cream paper. -->
+<div class="green-field" id="green-field" aria-hidden="true"></div>
+
+<section id="work" class="work" aria-label="Case studies">
+  <div class="work-head" data-reveal>
+    <h2 class="work-title">Case Studies</h2>
+  </div>
+
+  <div class="work-list">
+    {cases.map((c) =>
+      c.live ? (
+        <a href={c.href} class="work-row" data-reveal>
+          <div class="row-main">
+            <h3 class="row-title">{c.title}</h3>
+            <p class="row-desc">{c.desc}</p>
+          </div>
+          <div class="row-side">
+            <span class="row-meta">{c.meta}</span>
+            <span class="row-arrow" aria-hidden="true">&rarr;</span>
+          </div>
+        </a>
+      ) : (
+        <div class="work-row row-off" data-reveal>
+          <div class="row-main">
+            <h3 class="row-title">{c.title}</h3>
+            <p class="row-desc">{c.desc}</p>
+          </div>
+          <div class="row-side">
+            <span class="row-meta">{c.meta}</span>
+          </div>
+        </div>
+      )
+    )}
+  </div>
+</section>
+
+<script>
+  // Scroll-driven chapter crossfades. The green field darkens in as the case
+  // studies reach the viewport, then dissolves as the technical chapter
+  // arrives, whose blueprint grid fades up in its place. One listener drives
+  // both layers; re-armed on every page load/swap with the previous listener
+  // detached first so they never stack up.
+  function initChapterFields() {
+    const field = document.getElementById('green-field');
+    const work = document.getElementById('work');
+    const tech = document.getElementById('technical');
+    const grid = document.getElementById('blueprint-field');
+    const tl = document.getElementById('timeline');
+    const w = window as typeof window & { __gfUpdate?: () => void };
+    if (w.__gfUpdate) {
+      window.removeEventListener('scroll', w.__gfUpdate);
+      window.removeEventListener('resize', w.__gfUpdate);
+      w.__gfUpdate = undefined;
+    }
+    if (!field || !work) return;
+    const smooth = (p: number) => p * p * (3 - 2 * p);
+    const clamp = (p: number) => Math.min(1, Math.max(0, p));
+    const update = () => {
+      const vh = window.innerHeight || 1;
+      const pIn = smooth(clamp(1 - work.getBoundingClientRect().top / (vh * 0.85)));
+      const pOut = tech ? smooth(clamp(1 - tech.getBoundingClientRect().top / (vh * 0.7))) : 0;
+      const pTl = tl ? smooth(clamp(1 - tl.getBoundingClientRect().top / (vh * 0.7))) : 0;
+      (field as HTMLElement).style.opacity = String(pIn * (1 - pOut));
+      if (grid) (grid as HTMLElement).style.opacity = String(pOut * (1 - pTl));
+      const bone = document.getElementById('bone-field');
+      if (bone) bone.style.opacity = String(pOut);
+    };
+    w.__gfUpdate = update;
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  }
+  document.addEventListener('astro:page-load', initChapterFields);
+</script>
+
+<style>
+  .green-field {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+    background:
+      radial-gradient(70% 55% at 50% 6%, rgba(82, 118, 98, 0.32), transparent 72%),
+      radial-gradient(130% 130% at 50% 48%, transparent 55%, rgba(9, 17, 13, 0.4) 100%),
+      #1F332A;
+  }
+
+  .work {
+    position: relative;
+    z-index: 2;
+    padding: 14vh 4vw 12vh;
+    scroll-margin-top: 4vh;
+  }
+
+  .work-head { margin-bottom: 8vh; }
+  .work-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(40px, 5.4vw, 76px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--bone);
+  }
+
+  .work-list { display: flex; flex-direction: column; }
+
+  .work-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4vw;
+    padding: 5vh 2vw;
+    transition: background 0.25s;
+  }
+  a.work-row:hover { background: rgba(233, 225, 207, 0.06); color: inherit; }
+  a.work-row:hover .row-arrow { transform: translateX(6px); }
+  a.work-row:hover .row-title { color: #9DBFAA; }
+
+  .row-main { max-width: 620px; }
+  .row-title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.3vw, 32px);
+    line-height: 1.15;
+    color: var(--bone);
+    transition: color 0.2s;
+  }
+  .row-desc {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    color: rgba(233, 225, 207, 0.72);
+  }
+
+  .row-side {
+    display: flex;
+    align-items: baseline;
+    gap: 26px;
+    flex-shrink: 0;
+  }
+  .row-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: rgba(233, 225, 207, 0.5);
+    white-space: nowrap;
+  }
+  .row-arrow {
+    font-size: 26px;
+    line-height: 1;
+    color: #9DBFAA;
+    transition: transform 0.25s var(--ease-mech);
+  }
+
+  .row-off { opacity: 0.4; }
+
+  @media (max-width: 720px) {
+    .work { padding: 10vh 6vw; }
+    .work-head { margin-bottom: 5vh; }
+    .work-row { flex-direction: column; gap: 14px; padding: 4vh 0; }
+    .row-side { gap: 16px; }
+    .row-meta { white-space: normal; letter-spacing: 0.12em; }
+  }
+</style>

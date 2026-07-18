@@ -1,0 +1,50 @@
+---
+interface Item {
+  label: string;
+  value: string;
+  accent?: boolean;
+}
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+
+<div class="colophon" data-reveal>
+  {items.map((it) => (
+    <div class="col-item">
+      <div class="col-label">{it.label}</div>
+      <div class={`col-value ${it.accent ? 'col-accent' : ''}`}>{it.value}</div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .colophon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px 5vw;
+    padding: 4vh 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.12);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.12);
+  }
+  .col-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted-4);
+    margin-bottom: 9px;
+  }
+  .col-value {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink-muted-1);
+    max-width: 300px;
+  }
+  .col-accent { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .colophon { gap: 24px 8vw; }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+// The engagement's named workstreams as full-width consulting rows:
+// index | titled move | body, spanning the content width on desktop,
+// stacking cleanly on mobile.
+interface Workstream {
+  title: string;
+  body: string | string[]; // one paragraph, or several
+}
+interface Props { workstreams: Workstream[] }
+const { workstreams } = Astro.props;
+---
+
+<div class="approach">
+  {workstreams.map((w, i) => (
+    <div class="ws" data-reveal>
+      <div class="ws-index">{String(i + 1).padStart(2, '0')}</div>
+      <h3 class="ws-title">{w.title}</h3>
+      <div class="ws-main">
+        {(Array.isArray(w.body) ? w.body : [w.body]).map((para) => (
+          <p class="ws-body">{para}</p>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .approach { margin-top: 7vh; }
+  .ws {
+    display: grid;
+    grid-template-columns: 56px minmax(200px, 300px) 1fr;
+    gap: 0 3vw;
+    padding: 4.6vh 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.1);
+  }
+  .ws:last-child { border-bottom: 1px solid rgba(41, 33, 23, 0.1); }
+  .ws-index {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    padding-top: 9px;
+  }
+  .ws-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 1.9vw, 27px);
+    line-height: 1.2;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .ws-body {
+    margin: 0;
+    max-width: 72ch;
+    font-family: var(--font-sans);
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.6;
+    color: var(--ink-muted-3);
+    text-wrap: pretty;
+  }
+  .ws-body + .ws-body { margin-top: 1em; }
+  @media (max-width: 900px) {
+    .approach { margin-top: 5vh; }
+    .ws { grid-template-columns: 1fr; gap: 10px; padding: 3.6vh 0; }
+    .ws-index { padding-top: 0; }
+    .ws-title { margin-bottom: 4px; }
+  }
+</style>
