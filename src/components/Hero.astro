@@ -19,19 +19,23 @@ import portrait from '../assets/portrait.jpg';
       </div>
     </div>
 
-    <!-- TOP BAR -->
-    <div class="topbar fx-stamp">
-      <div class="topbar-brand">
+    <!-- MASTHEAD: text links set on a double rule, like a newspaper nameplate -->
+    <div class="masthead fx-stamp">
+      <div class="mh-row">
         <span class="monogram">RMTD</span>
+        <nav class="mh-nav" aria-label="Sections">
+          <a href="#work" class="mh-link nav-active">Case Studies</a>
+          <a href="/#technical" class="mh-link">Technical</a>
+          <a href="/#timeline" class="mh-link">Timeline</a>
+        </nav>
+        <a href="mailto:michael@rmtdco.com" class="mh-cta">Get in touch</a>
       </div>
-      <nav class="topbar-nav" aria-label="Sections">
-        <a href="#work" class="nav-active">Case Studies</a>
-        <a href="/#technical" class="nav-mid">Technical</a>
-        <a href="/#timeline" class="nav-end">Timeline</a>
+      <div class="mh-rule" aria-hidden="true"></div>
+      <nav class="mh-nav-mobile" aria-label="Sections">
+        <a href="#work" class="mh-link nav-active">Case Studies</a>
+        <a href="/#technical" class="mh-link">Technical</a>
+        <a href="/#timeline" class="mh-link">Timeline</a>
       </nav>
-      <div class="topbar-right">
-        <a href="mailto:michael@rmtdco.com" class="cta">GET IN TOUCH</a>
-      </div>
     </div>
 
     <!-- orienting caption, upper-left — serif line + mono metadata -->
@@ -55,7 +59,7 @@ import portrait from '../assets/portrait.jpg';
   .hero {
     position: relative;
     height: 100svh;
-    min-height: 520px;
+    min-height: 580px;
     z-index: 1;
     color: var(--ink);
     overflow: hidden;
@@ -72,6 +76,14 @@ import portrait from '../assets/portrait.jpg';
     position: absolute;
     inset: 0;
     z-index: 1;
+    /* Dissolve the WHOLE portrait stack (photo + softlight + edgefade fade
+       together) at both ends: the top fade melts the photo's dark night sky
+       into the atmosphere before it can mass into a black blob, and the
+       bottom fade reaches transparent before the hero's overflow clip —
+       otherwise the clip prints a hard line against the green field
+       crossfading in behind the section below. */
+    -webkit-mask-image: linear-gradient(180deg, transparent 2%, #000 26%, #000 70%, transparent 96%);
+    mask-image: linear-gradient(180deg, transparent 2%, #000 26%, #000 70%, transparent 96%);
   }
   /* The photo box is sized by HEIGHT (vh) with a FIXED aspect ratio matching
      the photo (3:4), so cover shows the whole photo and the viewport crops the
@@ -113,27 +125,33 @@ import portrait from '../assets/portrait.jpg';
   }
   /* Cream echo of the mask (same shape), so the photo fades toward the page's
      own tone as its own pixels fade to transparent — one continuous dissolve.
-     The extra bottom linear layer settles the photo into bone BEFORE the
-     hero's bottom edge, so scrolling into the next section never slices it. */
+     The top linear layer veils the photo's near-black night sky so it reads
+     as dusk tone at every viewport shape instead of massing into a dark blob
+     (which shape shows how much sky depends on the window's aspect ratio).
+     No opaque bottom layer here: the wrap's bottom mask dissolves the whole
+     stack before the hero's clip, and an opaque cream slab would print a
+     hard edge against the green field darkening behind the next section. */
   .portrait-edgefade {
     position: absolute; inset: 0; pointer-events: none;
     background:
-      linear-gradient(180deg, transparent 70%, var(--bone) 86%),
+      linear-gradient(180deg, rgba(233, 225, 207, 0.62) 0%, rgba(233, 225, 207, 0.46) 26%, rgba(233, 225, 207, 0.2) 42%, transparent 58%),
       radial-gradient(52% 86% at 55% 43%, transparent 38%, transparent 56%, rgba(233, 225, 207, 0.32) 78%, var(--bone) 95%);
   }
 
-  /* ---- Top bar (Inter, readable sizes, strong contrast) ---- */
-  .topbar {
+  /* ---- Masthead: text links on a double rule, no dark slabs ---- */
+  .masthead {
     position: absolute;
     top: 0; left: 0; right: 0;
     z-index: 6;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 3vw;
+    padding: 12px 3vw 0;
     font-family: var(--font-sans);
   }
-  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .mh-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 8px;
+  }
   .monogram {
     display: inline-flex; align-items: center; justify-content: center;
     height: 26px;
@@ -141,34 +159,49 @@ import portrait from '../assets/portrait.jpg';
     border: 1px solid rgba(41, 33, 23, 0.42);
     font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
     color: var(--ink);
+    flex-shrink: 0;
   }
-  /* The nav sits on its own ink bar, same style as the GET IN TOUCH button,
-     with the tonal gradient running across the three labels. */
-  .topbar-nav {
+  .mh-nav {
+    flex: 1;
     display: flex;
-    gap: 30px;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mh-link {
     font-size: 11.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: var(--ink);
-    padding: 8px 18px;
-  }
-  .topbar-nav a { font-weight: 600; color: #C9C3B4; transition: color 0.15s; }
-  .topbar-nav a:hover { color: var(--bone); }
-  .topbar-nav .nav-active { color: #C9C3B4; font-weight: 600; }
-  .topbar-nav .nav-mid { color: #B1AB9C; }
-  .topbar-nav .nav-end { color: #9B9484; }
-  .topbar-right { display: flex; align-items: center; gap: 20px; font-size: 11px; letter-spacing: 0.1em; }
-  .cta {
-    color: var(--bone);
-    background: var(--ink);
-    padding: 8px 15px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted-2);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
     white-space: nowrap;
-    transition: background 0.15s;
   }
-  .cta:hover { background: var(--accent); color: var(--bone); }
+  .mh-link:hover { color: var(--ink); border-bottom-color: var(--accent); }
+  .mh-link.nav-active { color: var(--ink); border-bottom-color: var(--accent); }
+  .mh-cta {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .mh-cta:hover { border-bottom-color: var(--accent); }
+  /* The double rule: slim line over hairline, newspaper nameplate style.
+     Kept light — the masthead should sit on the page, not press on it. */
+  .mh-rule {
+    border-top: 2px solid rgba(41, 33, 23, 0.78);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.45);
+    height: 2px;
+  }
+  /* Mobile-only second row of section links; hidden on desktop */
+  .mh-nav-mobile { display: none; }
 
   /* ---- Orienting caption (serif line + mono metadata) ----
      Hierarchy is scale + typeface only; no weight-based emphasis.
@@ -177,9 +210,12 @@ import portrait from '../assets/portrait.jpg';
        caption-line clamp(16px,1.35vw,20px); caption-meta margin-top 16px }.
      OPTION C -> { top: 14vh; width: min(46vw,560px);
        caption-line clamp(23px,2.3vw,33px)/line-height 1.3; caption-meta 11px, margin-top 22px }. */
+  /* Offsets are % of the hero box (not vh): the hero has a min-height floor,
+     so viewport units drift out of the box on short windows and elements
+     collide. A px floor keeps the caption clear of the masthead. */
   .hero-caption {
     position: absolute;
-    top: 15vh; left: 3vw;
+    top: max(16%, 118px); left: 3vw;
     width: min(34vw, 400px);
     z-index: 4;
   }
@@ -204,7 +240,7 @@ import portrait from '../assets/portrait.jpg';
   /* ---- Nameplate (reduced scale — supports, doesn't dominate) ---- */
   .nameplate {
     position: absolute;
-    left: 3vw; bottom: 9vh;
+    left: 3vw; bottom: 9%;
     z-index: 3;
     font-family: var(--font-display);
     transform-origin: 0% 100%;
@@ -225,22 +261,35 @@ import portrait from '../assets/portrait.jpg';
 
   /* ---- Short-but-wide desktop windows: keep the plate clear of the copy ---- */
   @media (min-width: 721px) and (max-height: 740px) {
-    .nameplate { bottom: 7vh; }
-    .hero-caption { top: 13vh; }
+    .nameplate { bottom: 7%; }
+    .hero-caption { top: max(14%, 112px); }
   }
 
-  /* ---- Mid widths: keep the top bar on one line ---- */
+  /* ---- Mid widths: tighten the masthead so it stays on one line ---- */
   @media (max-width: 980px) {
-    .topbar-nav { gap: 18px; }
+    .mh-nav { gap: 22px; }
+    .mh-row { gap: 16px; }
   }
 
   /* ---- Mobile ---- */
   @media (max-width: 720px) {
-    .topbar { padding: 14px 6vw; }
-    .topbar-nav { display: none; }
-    .hero-caption { top: 14vh; left: 6vw; width: min(82vw, 440px); }
+    .masthead { padding: 10px 6vw 0; }
+    .mh-row { padding-bottom: 8px; }
+    /* row 1 keeps only the stamp and the CTA; links move below the rule */
+    .mh-nav { display: none; }
+    .mh-row { justify-content: space-between; }
+    .mh-rule { border-top-width: 1.5px; height: 2px; }
+    .mh-nav-mobile {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 9px 0 0;
+    }
+    /* padding grows the tap target without changing the visual line */
+    .mh-nav-mobile .mh-link { font-size: 10.5px; letter-spacing: 0.1em; padding: 10px 4px; }
+    .hero-caption { top: max(15%, 128px); left: 6vw; width: min(82vw, 440px); }
     .caption-line { font-size: 19px; }
-    .nameplate { left: 6vw; bottom: 9vh; }
+    .nameplate { left: 6vw; bottom: 9%; }
     .nm-initial { font-size: 5vw; }
     .nm-michael { font-size: 9.5vw; }
     .nm-doerffler { font-size: 12vw; }
@@ -256,11 +305,29 @@ import portrait from '../assets/portrait.jpg';
       mask-image: radial-gradient(70% 62% at 60% 40%, #000 0%, rgba(0, 0, 0, 0.9) 22%, rgba(0, 0, 0, 0.55) 40%, rgba(0, 0, 0, 0.15) 58%, transparent 74%);
     }
     .portrait-img img { object-position: 50% 24%; }
-    /* layer an extra top fade over the radial dissolve so the caption stays legible */
+    /* layer an extra top fade over the radial dissolve so the caption stays
+       legible: the veil runs deep enough to cover the caption zone at ANY
+       mobile width, clearing before the face in the photo's lower middle */
     .portrait-edgefade {
       background:
-        linear-gradient(180deg, rgba(233, 225, 207, 0.92) 0%, transparent 30%),
+        linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.85) 35%, rgba(233, 225, 207, 0.45) 55%, transparent 72%),
         radial-gradient(70% 62% at 60% 40%, transparent 0%, transparent 22%, rgba(233, 225, 207, 0.3) 40%, rgba(233, 225, 207, 0.75) 58%, var(--bone) 74%);
+    }
+  }
+
+  /* ---- Wide-short "mobile" windows (zoomed desktops, split screens):
+     the phone crop assumptions break — the full-bleed mask would expose the
+     photo's whole sky behind the text. Tighten the window onto the face. ---- */
+  @media (min-width: 501px) and (max-width: 720px) {
+    .portrait-content {
+      -webkit-mask-image: radial-gradient(46% 52% at 62% 58%, #000 0%, rgba(0, 0, 0, 0.9) 26%, rgba(0, 0, 0, 0.5) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%);
+      mask-image: radial-gradient(46% 52% at 62% 58%, #000 0%, rgba(0, 0, 0, 0.9) 26%, rgba(0, 0, 0, 0.5) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%);
+    }
+    .portrait-img img { object-position: 50% 34%; }
+    .portrait-edgefade {
+      background:
+        linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.85) 38%, rgba(233, 225, 207, 0.4) 56%, transparent 72%),
+        radial-gradient(46% 52% at 62% 58%, transparent 0%, transparent 26%, rgba(233, 225, 207, 0.35) 46%, rgba(233, 225, 207, 0.8) 62%, var(--bone) 76%);
     }
   }
 </style>

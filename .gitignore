@@ -7,6 +7,7 @@ dist/
 *.docx
 *.zip
 Master Context*.pdf
+master-context-update-brief.md
 newfile730/
 
 # legacy root assets from the old site (old site lives in portfoliorepo/)

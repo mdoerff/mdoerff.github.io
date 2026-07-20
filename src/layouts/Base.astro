@@ -104,10 +104,12 @@ const {
     pointer-events: none;
     background-size: cover;
     background-position: 50% 42%;
-    filter: blur(17px) saturate(1.15) brightness(1.4);
+    /* Lifted hard: the photo's night sky and cloud must read as soft tone,
+       not a dark smudge floating over text at wide aspect ratios */
+    filter: blur(22px) saturate(1.1) brightness(1.8);
     transform: scale(4.4);
     transform-origin: 0 0;
-    opacity: 0.62;
+    opacity: 0.5;
   }
 
   /* Cream veil + refined depth over the atmosphere: keeps the page light and
