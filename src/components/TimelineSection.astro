@@ -1,54 +1,43 @@
 ---
 // Timeline: an ascending plot of the full work history, 2020 → 2026.
 // Precision aesthetic: clean bone ground, sharp line, weighted nodes.
-// Time is deliberately warped: the scrappy 2020-22 cluster stays tight,
-// the quiet 2023-24 stretch is compressed, and the significant 2025-26
-// run gets the most room. Hover/tap/focus a node for detail on demand.
+// Time is LINEAR: every node and year tick sits exactly where the
+// calendar puts it. Hover/tap/focus a node for detail on demand.
 // Hover copy is PLACEHOLDER until Michael supplies the real lines.
 
-// Piecewise time → x mapping (decimal year → svg x).
-const ANCHORS: [number, number][] = [
-  [2020.42, 70],
-  [2023.0, 500],
-  [2024.35, 665],
-  [2027.05, 1390],
-];
-const xFor = (d: number) => {
-  for (let i = 1; i < ANCHORS.length; i++) {
-    if (d <= ANCHORS[i][0]) {
-      const [d0, x0] = ANCHORS[i - 1];
-      const [d1, x1] = ANCHORS[i];
-      return x0 + ((d - d0) / (d1 - d0)) * (x1 - x0);
-    }
-  }
-  return ANCHORS[ANCHORS.length - 1][1];
-};
+// Linear time → x mapping (decimal year → svg x).
+const T0 = 2020.42, T1 = 2027.05, X0 = 70, X1 = 1390;
+const xFor = (d: number) => X0 + ((d - T0) / (T1 - T0)) * (X1 - X0);
 
 // The line: one deliberate rise.
 const LX0 = 70, LY0 = 232, LX1 = 1390, LY1 = 76;
 const yFor = (x: number) => LY0 + ((x - LX0) / (LX1 - LX0)) * (LY1 - LY0);
 
-// All 18 entries, exact order and dates from Michael. w = visual weight:
+// All 22 entries, exact order and dates from Michael. w = visual weight:
 // 1 small blip · 2 mid · 3 major. future = open node past today.
 const entries = [
-  { start: 'JUN 2020', end: 'MAR 2022', title: 'Salsa Grille', d: 2020.42, w: 1 },
-  { start: 'SEP 2020', end: 'MAR 2021', title: 'YMCA, referee', d: 2020.67, w: 1 },
-  { start: 'FEB 2021', end: 'JUL 2021', title: "Wendy's", d: 2021.08, w: 1 },
-  { start: 'FALL 2021', end: 'FALL 2022', title: 'Homestead Investment Club, founded', d: 2021.7, w: 2 },
-  { start: 'FEB 2022', end: 'JUN 2022', title: 'Catalyst Fitness, receptionist', d: 2022.08, w: 1 },
-  { start: 'JUN 2022', end: 'JAN 2023', title: 'Middle America Homes, real estate sales and marketing intern', d: 2022.42, w: 2 },
-  { start: 'FALL 2023', end: 'SPRING 2024', title: 'Tutor', d: 2023.7, w: 1 },
-  { start: 'SUMMER 2024', end: 'FALL 2024', title: 'BM Solutions, co-founded', d: 2024.45, w: 2 },
-  { start: 'FALL 2024', end: null, title: 'Switched major to AI & Business Analytics', d: 2024.7, w: 3 },
-  { start: 'FALL 2024', end: 'FALL 2024', title: 'Peer Leader, Bulls Business Community', d: 2024.7, w: 2 },
-  { start: 'FEB 2025', end: 'AUG 2025', title: 'Delta Tau Delta, Social Media Chair', d: 2025.08, w: 1 },
-  { start: 'SPRING 2025', end: 'SPRING 2025', title: "Dick's Sporting Goods", d: 2025.2, w: 1 },
-  { start: 'MAY 2025', end: 'AUG 2025', title: '3Rivers Federal Credit Union, BI intern', d: 2025.33, w: 2 },
-  { start: 'MAY 2025', end: 'JAN 2026', title: 'Noll Team, analytics', d: 2025.33, w: 3 },
-  { start: 'AUG 2025', end: 'AUG 2026', title: 'Delta Tau Delta, VP of Programming', d: 2025.58, w: 2 },
-  { start: 'APR 2026', end: 'JUL 2026', title: 'Florida DOH', d: 2026.25, w: 3 },
-  { start: 'MAY 2026', end: 'AUG 2026', title: 'A-LIGN, BDR', d: 2026.33, w: 3 },
-  { start: 'DEC 2026', end: null, title: 'Graduation', d: 2026.92, w: 3, future: true },
+  { start: 'JUN 2020', end: 'MAR 2022', title: 'Salsa Grille', d: 2020.42, w: 2, text: 'A first consistent paycheck, earned in high school. Left with a love of Mexican food and the ability to roll a perfect burrito.' },
+  { start: 'SEP 2020', end: 'MAR 2021', title: 'YMCA, referee', d: 2020.67, w: 1, text: 'Refereed little league football and basketball.' },
+  { start: 'FEB 2021', end: 'JUL 2021', title: "Wendy's", d: 2021.08, w: 1, text: 'Sixteen, working Wendy’s and Salsa Grille at the same time. If you can’t tell yet, I like a full plate.' },
+  { start: 'FALL 2021', end: 'FALL 2022', title: 'Homestead Investment Club, founded', d: 2021.7, w: 2, text: 'Teaching myself investing and entrepreneurship turned into founding a club that put like minds together. Five members grew to thirty, with simulations, guest professionals, and a group that went on to great colleges and internships.' },
+  { start: 'FEB 2022', end: 'JUN 2022', title: 'Catalyst Fitness, receptionist', d: 2022.08, w: 1, text: 'Front desk at my local gym: great relationships with the regulars, a free membership, and time for schoolwork on the slow shifts.' },
+  { start: 'JUN 2022', end: 'JAN 2023', title: 'Middle America Homes, real estate sales and marketing intern', d: 2022.42, w: 2, text: 'Turned a club connection into a for-credit internship on an eight-person real estate wholesaling team. Ran text and cold-call outreach, qualified leads, and handled the data entry and payroll nobody else wanted.' },
+  { start: 'DEC 2022', end: null, title: 'Graduated high school', d: 2022.92, w: 2, text: 'Finished a semester early, on purpose, to work and save before college. A 4.0 the whole way and fifty transferable college credits.' },
+  { start: 'SPRING 2023', end: 'FALL 2023', title: 'Target', d: 2023.2, w: 1, text: 'Long hours all spring and summer, banking everything for the move to Florida. The light at the end of the tunnel was a whole new chapter.' },
+  { start: 'SUMMER 2023', end: 'FALL 2023', title: 'USF Investment Club', d: 2023.45, w: 1, text: 'Global Markets Division plus a selective cohort preparing for the investment banking cycle. It confirmed I could do traditional finance, and revealed I would rather explore other paths.' },
+  { start: 'FALL 2023', end: null, title: 'Moved from Fort Wayne to Tampa for college', d: 2023.7, w: 2, text: 'A thousand-mile drive from my hometown and everything I had ever known. More excited than scared: the opportunity ahead was worth leaving the comfort zone behind.' },
+  { start: 'FALL 2023', end: 'SPRING 2024', title: 'Tutor', d: 2023.7, w: 1, text: 'Focused my first year on grades and finding my footing in the Bulls Business Community. Became the person people came to for business calculus and computers in business.' },
+  { start: 'SUMMER 2024', end: 'FALL 2024', title: 'BM Solutions, co-founded', d: 2024.45, w: 2, text: 'No internships landed, so Brady and I printed flyers and started knocking doors; our first client signed on day one. Ten weeks of sunrise-to-sunset work grew it to forty-plus clients and $13K in revenue from a standing start.' },
+  { start: 'FALL 2024', end: 'FALL 2024', title: 'Peer Leader, Bulls Business Community', d: 2024.7, w: 2, text: 'Chose the business living-learning community deliberately as a freshman, then came back as a Peer Leader, mentoring incoming students and running the community’s professional programming.' },
+  { start: 'FALL 2024', end: null, title: 'Switched major to AI & Business Analytics', d: 2024.7, w: 3, text: 'College was not challenging me enough, so I traded the comfortable major for the one that scared me a little. Skills that compound into any career, with entrepreneurship kept as a minor.' },
+  { start: 'FEB 2025', end: 'AUG 2025', title: 'Delta Tau Delta, Social Media Chair', d: 2025.08, w: 1, text: 'Put my high school graphic design coursework to work and ended up owning the chapter’s whole visual identity: website, graphics, animations, one consistent brand. Recruitment content began outperforming paid vendor work.' },
+  { start: 'SPRING 2025', end: 'SPRING 2025', title: "Dick's Sporting Goods", d: 2025.2, w: 1, text: 'Retail associate in the golf department, surrounded by seriously experienced golfers. Learned the sport from them and got hooked myself.' },
+  { start: 'MAY 2025', end: 'AUG 2025', title: '3Rivers Federal Credit Union, BI intern', d: 2025.33, w: 2, text: 'The least experienced person in a room of seasoned data, IT, and finance professionals, which was exactly the point. Coursework, 3Rivers, and the Noll Team all ran at once, each feeding the others.' },
+  { start: 'MAY 2025', end: 'JAN 2026', title: 'Noll Team, analytics', d: 2025.33, w: 3, text: 'Their first collegiate intern, in a role Brad and I invented together. Nine months across strategy, operations, and the numbers, capped by a seat on his podcast talking AI in small business.' },
+  { start: 'AUG 2025', end: 'AUG 2026', title: 'Delta Tau Delta, VP of Programming', d: 2025.58, w: 2, text: 'Ran the operational side of an eighty-member organization: full event calendar, semester budget, vendor contracts, and university approvals, through a fifteen-chair team.' },
+  { start: 'APR 2026', end: 'JUL 2026', title: 'Florida DOH', d: 2026.25, w: 3, text: 'Brought in through Troubadour Health to accelerate a stalled government build, and ended up the one building it. A fully manual permitting process became an automated system, closed with training, a full handoff, and a CEO letter saying the work exceeded what an internship typically delivers.' },
+  { start: 'MAY 2026', end: 'AUG 2026', title: 'A-LIGN, BDR', d: 2026.33, w: 3, text: 'Came in through the sales door: cold outreach, qualification, the BDR grind. Then a side project fixing broken software quietly turned the job into building and running the systems behind the sales.' },
+  { start: 'DEC 2026', end: null, title: 'Graduation', d: 2026.92, w: 3, future: true, text: 'Four and a half years of leaving the comfort zone and learning from everyone around me. Graduation just gives that instinct more room to run.' },
 ];
 
 // Plot positions, nudging same-date entries apart so every node is hoverable.
@@ -71,8 +60,8 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   <div class="tl-head" data-reveal>
     <div class="sec-label">TIMELINE</div>
     <p class="tl-sub">
-      A first job in June 2020, a degree in December 2026, and eighteen entries between them. The
-      line never flattens.
+      A first job in June 2020, a degree in December 2026, and twenty-two entries between them.
+      The line never flattens.
     </p>
     <p class="tl-note">Rest on a node for the detail.</p>
   </div>
@@ -87,41 +76,42 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     <div class="strip-hint" aria-hidden="true">SCROLL THE PLOT · TAP A NODE &rarr;</div>
     <div class="strip" id="tl-strip">
       <svg viewBox="0 0 1600 300" id="tl-svg" style="width: 100%; height: auto; display: block;" aria-hidden="true">
-        <!-- baseline + year ticks -->
-        <line x1="70" y1="262" x2="1390" y2="262" stroke="rgba(41,33,23,0.18)" stroke-width="1" />
+        <!-- baseline + year ticks (bone on the green field) -->
+        <line x1="70" y1="262" x2="1390" y2="262" stroke="rgba(233,225,207,0.2)" stroke-width="1" />
         {years.map((yr) => (
           <g>
-            <line x1={xFor(yr)} y1="258" x2={xFor(yr)} y2="266" stroke="rgba(41,33,23,0.4)" stroke-width="1" />
-            <text x={xFor(yr)} y="284" font-size="11" letter-spacing="1.5" text-anchor="middle" fill="var(--grey-label)" style="font-family: var(--font-sans);">{yr}</text>
+            <line x1={xFor(yr)} y1="258" x2={xFor(yr)} y2="266" stroke="rgba(233,225,207,0.4)" stroke-width="1" />
+            <text x={xFor(yr)} y="284" font-size="11" letter-spacing="1.5" text-anchor="middle" fill="rgba(233,225,207,0.5)" style="font-family: var(--font-sans);">{yr}</text>
           </g>
         ))}
 
-        <!-- the rise: solid ink through today, dashed ahead, trailing open -->
-        <line class="tl-line-draw" x1={LX0} y1={LY0} x2={xNow} y2={yFor(xNow)} stroke="var(--ink)" stroke-width="2" />
-        <line x1={xNow} y1={yFor(xNow)} x2={LX1} y2={LY1} stroke="rgba(41,33,23,0.45)" stroke-width="1.6" stroke-dasharray="5 6" />
-        <path d={`M ${LX1} ${LY1} L 1490 ${LY1 - 14} L 1566 ${LY1 - 24}`} fill="none" stroke="rgba(41,33,23,0.4)" stroke-width="1.4" stroke-dasharray="3 7" />
-        <path d={`M 1566 ${LY1 - 24} l -9 -1 m 9 1 l -7 6`} fill="none" stroke="rgba(41,33,23,0.55)" stroke-width="1.3" />
-        <text x="1578" y={LY1 - 36} font-size="10" letter-spacing="1.6" text-anchor="end" fill="var(--ink-muted-4)" style="font-family: var(--font-sans);">STILL DRAWING</text>
+        <!-- the rise: solid bone through today, dashed ahead, trailing open -->
+        <line class="tl-line-draw" x1={LX0} y1={LY0} x2={xNow} y2={yFor(xNow)} stroke="var(--bone)" stroke-width="2" />
+        <line x1={xNow} y1={yFor(xNow)} x2={LX1} y2={LY1} stroke="rgba(233,225,207,0.5)" stroke-width="1.6" stroke-dasharray="5 6" />
+        <path d={`M ${LX1} ${LY1} L 1490 ${LY1 - 14} L 1566 ${LY1 - 24}`} fill="none" stroke="rgba(233,225,207,0.45)" stroke-width="1.4" stroke-dasharray="3 7" />
+        <path d={`M 1566 ${LY1 - 24} l -9 -1 m 9 1 l -7 6`} fill="none" stroke="rgba(233,225,207,0.6)" stroke-width="1.3" />
+        <text x="1578" y={LY1 - 36} font-size="10" letter-spacing="1.6" text-anchor="end" fill="rgba(233,225,207,0.55)" style="font-family: var(--font-sans);">STILL DRAWING</text>
 
         <!-- origin annotation: the humble anchor, clear of the axis -->
-        <text x="70" y={LY0 + 26} font-size="10" letter-spacing="1.6" fill="var(--ink-muted-4)" style="font-family: var(--font-sans);">JUN 2020 · THE FIRST JOB</text>
+        <text x="70" y={LY0 + 26} font-size="10" letter-spacing="1.6" fill="rgba(233,225,207,0.55)" style="font-family: var(--font-sans);">JUN 2020 · THE FIRST JOB</text>
 
-        <!-- the eighteen nodes, weighted -->
+        <!-- the twenty-two nodes, weighted -->
         {nodes.map((n, i) => (
           <g
             class={`tnode tnode-w${n.w} ${n.future ? 'tnode-future' : ''}`}
             data-i={i}
+            data-text={(n as any).text || ''}
             tabindex="0"
             role="button"
             aria-label={`${n.title}. ${n.start}${n.end ? ' to ' + n.end : ''}.`}
             style={`--rd: ${i * 0.06}s;`}
           >
             <circle class="tnode-hit" cx={n.x} cy={n.y} r="14" fill="transparent" />
-            {n.w === 3 && <circle class="tnode-halo" cx={n.x} cy={n.y} r={R[3] + 6} fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" />}
+            {n.w === 3 && <circle class="tnode-halo" cx={n.x} cy={n.y} r={R[3] + 6} fill="none" stroke="#9DBFAA" stroke-width="1" opacity="0.4" />}
             {n.future ? (
-              <circle class="tnode-dot" cx={n.x} cy={n.y} r={R[3]} fill="var(--bone)" stroke="var(--accent)" stroke-width="2" />
+              <circle class="tnode-dot" cx={n.x} cy={n.y} r={R[3]} fill="#1F332A" stroke="#9DBFAA" stroke-width="2" />
             ) : (
-              <circle class="tnode-dot" cx={n.x} cy={n.y} r={R[n.w as 1 | 2 | 3]} fill={n.w === 3 ? 'var(--accent)' : 'var(--ink)'} opacity={n.w === 1 ? 0.75 : 1} />
+              <circle class="tnode-dot" cx={n.x} cy={n.y} r={R[n.w as 1 | 2 | 3]} fill={n.w === 3 ? '#9DBFAA' : 'var(--bone)'} opacity={n.w === 1 ? 0.75 : 1} />
             )}
           </g>
         ))}
@@ -143,11 +133,13 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     const wrap = card.parentElement as HTMLElement;
     const nodes = [...strip.querySelectorAll<SVGGElement>('.tnode')];
 
-    // Placeholder detail lines until Michael supplies the real hover copy.
+    // Card copy comes from each node's data-text (Michael's own lines,
+    // confirmed one by one); placeholder only where a line is still owed.
     const data = nodes.map((n) => {
       const label = n.getAttribute('aria-label') || '';
       const [title, dates] = label.split('. ');
-      return { title, dates: (dates || '').replace(/\.$/, ''), text: 'One to two sentences of detail land here.' };
+      const text = n.getAttribute('data-text') || 'One to two sentences of detail land here.';
+      return { title, dates: (dates || '').replace(/\.$/, ''), text };
     });
 
     let shown = -1;
@@ -159,7 +151,13 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       const svgRect = svg.getBoundingClientRect();
       const wrapRect = wrap.getBoundingClientRect();
       const px = svgRect.left - wrapRect.left + (cx / 1600) * svgRect.width;
-      const clamped = Math.min(wrapRect.width - 150, Math.max(150, px));
+      // Long copy widens the card instead of growing it downward, so every
+      // card stays a short block under the plot.
+      const len = data[i].text.length;
+      card.classList.toggle('tl-card-wide', len > 300);
+      card.classList.toggle('tl-card-mid', len > 180 && len <= 300);
+      const half = (card as HTMLElement).offsetWidth / 2 + 10;
+      const clamped = Math.min(wrapRect.width - half, Math.max(half, px));
       card.style.left = clamped + 'px';
       cardDates.textContent = data[i].dates;
       cardTitle.textContent = data[i].title;
@@ -195,7 +193,9 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
 </script>
 
 <style>
-  /* Clean bone ground: this section sits on paper, not atmosphere.
+  /* The timeline sits on the returned green field (the fixed #green-field
+     crossfades back in as this chapter arrives, mirroring the case studies
+     hand-off). Content is set bone-on-green like the work index.
      (The film grain overlay in Base sits above everything, so it stays.) */
   .tl {
     position: relative;
@@ -203,6 +203,7 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     padding: 16vh 4vw 12vh;
     scroll-margin-top: 4vh;
   }
+  .tl-head .sec-label { color: var(--bone); }
   .tl-sub {
     margin: 16px 0 0;
     max-width: 820px;
@@ -210,34 +211,38 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     font-weight: 400;
     font-size: clamp(18px, 1.7vw, 25px);
     line-height: 1.4;
-    color: var(--ink);
+    color: var(--bone);
     text-wrap: pretty;
   }
   .tl-note {
     margin: 10px 0 0;
     font-family: var(--font-sans);
     font-size: clamp(13px, 1.05vw, 14.5px);
-    color: var(--ink-muted-4);
+    color: rgba(233, 225, 207, 0.55);
   }
 
   .plot-wrap { position: relative; margin-top: 8vh; }
 
-  /* Hover card: one card, repositioned per node. 1-2 sentences max. */
+  /* Hover card: one card, repositioned per node. Sits BELOW the plot so
+     long cards never cover the section headline above it. */
   .tl-card {
     position: absolute;
-    top: -8px;
-    transform: translate(-50%, -100%);
+    top: calc(100% + 6px);
+    transform: translate(-50%, 0);
     width: 290px;
     padding: 14px 16px;
     background: var(--bone);
     border: 1px solid rgba(41, 33, 23, 0.4);
-    box-shadow: 3px 3px 0 rgba(46, 74, 58, 0.14);
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.18s ease;
     z-index: 5;
   }
   .tl-card-on { opacity: 1; }
+  /* Long copy goes wide, not tall */
+  .tl-card-mid { width: min(420px, calc(100vw - 48px)); }
+  .tl-card-wide { width: min(560px, calc(100vw - 48px)); }
   .card-dates {
     margin: 0 0 6px;
     font-family: var(--font-sans);
@@ -270,7 +275,7 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   .tnode:hover .tnode-dot, .tnode:focus-visible .tnode-dot, .tnode-on .tnode-dot { r: 9; }
   .tnode-halo { transition: opacity 0.2s; }
   .tnode:hover .tnode-halo, .tnode-on .tnode-halo { opacity: 0.7; }
-  .tnode:focus-visible .tnode-dot { stroke: var(--accent); stroke-width: 2; }
+  .tnode:focus-visible .tnode-dot { stroke: #9DBFAA; stroke-width: 2; }
 
   /* Draw-on-reveal: the solid line draws, nodes settle in sequence. */
   @media (prefers-reduced-motion: no-preference) {
@@ -302,7 +307,7 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.14em;
-      color: var(--grey-label);
+      color: rgba(233, 225, 207, 0.55);
     }
     .tl-card { width: 250px; }
   }

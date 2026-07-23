@@ -88,10 +88,23 @@ const cases = [
       const pIn = smooth(clamp(1 - work.getBoundingClientRect().top / (vh * 0.85)));
       const pOut = tech ? smooth(clamp(1 - tech.getBoundingClientRect().top / (vh * 0.7))) : 0;
       const pTl = tl ? smooth(clamp(1 - tl.getBoundingClientRect().top / (vh * 0.7))) : 0;
-      (field as HTMLElement).style.opacity = String(pIn * (1 - pOut));
+      // The footer is shorter than a viewport, so its top can only travel
+      // (footer height) px into view before the page ends: scale the fade
+      // to the distance that actually exists, or it would never complete.
+      const foot = document.querySelector('.foot');
+      let pFt = 0;
+      if (foot) {
+        const fr = foot.getBoundingClientRect();
+        const runway = Math.min(vh * 0.7, fr.height * 0.85);
+        pFt = smooth(clamp((vh - fr.top) / runway));
+      }
+      // Green carries the work chapter, hands off to bone+grid for technical,
+      // RETURNS for the timeline, then dissolves out for the footer so the
+      // page ends on the hero's own paper atmosphere: full circle.
+      (field as HTMLElement).style.opacity = String(Math.min(1, pIn * (1 - pOut) + pTl) * (1 - pFt));
       if (grid) (grid as HTMLElement).style.opacity = String(pOut * (1 - pTl));
       const bone = document.getElementById('bone-field');
-      if (bone) bone.style.opacity = String(pOut);
+      if (bone) bone.style.opacity = String(pOut * (1 - pTl));
     };
     w.__gfUpdate = update;
     window.addEventListener('scroll', update, { passive: true });
