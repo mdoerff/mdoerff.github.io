@@ -6,14 +6,17 @@ interface Workstream {
   title: string;
   body: string | string[]; // one paragraph, or several
 }
-interface Props { workstreams: Workstream[] }
-const { workstreams } = Astro.props;
+interface Props {
+  workstreams: Workstream[];
+  numbered?: boolean; // row indexes (01, 02...); on by default
+}
+const { workstreams, numbered = true } = Astro.props;
 ---
 
 <div class="approach">
   {workstreams.map((w, i) => (
-    <div class="ws" data-reveal>
-      <div class="ws-index">{String(i + 1).padStart(2, '0')}</div>
+    <div class={`ws ${numbered ? '' : 'ws-plain'}`} data-reveal>
+      {numbered && <div class="ws-index">{String(i + 1).padStart(2, '0')}</div>}
       <h3 class="ws-title">{w.title}</h3>
       <div class="ws-main">
         {(Array.isArray(w.body) ? w.body : [w.body]).map((para) => (
@@ -33,6 +36,7 @@ const { workstreams } = Astro.props;
     padding: 4.6vh 0;
     border-top: 1px solid rgba(41, 33, 23, 0.1);
   }
+  .ws-plain { grid-template-columns: minmax(200px, 300px) 1fr; }
   .ws:last-child { border-bottom: 1px solid rgba(41, 33, 23, 0.1); }
   .ws-index {
     font-family: var(--font-sans);

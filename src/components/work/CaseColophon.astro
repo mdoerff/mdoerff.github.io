@@ -8,9 +8,11 @@ interface Props { items: Item[] }
 const { items } = Astro.props;
 ---
 
+<!-- Compact spec-sheet: one slim row per fact, label beside value,
+     so the block reads at a glance instead of costing a screen of scroll -->
 <div class="colophon" data-reveal>
   {items.map((it) => (
-    <div class="col-item">
+    <div class="col-row">
       <div class="col-label">{it.label}</div>
       <div class={`col-value ${it.accent ? 'col-accent' : ''}`}>{it.value}</div>
     </div>
@@ -19,32 +21,36 @@ const { items } = Astro.props;
 
 <style>
   .colophon {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 34px 5vw;
-    padding: 4vh 0;
+    padding: 1.5vh 0;
     border-top: 1px solid rgba(41, 33, 23, 0.12);
     border-bottom: 1px solid rgba(41, 33, 23, 0.12);
   }
+  .col-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 0 24px;
+    align-items: baseline;
+    padding: 7px 0;
+  }
+  .col-row + .col-row { border-top: 1px solid rgba(41, 33, 23, 0.06); }
   .col-label {
     font-family: var(--font-sans);
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     color: var(--ink-muted-4);
-    margin-bottom: 9px;
   }
   .col-value {
     font-family: var(--font-sans);
     font-size: 13.5px;
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.45;
     color: var(--ink-muted-1);
-    max-width: 300px;
   }
   .col-accent { color: var(--accent); }
 
   @media (max-width: 720px) {
-    .colophon { gap: 24px 8vw; }
+    .col-row { grid-template-columns: 96px 1fr; gap: 0 14px; padding: 6px 0; }
+    .col-value { font-size: 12.5px; }
   }
 </style>

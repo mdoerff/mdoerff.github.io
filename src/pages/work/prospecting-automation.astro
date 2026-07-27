@@ -3,203 +3,174 @@ import Base from '../../layouts/Base.astro';
 import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
 import CaseColophon from '../../components/work/CaseColophon.astro';
 import CaseApproach from '../../components/work/CaseApproach.astro';
-import ProspectingDiagram from '../../components/work/diagrams/ProspectingDiagram.astro';
+import RepWorkDiagram from '../../components/work/diagrams/RepWorkDiagram.astro';
+import ChangedHeldDiagram from '../../components/work/diagrams/ChangedHeldDiagram.astro';
 
 const facts = [
-  { label: 'CLIENT', value: 'A-LIGN · Cybersecurity compliance audits' },
-  { label: 'SECTOR', value: 'Compliance · SaaS' },
-  { label: 'ROLE', value: 'BDR intern · Primary responsibility, Apollo build' },
+  { label: 'ROLE', value: 'BDR intern · The person who owns the Apollo build' },
+  { label: 'ORG', value: 'A-LIGN · Cybersecurity compliance' },
   { label: 'TIMELINE', value: '2026 · Ongoing' },
-  { label: 'STATUS', value: 'Live on SOC 2, team-wide · CMMC validated in testing', accent: true },
+  { label: 'TOOLS', value: 'Apollo · Salesforce · Outreach · AI qualification' },
+  { label: 'WHERE IT STANDS', value: 'Proven on CMMC · Paused on SOC 2 · Running across fourteen reps', accent: true },
 ];
 
-const workstreams = [
+// What the build had to survive: five constraints, each a titled row.
+const survived = [
   {
-    title: 'Take it on',
-    body: 'My manager brought Apollo up in a team meeting and said he would appreciate another set of eyes on it. I volunteered, learned the whole situation, and from there offered to take it on as a project. The work ran through me: meetings with the senior manager of revenue operations, and a direct line to Apollo’s engineers.',
+    title: 'A team of fourteen, not a workflow of one',
+    body: `Fourteen personal workflows is fourteen things to maintain and fourteen ways to drift. I built one workflow per audit line feeding a shared list reps filter themselves, so there's a single place to fix and a standard everyone runs the same way.`,
   },
   {
-    title: 'Diagnose the silent failure',
-    body: 'The inherited workflow checked a qualification field that nothing wrote to, so every contact failed out without an error. Underneath sat a deeper platform conflict between Apollo’s account-list triggers and the conditional branches the design depended on.',
+    title: `An account layer that wasn't always there`,
+    body: `When SOC 2 struggled, the layered structure told me where to look. The problem was never the prompt, it was that the qualified account list underneath it didn't exist yet.`,
   },
   {
-    title: 'Re-architect on AI',
-    body: 'I rebuilt the enrollment logic to resolve the conflict, then built qualification around a prompt-based agent on Perplexity Sonar, the one model with live web access, reading real LinkedIn content against our compliance criteria. Qualified contacts flow through enrichment and validation into a clean prospect list, with the Salesforce and Outreach integration configured hands-on.',
+    title: `Inventory we couldn't afford to waste`,
+    body: `With CMMC paused, SOC 2 accounts got more valuable, not less. Running an untested version against them would have burned the accounts the team most needed. We paused it and reps work those by hand. That was a call made with the BDR manager, not a technical one.`,
   },
   {
-    title: 'Refine against evidence',
-    body: 'Testing exposed what only a practitioner would catch. The title-based filter was screening out companies under fifty employees before the AI step ever ran, and those companies are most of the target market. And the prompt surfaced one contact per account when compliance decisions rarely sit with one person. I built a new seniority persona and iterated the qualifying prompt until the workflow matched the judgment of a rep who knows the market.',
+    title: 'Credits that had to be spent carefully',
+    body: `Volume stopped being the constraint the moment the workflow ran, since we can process as many accounts as we choose. But every enrichment run costs from a finite pool the whole org shares, so the question became how much to run rather than how much was possible. How many accounts go through a test batch before scaling, whether verification runs against a full list or only the contacts most likely to bounce, and what to tell a rep who wants more contacts when more contacts means spending the team's budget on lower-quality output. The answer is usually fewer, better, and a reason why.`,
   },
   {
-    title: 'Roll it out',
-    body: 'Two weeks testing it alone, run by run. Then two more reps alongside me, then the rest, until the full fourteen-seat team was running on it.',
-  },
-  {
-    title: 'Prove it scales',
-    body: 'When CMMC requirements were paused, the case for automating that line went with it. I rebuilt the qualification workflow for SOC 2, tested it, iterated against real output, and validated it against a large batch of accounts. I ran a live training session for the full team, dispersed the qualified contacts, and now all fourteen reps are running on the SOC 2 workflow while we collect performance and feedback.',
-  },
-];
-
-// The before/after ledger: a rep's day, as found and with the pipeline.
-const ledger = [
-  {
-    label: 'SOURCING',
-    before: 'About ten minutes per account: open it, verify it, hunt for contacts, verify each one by hand.',
-    after: 'An entire account list processed in a couple of hours, every account qualified or ruled out by the same criteria, encoded.',
-  },
-  {
-    label: 'CONTACTS',
-    before: 'One to three per account, judged in the rep’s head.',
-    after: 'Two to four senior contacts per account, screened against multiple verification platforms.',
-  },
-  {
-    label: 'DELIVERABILITY',
-    before: 'Roughly six percent of outbound bounced, eroding the domain reputation everything else depends on.',
-    after: 'Bounce falling toward one percent in testing, and reply rates rising.',
-  },
-  {
-    label: 'THE DAY ITSELF',
-    before: 'Most of it spent researching.',
-    after: 'Most of it spent selling: conversations, follow-ups, booked meetings.',
-  },
-];
-
-const scale = [
-  {
-    label: 'THE TEAM',
-    body: 'Fourteen reps, all running the workflow day to day, targeting twice the daily outreach, with sends, replies, bounces, and meetings booked tracked at every step.',
-  },
-  {
-    label: 'THE AUDIT LINES',
-    body: 'Proven on CMMC, then rebuilt and validated for SOC 2 when CMMC was paused. The same architecture is what the audit lines beyond it will run on.',
-  },
-  {
-    label: 'THE VENDOR DECISION',
-    body: 'A platform this central to the team’s day needs to earn its place. Two audit lines proven now, not one: working evidence, not a claimed saving.',
+    title: 'Reps who still need their own judgment',
+    body: `Hand fourteen people a system that says "qualified" and they stop building the instinct to question it. The review step stays, and every contact carries a written reason a rep can read and override, even though skipping both would be faster.`,
   },
 ];
 ---
 
 <Base
   title="A-LIGN prospecting automation · Michael Doerffler"
-  description="Case study: taking over a stalled AI prospecting build with a vendor contract at stake, and proving it twice, on two different audit lines, in a pipeline that raises the volume and the quality of a sales team's outreach at once."
+  description="Case study: taking over a stalled AI prospecting build and ending up running the system a fourteen-rep team prospects on, with AI qualification layered under human judgment."
 >
   <CaseStudyLayout
     caseLabel="A-LIGN · PROSPECTING AUTOMATION"
     eyebrow="COMPLIANCE · AI AUTOMATION"
-    titleLine1="An AI pipeline that raises"
-    titleLine2="volume and quality at once."
-    standfirst="Leadership wanted proof that an AI platform could replace the team's expensive contact data vendor. The build meant to deliver that proof was failing silently. I took it over, re-architected it, and have now proven it twice: on CMMC, and on SOC 2, rebuilt and validated with the full team after CMMC requirements were paused."
+    titleLine1="Taking the busywork out of prospecting,"
+    titleLine2="without taking out the judgment."
+    standfirst="I was hired to prospect. I ended up running the system the team prospects on."
     nextLabel="THE NOLL TEAM"
     nextHref="/work/noll-team"
   >
     <CaseColophon items={facts} />
 
     <section class="case-section">
-      <div class="sec-label" data-reveal>THE CHALLENGE</div>
-      <p class="body body-lead" data-reveal>
-        A-LIGN is the leading provider of high-quality, efficient cybersecurity compliance
-        programs. Combining experienced auditors and audit management technology, A-LIGN provides
-        the widest breadth and depth of services including SOC 2, ISO 27001, HITRUST, FedRAMP,
-        CMMC, and PCI. A-LIGN is the number one issuer of SOC 2 and HITRUST and a top three
-        FedRAMP assessor. To learn more, visit a-lign.com.
-      </p>
-      <div class="challenge-grid" data-reveal>
-        <p class="body">
-          A fourteen-person team prospects for the compliance certifications A-LIGN runs, CMMC,
-          SOC 2, and others, and the slowest part of every rep's day is the same no matter which
-          one: finding the right people by hand, about ten minutes an account, repeated all day.
-        </p>
-        <p class="body">
-          Behind the automation push, leadership wanted to replace an expensive vendor the team
-          relies on to verify and enrich contact data, and BDR management wanted prospecting
-          automated, aiming to double each rep's daily outreach. Both pointed at the same goal: a
-          faster team, on a platform proven enough to trust.
-        </p>
-      </div>
+      <h2 class="nar-head" data-reveal>Nobody assigned me this</h2>
       <p class="situation-stmt" data-reveal>
-        On the canvas, the build looked finished. In practice it
-        <span class="situation-key">produced nothing</span>. I volunteered to take it on.
+        My manager mentioned a stalled Apollo project in a team meeting.
+        <span class="situation-key">I volunteered</span>.
       </p>
-    </section>
-
-    <section class="case-section">
-      <div class="sec-label" data-reveal>THE APPROACH</div>
-      <CaseApproach workstreams={workstreams} />
+      <p class="body" data-reveal>
+        The workflow was meant to find the right contact inside every target account automatically,
+        the slowest part of a rep's day at about ten minutes an account. It looked finished and
+        produced nothing, with no error to explain why. To be useful I had to learn three things at
+        once: Apollo, the Salesforce integration the RevOps manager had built and walked me through,
+        and the compliance domain itself, because you can't automate a judgment you don't
+        understand.
+      </p>
     </section>
 
     <section class="case-section case-exhibit">
-      <ProspectingDiagram />
+      <!-- visual 1: how a rep's work changed -->
+      <RepWorkDiagram />
     </section>
 
     <section class="case-section">
-      <div class="sec-label" data-reveal>THE IMPACT</div>
-
-      <p class="impact-thesis" data-reveal>
-        Automation usually trades quality for volume.
-        <span class="thesis-key">This build refused the trade.</span>
+      <h2 class="nar-head" data-reveal>Deciding what the AI is allowed to decide</h2>
+      <p class="situation-stmt" data-reveal>
+        The bug was a field nothing wrote to. Fixing it was
+        <span class="situation-key">the easy half</span>.
       </p>
-      <p class="impact-support" data-reveal>
-        Every email that goes out is better targeted and better verified than the ones reps sent by
-        hand, and the rollout targets twice as many of them. That is the difference between a time
-        saver and a system a team runs on.
+      <p class="body" data-reveal>
+        I rebuilt qualification in layers. Accounts qualify before they ever enter the workflow,
+        against criteria our team and A-LIGN have built over years of knowing what a real prospect
+        looks like. The model qualifies contacts inside those accounts, reading a person's live
+        LinkedIn against our compliance criteria. Reps make the final call, seconds instead of ten
+        minutes. The contact layer took the most iteration: too loose and we waste sends on the
+        wrong people, too tight and we miss the real buyer at companies that structure the role
+        differently. Every contact returns a written reason a rep can override.
       </p>
-
-      <div class="ledger" data-reveal>
-        <div class="ledger-row ledger-head-row">
-          <div class="ledger-cell ledger-label"></div>
-          <div class="ledger-cell ledger-head">A REP'S DAY, AS FOUND</div>
-          <div class="ledger-cell ledger-head ledger-head-after">WITH THE PIPELINE</div>
-        </div>
-        {ledger.map((row) => (
-          <div class="ledger-row">
-            <div class="ledger-cell ledger-label">{row.label}</div>
-            <div class="ledger-cell ledger-before">{row.before}</div>
-            <div class="ledger-cell ledger-after">{row.after}</div>
-          </div>
-        ))}
-      </div>
-
-      <div class="scale-band" data-reveal>
-        {scale.map((col) => (
-          <div class="scale-col">
-            <p class="scale-label">{col.label}</p>
-            <p class="scale-body">{col.body}</p>
-          </div>
-        ))}
-      </div>
-
-      <p class="impact-disclaimer" data-reveal>
-        CMMC FIGURES ARE FROM THE TESTING PHASE. SOC 2 IS LIVE WITH THE FULL TEAM; PERFORMANCE AND
-        FEEDBACK ARE BEING COLLECTED, NOT YET A MEASURED RESULT.
+      <p class="body" data-reveal>
+        We proved it on CMMC, the Department of Defense's standard for its contractors and one of
+        A-LIGN's highest-demand lines. Emails through the workflow bounced at about 1%, against a
+        6% team average.
       </p>
     </section>
 
     <section class="case-section">
-      <div class="sec-label" data-reveal>WHAT I'M APPLYING IN THE EXPANSION</div>
-      <div class="diff-grid" data-reveal>
-        <p class="diff-lead">Trust output, not architecture.</p>
-        <p class="diff-body">
-          The original build looked right on the canvas and failed silently. Its biggest blind
-          spot never showed up in the design, only in live test output, read line by line.
-        </p>
-        <p class="diff-body">
-          That lesson is exactly what the SOC 2 build ran on: qualification criteria tested
-          against a real batch of accounts before anything scaled, and the full team trained and
-          looped in before rollout, not after. The same method is what the next audit line will
-          run on too.
-        </p>
+      <h2 class="nar-head" data-reveal>Then almost everything changed at once</h2>
+      <p class="body" data-reveal>
+        CMMC was paused federally. Focus shifted to SOC 2, where the signal identifying a target
+        sits in a Salesforce structure Apollo can't read, so the upstream layer that made CMMC work
+        didn't exist. The person who could fix that became unavailable indefinitely. My manager said
+        the output wasn't good enough to rely on, and he was right: the contact layer was straining
+        because the account layer underneath it was missing.
+      </p>
+      <!-- visual 2: what changed, and what held -->
+      <div class="pause-exhibit">
+        <ChangedHeldDiagram />
       </div>
+      <p class="situation-stmt" data-reveal>
+        None of it was what I'd <span class="situation-key">designed for</span>.
+      </p>
+    </section>
+
+    <section class="case-section">
+      <h2 class="nar-head" data-reveal>What the build had to survive</h2>
+      <CaseApproach workstreams={survived} numbered={false} />
+    </section>
+
+    <section class="case-section">
+      <h2 class="nar-head" data-reveal>Where it stands, where it goes</h2>
+
+      <div class="close-group" data-reveal>
+        <p class="close-label">Where it stands</p>
+        <ul class="close-list">
+          <li>All fourteen reps run it day to day</li>
+          <li>Trained beyond the team: reps in EMEA and the email marketing group</li>
+          <li>Reply rate, meetings booked, and bounce tracked since the first run</li>
+          <li>That data drives the prompt revisions and the persona rebuilds</li>
+        </ul>
+      </div>
+
+      <div class="close-group" data-reveal>
+        <p class="close-label">Where it goes</p>
+        <ul class="close-list">
+          <li>Each audit line gets its own account sourcing and personas; the person who buys CMMC is not the person who buys SOC 2</li>
+          <li>Account lists built upstream, so the model inherits a clean starting point instead of guessing</li>
+          <li>Volume is not the limit anymore; the real decisions are how much to run and which accounts deserve it</li>
+          <li>With the managers: when contacts reach people, what a standard play looks like, and how hard to lean on the tool while a mid-quarter number still has to be hit</li>
+        </ul>
+      </div>
+
+      <p class="closing-note" data-reveal>
+        The first broken version taught the lesson everything since has run on: judge a system by
+        what it produces, not by whether it looks right.
+      </p>
     </section>
   </CaseStudyLayout>
 </Base>
 
 <style>
-  .case-section { margin-top: 12vh; }
+  .case-section { margin-top: 9vh; }
   .case-exhibit { margin-top: 6vh; }
 
+  /* Narrative section headers: the header IS the headline on this page */
+  .nar-head {
+    margin: 0;
+    max-width: 1000px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  /* Pivot lines: a step below the header, a step above the body */
   .situation-stmt {
-    margin: 5vh 0 0;
+    margin: 4vh 0 0;
     max-width: 900px;
     font-family: var(--font-display);
     font-weight: 400;
@@ -213,6 +184,9 @@ const scale = [
     border-bottom: 2px solid var(--accent);
   }
 
+  .pause-exhibit { margin-top: 4vh; }
+
+  /* Standard body copy */
   .body {
     margin: 3.5vh 0 0;
     max-width: 900px;
@@ -222,166 +196,48 @@ const scale = [
     color: var(--ink-muted-2);
     text-wrap: pretty;
   }
-  .body-lead {
-    color: var(--ink-muted-4);
-    font-size: clamp(14px, 1.1vw, 15.5px);
-  }
-  .challenge-grid {
-    margin-top: 3.5vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5vh 4vw;
-  }
-  .challenge-grid .body {
-    max-width: none;
-    margin-top: 0;
-  }
 
-  /* Impact: thesis → before/after ledger → where it scales */
-  .impact-thesis {
-    margin: 5vh 0 0;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(24px, 2.8vw, 42px);
-    line-height: 1.3;
-    color: var(--ink);
-    text-wrap: pretty;
-  }
-  .thesis-key {
-    color: var(--accent);
-  }
-  .impact-support {
-    margin: 3vh 0 0;
-    max-width: 820px;
-    font-family: var(--font-sans);
-    font-size: clamp(15px, 1.25vw, 17px);
-    line-height: 1.65;
-    color: var(--ink-muted-2);
-    text-wrap: pretty;
-  }
-
-  .ledger {
-    margin: 6vh 0 0;
-    border-top: 1px solid rgba(41, 33, 23, 0.2);
-  }
-  .ledger-row {
-    display: grid;
-    grid-template-columns: minmax(120px, 0.45fr) 1fr 1fr;
-    border-bottom: 1px solid rgba(41, 33, 23, 0.14);
-  }
-  .ledger-head-row { border-bottom: 1px solid rgba(41, 33, 23, 0.2); }
-  .ledger-cell { padding: 3vh 2vw 3vh 0; }
-  .ledger-head {
-    padding-top: 2vh;
-    padding-bottom: 2vh;
-    font-family: var(--font-sans);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    color: var(--grey-label);
-  }
-  .ledger-head-after { color: var(--accent); }
-  .ledger-label {
-    font-family: var(--font-sans);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    color: var(--ink);
-    padding-top: calc(3vh + 3px);
-  }
-  .ledger-before {
-    font-family: var(--font-sans);
-    font-size: clamp(13.5px, 1.1vw, 15.5px);
-    line-height: 1.6;
-    color: var(--ink-muted-4);
-    text-wrap: pretty;
-  }
-  .ledger-after {
-    font-family: var(--font-sans);
-    font-size: clamp(13.5px, 1.1vw, 15.5px);
-    line-height: 1.6;
-    color: var(--ink-muted-1);
-    background: rgba(46, 74, 58, 0.06);
-    padding-left: 2vw;
-    text-wrap: pretty;
-  }
-
-  .scale-band {
-    margin: 6vh 0 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0 3vw;
-    padding: 4vh 0 0;
-    border-top: 1px solid rgba(41, 33, 23, 0.2);
-  }
-  .scale-label {
+  /* Closer: two left-ruled bullet groups, matching the DOH questions device */
+  .close-group { margin-top: 4vh; }
+  .close-label {
     margin: 0 0 12px;
     font-family: var(--font-sans);
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.04em;
     color: var(--accent);
   }
-  .scale-body {
+  .close-list {
     margin: 0;
+    max-width: 900px;
+    padding: 2px 0 2px 26px;
+    border-left: 2px solid rgba(46, 74, 58, 0.35);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .close-list li {
     font-family: var(--font-sans);
-    font-size: clamp(13.5px, 1.1vw, 15px);
-    line-height: 1.6;
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.55;
     color: var(--ink-muted-2);
     text-wrap: pretty;
   }
 
-  .impact-disclaimer {
-    margin: 4vh 0 0;
-    font-family: var(--font-sans);
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
-    line-height: 1.7;
-    color: var(--grey-label);
-  }
-
-  .diff-grid {
-    margin-top: 5vh;
-    display: grid;
-    grid-template-columns: minmax(220px, 380px) 1fr 1fr;
-    gap: 2.5vh 4vw;
-  }
-  .diff-lead {
-    margin: 0;
+  /* Closing statement */
+  .closing-note {
+    margin: 5vh 0 0;
+    max-width: 860px;
     font-family: var(--font-display);
     font-weight: 400;
     font-size: clamp(20px, 2vw, 30px);
-    line-height: 1.3;
+    line-height: 1.35;
     color: var(--ink);
     text-wrap: pretty;
   }
-  .diff-body {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-size: clamp(15px, 1.2vw, 17px);
-    line-height: 1.65;
-    color: var(--ink-muted-2);
-    text-wrap: pretty;
-  }
 
-  @media (max-width: 900px) {
-    .challenge-grid { grid-template-columns: 1fr; }
-    .diff-grid { grid-template-columns: 1fr; gap: 2vh 0; }
-  }
   @media (max-width: 720px) {
-    .case-section { margin-top: 9vh; }
-    .ledger-row {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-    }
-    .ledger-label {
-      grid-column: 1 / -1;
-      padding: 2.5vh 0 0;
-    }
-    .ledger-cell { padding: 1.5vh 3vw 2.5vh 0; }
-    .ledger-after { padding-left: 3vw; }
-    .ledger-head-row .ledger-label { display: none; }
-    .ledger-head-row { grid-template-rows: auto; }
-    .scale-band { grid-template-columns: 1fr; gap: 3.5vh 0; }
+    .case-section { margin-top: 7vh; }
   }
 </style>

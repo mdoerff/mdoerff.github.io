@@ -1,0 +1,140 @@
+---
+// How a rep's work changed: the same five-step judgment chain, run by hand
+// above and by the build below, in strictly parallel columns so the reader
+// sees exactly what replaced what. The rep's decision survives in column
+// five: later in the chain, seconds instead of minutes, still theirs.
+const steps = [
+  "Read the company's context",
+  'Work out who owns compliance',
+  'Verify the person is real',
+  'Check the email will land',
+  'Sequence the outreach',
+];
+---
+
+<figure class="rw" aria-label="How a rep's work changed: the five judgment steps a rep ran by hand, about ten minutes an account, are now run by the model with a written reason, and the rep makes the final call in seconds.">
+  <div class="rw-row" data-reveal>
+    <p class="rw-label">By hand, about ten minutes an account</p>
+    <div class="rw-chain">
+      {steps.map((s) => <span class="rw-step">{s}</span>)}
+    </div>
+    <p class="rw-note">Accounts worked one at a time, one to three contacts pulled from each.</p>
+  </div>
+
+  <div class="rw-row" data-reveal>
+    <p class="rw-label rw-label-after">The build, seconds of review</p>
+    <div class="rw-chain">
+      <span class="rw-model">The same chain of reasoning, run by the model, with a written reason attached</span>
+      <span class="rw-call">The rep makes the final call</span>
+    </div>
+    <p class="rw-note rw-note-after">As many accounts as we choose to run, more qualified contacts than a week can absorb.</p>
+  </div>
+</figure>
+
+<style>
+  .rw { margin: 0; }
+
+  .rw-row + .rw-row { margin-top: 4.5vh; }
+
+  .rw-label {
+    margin: 0 0 12px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--grey-label);
+  }
+  .rw-label-after { color: var(--accent); }
+
+  .rw-chain {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .rw-step {
+    position: relative;
+    padding: 12px 13px;
+    border: 1px solid rgba(41, 33, 23, 0.35);
+    font-family: var(--font-sans);
+    font-size: clamp(12px, 1vw, 13.5px);
+    line-height: 1.4;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .rw-step:not(:last-child)::after {
+    content: '\2192';
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translate(50%, -50%);
+    font-size: 12px;
+    color: var(--grey-faint);
+  }
+
+  /* The model panel sits exactly beneath the four steps it absorbed */
+  .rw-model {
+    grid-column: 1 / 5;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid rgba(46, 74, 58, 0.4);
+    background: rgba(46, 74, 58, 0.06);
+    font-family: var(--font-display);
+    font-size: clamp(13.5px, 1.15vw, 16px);
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .rw-call {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 12px 13px;
+    background: var(--accent);
+    font-family: var(--font-sans);
+    font-size: clamp(12px, 1vw, 13.5px);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--bone);
+    text-wrap: pretty;
+  }
+  .rw-model::after {
+    content: '\2192';
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translate(50%, -50%);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .rw-model { position: relative; }
+
+  .rw-note {
+    margin: 12px 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(12.5px, 1vw, 14px);
+    color: var(--ink-muted-4);
+  }
+  .rw-note-after { color: var(--ink-muted-1); }
+
+  @media (max-width: 720px) {
+    .rw-chain { grid-template-columns: 1fr; gap: 10px; }
+    .rw-step:not(:last-child)::after {
+      content: '\2193';
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -10px;
+      transform: translate(-50%, 50%);
+    }
+    .rw-model { grid-column: 1; }
+    .rw-model::after {
+      content: '\2193';
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -10px;
+      transform: translate(-50%, 50%);
+    }
+  }
+</style>

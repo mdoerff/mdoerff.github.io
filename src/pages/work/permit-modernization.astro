@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
 import CaseColophon from '../../components/work/CaseColophon.astro';
-import CaseApproach from '../../components/work/CaseApproach.astro';
 import PermittingDiagram from '../../components/work/diagrams/PermittingDiagram.astro';
 
 const facts = [
@@ -11,41 +10,6 @@ const facts = [
   { label: 'ROLE', value: 'Primary responsibility · system architecture and implementation' },
   { label: 'TIMELINE', value: 'Spring to Summer 2026' },
   { label: 'STATUS', value: 'Built, validated, handed off', accent: true },
-];
-
-const workstreams = [
-  {
-    title: 'Discovery',
-    body: `Before building anything, I worked to understand how permitting actually ran, not how it was supposed to. I sat with the consultant leading the engagement, then with the people who work the system every day: the EPH manager, the clerical staff who retype every application, the inspectors. I read the department's own documentation and the DH 4159 state form that governs what a pool permit application has to contain. And I studied how a sister county had solved the same problem, so I wasn't inventing a pattern that already existed.`,
-  },
-  {
-    title: 'Design the intake',
-    body: `I designed a Microsoft Form against two things at once: the Excel tracking sheet the staff already lived in, and the DH 4159. Matching both meant the new system produced records staff would recognize and the state would accept. Because the form is public-facing, I built branching logic so each of the four permit types routes down only its relevant questions, rather than showing an applicant a wall of fields that don't apply to them.`,
-  },
-  {
-    title: 'Build the record',
-    body: `The SharePoint list becomes the department's first real system of record. Fifty-one historical records were migrated in, with status values rebuilt to match the milestones the manager already used rather than generic labels.`,
-  },
-  {
-    title: 'Automate what ran on memory',
-    body: `Seven flows now handle the steps that previously moved only when someone remembered. The biggest time saver is the intake itself: every completed form submission maps automatically into the SharePoint list, ending the retyping of every application. The rest carry the follow-through: receipt confirmations to the applicant, staff notifications with permit-specific next steps, a thirty-day statutory review clock that sets itself on status change, issued-permit and re-inspection reminders, and an enforcement flag.`,
-  },
-  {
-    title: 'Right-size against reality',
-    body: [
-      `I planned for more than I built. The original design called for heavier automation and a much larger SharePoint list with more fields and more capability.`,
-      `I pulled back. Three reasons, all about the client rather than the code. The team maintaining it is small. There is no dedicated technical staff to fix it when something breaks. And this was an active production project in a government tenant, where the consequences of a broken automation are considerably worse than the inconvenience of a simple one.`,
-      `So I went back to the staff, and I tested every piece of it against them: does this field earn its place, or is it a column nobody will ever fill? Does this automation add value, or is it complexity we're adding because we can? Every decision to keep something, and every decision to cut it, was made with the people who would have to live with it.`,
-      `What got built is smaller than what was drawn. That was the point.`,
-    ],
-  },
-];
-
-const unlocks = [
-  ['Leadership reporting', 'volume, cycle time, and throughput on a program that ran on memory'],
-  ['Bottleneck detection', 'timestamped status shows where permits stall, not just that they do'],
-  ['Compliance visibility', 'a statutory thirty-day clock that can be monitored, not hoped for'],
-  ['Forward-looking tools', 'demand forecasting and certifications flagged before they lapse'],
 ];
 ---
 
@@ -58,7 +22,7 @@ const unlocks = [
     eyebrow="GOVERNMENT · PROCESS AUTOMATION"
     titleLine1="From a shared inbox"
     titleLine2="to a system of record."
-    standfirst="A county health department's pool permitting modernization had stalled. I took it over, rebuilt the program as a single automated system of record, and in doing so gave the department something it had never had: data it could actually manage the work with."
+    standfirst="A county health department's pool permitting modernization had stalled. I picked it up, rebuilt the program as a single automated system of record, and gave the department something it never had: data it could actually manage the work with."
     nextLabel="A-LIGN"
     nextHref="/work/prospecting-automation"
   >
@@ -67,12 +31,12 @@ const unlocks = [
     <section class="case-section">
       <div class="sec-label" data-reveal>THE CHALLENGE</div>
       <p class="body" data-reveal>
-        More than fifty pool permits a year arrived by email. Staff retyped the details into a
-        spreadsheet, tracked status by inbox and memory, and hand-wrote every letter that went back
-        out. Applications routinely arrived incomplete, and nobody knew until someone opened them.
+        More than fifty pool permits a year arrived by email. Details were retyped into a
+        spreadsheet, status was tracked by inbox and memory, and every letter was typed by hand.
+        Applications routinely arrived incomplete, and nobody knew until someone opened them.
       </p>
       <p class="situation-stmt" data-reveal>
-        But the deeper problem wasn't the manual labor. It was that the department
+        But the deeper problem wasn't the manual labor at all. It was that the department
         <span class="situation-key">couldn't see its own work</span>.
       </p>
       <p class="body" data-reveal>
@@ -82,8 +46,6 @@ const unlocks = [
       <ul class="questions" data-reveal>
         <li>How long does a permit actually take?</li>
         <li>Where do they stall?</li>
-        <li>Which step is the bottleneck?</li>
-        <li>How many are overdue right now?</li>
         <li>Is the statutory thirty-day review clock being met?</li>
       </ul>
       <p class="body" data-reveal>
@@ -91,9 +53,9 @@ const unlocks = [
         exist in any form you could ask a question of.
       </p>
       <p class="body-muted" data-reveal>
-        The department had known this needed to change for years. An earlier internal effort never
-        delivered. When it was finally revived with an outside consultant, the build stalled again in
-        its first weeks, with no clear owner driving it.
+        An earlier internal effort never delivered. When the project was revived with an outside
+        consultant, the technical lead was scoped to sit on the DOH side. The build's complexity
+        exceeded that arrangement and it was reassigned. That's where I picked it up.
       </p>
     </section>
 
@@ -102,8 +64,54 @@ const unlocks = [
     </section>
 
     <section class="case-section">
-      <div class="sec-label" data-reveal>THE APPROACH</div>
-      <CaseApproach workstreams={workstreams} />
+      <div class="sec-label" data-reveal>WHAT GOT BUILT</div>
+      <p class="situation-stmt" data-reveal>One intake, one record, seven flows.</p>
+      <p class="body" data-reveal>
+        The form is designed against two things at once: the Excel sheet staff already lived in, and
+        the DH 4159 state form. Matching both meant the new system produced records staff would
+        recognize and the state would accept. The SharePoint list behind it is the program's first
+        real system of record, with fifty-one historical records migrated in and status values
+        rebuilt to match the milestones the manager already used rather than generic labels.
+      </p>
+      <p class="body" data-reveal>
+        A version of this system already existed in another county, built for septic permits.
+        Copying it was the fast path and the wrong one. Most of the early rework came from the gap
+        between what pools actually need and what septic had been built for.
+      </p>
+      <p class="body" data-reveal>
+        Much of the calendar went to the parts you can't see: getting access provisioned inside a
+        government tenant, and getting the consultant, the department, and government IT aligned on
+        who could touch what. Once both were in place, the core system came together in a few weeks.
+      </p>
+    </section>
+
+    <section class="case-section">
+      <div class="sec-label" data-reveal>RIGHT-SIZING AGAINST REALITY</div>
+      <p class="body" data-reveal>
+        I planned for more than I built. The original design called for heavier automation and a
+        much larger list.
+      </p>
+      <p class="body" data-reveal>
+        I pulled back, for reasons about the client rather than the code. The team maintaining it is
+        small, there is no dedicated technical staff to fix it when something breaks, and this was
+        an active production project in a government tenant.
+      </p>
+      <p class="body" data-reveal>
+        The clearest case is letters. I built three Word templates with content controls and then
+        didn't ship them. Part of that was fragility, since a letter flow that fails quietly means a
+        permit notice that never goes out. The better reason is that this is a regulatory program,
+        and the system shouldn't write to an applicant on behalf of staff. It sends exactly one
+        thing on its own: the confirmation that a submission was received. Everything else is a
+        reminder telling a person it's their turn. Staff stayed the decision-makers.
+      </p>
+      <p class="body" data-reveal>
+        Every other cut went the same way. The EPH manager who has run this program for years and I
+        took the list from roughly ninety columns to thirty-five, one field at a time. Does this
+        field earn its place, or is it a column nobody will ever fill?
+      </p>
+      <p class="closing-note" data-reveal>
+        What got built is smaller than what was drawn. That was the point.
+      </p>
     </section>
 
     <section class="case-section quote-band" data-reveal>
@@ -123,65 +131,40 @@ const unlocks = [
 
     <section class="case-section">
       <div class="sec-label" data-reveal>THE IMPACT</div>
-      <div class="impact-grid" data-reveal>
-        <div class="compartment">
-          <p class="compartment-label">THE RECORD</p>
-          <p class="compartment-body">
-            A structured electronic intake system feeding one centralized record. Every permit is
-            timestamped and moving through defined milestones, in place of four disagreeing copies.
-            Clean data the department can finally query.
-          </p>
-        </div>
-        <div class="compartment">
-          <p class="compartment-label">WHAT IT UNLOCKS</p>
-          <ul class="unlocks">
-            {unlocks.map(([term, desc]) => (
-              <li>
-                <span class="u-term">{term}</span>
-                <span class="u-desc">{desc}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div class="compartment">
-          <p class="compartment-label">EFFICIENCY</p>
-          <p class="compartment-body">
-            It improves efficiency while preserving regulatory oversight. Work that ran on staff
-            memory now runs on its own: confirmations, notifications, reminders, and the review clock.
-            Letters are no longer typed by hand, and incomplete applications are rejected at intake.
-          </p>
-        </div>
-        <div class="compartment">
-          <p class="compartment-label">SCALE</p>
-          <p class="compartment-body">
-            Pools is phase one of a planned rollout across more than ten of the department's
-            regulated Environmental Public Health programs. The same architecture extends to the
-            rest.
-          </p>
-        </div>
-      </div>
+      <p class="body" data-reveal>
+        One centralized record in place of four disagreeing copies. Every permit timestamped and
+        moving through defined milestones. Work that ran on staff memory now runs on its own, and
+        incomplete applications are rejected at intake. The whole thing runs on Microsoft 365
+        licensing the department already owned, which is the reason they can actually keep it.
+      </p>
+      <p class="body" data-reveal>
+        The system was handed off in July 2026, so it hasn't produced a cycle-time number yet.
+        That's the point. The first thing it generates is the baseline that never existed: volume,
+        cycle time, where permits stall, and whether the thirty-day clock is being met.
+      </p>
+      <p class="body" data-reveal>
+        Pools is phase one. The same architecture extends to food service, lodging, groupcare, and
+        septic without rebuilding each time.
+      </p>
     </section>
 
     <section class="case-section">
       <div class="sec-label" data-reveal>HOW IT CLOSED</div>
       <p class="body" data-reveal>
-        I didn't stop when the build worked. I delivered two documents in the client's branding: a
-        leadership summary covering the work, the collaboration, an honest account of where the
-        project stalled, and the scalability path across the other EPH programs. And a staff
-        operational guide covering what changed, how applications flow now, and what each automated
-        reminder means, closing with an invitation for staff to suggest improvements.
+        I delivered a leadership summary and a staff guide, then ran a live walkthrough to train the
+        team. The EPH manager, the consultant, and the IT team were genuinely excited to see the
+        system come to life, and to get their time back from the repetitive manual work it replaces.
       </p>
-      <p class="body" data-reveal>Then I ran a live walkthrough to train the team.</p>
       <p class="closing-note" data-reveal>
-        Engagements are supposed to end this way. The difference between a system that gets used and
-        one that gets abandoned is almost entirely what happens in the last week.
+        The difference between a system that gets used and one that gets abandoned is almost
+        entirely what happens in the last week.
       </p>
     </section>
   </CaseStudyLayout>
 </Base>
 
 <style>
-  .case-section { margin-top: 12vh; }
+  .case-section { margin-top: 9vh; }
   .case-exhibit { margin-top: 6vh; }
 
   /* Big display statement (the pivot / lead lines) */
@@ -239,59 +222,6 @@ const unlocks = [
     color: var(--ink-muted-2);
   }
 
-  /* Impact: four-compartment grid */
-  .impact-grid {
-    margin: 5vh 0 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-top: 1px solid rgba(41, 33, 23, 0.16);
-    border-left: 1px solid rgba(41, 33, 23, 0.16);
-  }
-  .compartment {
-    padding: 4.5vh 3vw;
-    border-right: 1px solid rgba(41, 33, 23, 0.16);
-    border-bottom: 1px solid rgba(41, 33, 23, 0.16);
-  }
-  .compartment-label {
-    margin: 0 0 18px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--accent);
-  }
-  .compartment-body {
-    margin: 0;
-    max-width: 42ch;
-    font-family: var(--font-sans);
-    font-size: clamp(15px, 1.15vw, 16.5px);
-    line-height: 1.6;
-    color: var(--ink-muted-2);
-    text-wrap: pretty;
-  }
-  .unlocks {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  .u-term {
-    display: block;
-    font-family: var(--font-display);
-    font-size: clamp(16px, 1.3vw, 19px);
-    line-height: 1.2;
-    color: var(--ink);
-  }
-  .u-desc {
-    display: block;
-    margin-top: 3px;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--ink-muted-3);
-  }
-
   /* Closing statement */
   .closing-note {
     margin: 5vh 0 0;
@@ -339,7 +269,6 @@ const unlocks = [
   .cq-role { color: rgba(233, 225, 207, 0.6); font-weight: 400; }
 
   @media (max-width: 720px) {
-    .case-section { margin-top: 9vh; }
-    .impact-grid { grid-template-columns: 1fr; }
+    .case-section { margin-top: 7vh; }
   }
 </style>
