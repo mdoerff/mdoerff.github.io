@@ -4,14 +4,12 @@ import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
 import CaseColophon from '../../components/work/CaseColophon.astro';
 import CaseApproach from '../../components/work/CaseApproach.astro';
 import RepWorkDiagram from '../../components/work/diagrams/RepWorkDiagram.astro';
-import ChangedHeldDiagram from '../../components/work/diagrams/ChangedHeldDiagram.astro';
 
 const facts = [
   { label: 'ROLE', value: 'BDR intern · The person who owns the Apollo build' },
   { label: 'ORG', value: 'A-LIGN · Cybersecurity compliance' },
   { label: 'TIMELINE', value: '2026 · Ongoing' },
-  { label: 'TOOLS', value: 'Apollo · Salesforce · Outreach · AI qualification' },
-  { label: 'WHERE IT STANDS', value: 'Proven on CMMC · Paused on SOC 2 · Running across fourteen reps', accent: true },
+  { label: 'TOOLS', value: 'Apollo · Salesforce · Outreach · Agentic workflow' },
 ];
 
 // What the build had to survive: five constraints, each a titled row.
@@ -55,10 +53,10 @@ const survived = [
     <CaseColophon items={facts} />
 
     <section class="case-section">
-      <h2 class="nar-head" data-reveal>Nobody assigned me this</h2>
+      <h2 class="nar-head" data-reveal>How I got involved</h2>
       <p class="situation-stmt" data-reveal>
-        My manager mentioned a stalled Apollo project in a team meeting.
-        <span class="situation-key">I volunteered</span>.
+        Projects like this were not part of a BDR intern's job. My manager mentioned a stalled
+        Apollo build in a team meeting, and <span class="situation-key">I volunteered</span>.
       </p>
       <p class="body" data-reveal>
         The workflow was meant to find the right contact inside every target account automatically,
@@ -99,17 +97,18 @@ const survived = [
 
     <section class="case-section">
       <h2 class="nar-head" data-reveal>Then almost everything changed at once</h2>
-      <p class="body" data-reveal>
-        CMMC was paused federally. Focus shifted to SOC 2, where the signal identifying a target
-        sits in a Salesforce structure Apollo can't read, so the upstream layer that made CMMC work
-        didn't exist. The person who could fix that became unavailable indefinitely. My manager said
-        the output wasn't good enough to rely on, and he was right: the contact layer was straining
-        because the account layer underneath it was missing.
-      </p>
-      <!-- visual 2: what changed, and what held -->
-      <div class="pause-exhibit">
-        <ChangedHeldDiagram />
+      <div class="stood-strip" data-reveal>
+        <span class="stood-label">Where it stood</span>
+        <span class="stood-line">Proven on CMMC, about 1% bounce against a 6% team average, running across fourteen reps.</span>
       </div>
+      <p class="body" data-reveal>
+        CMMC was paused federally and the focus moved to SOC 2, where the platform isn't yet
+        streamlined into the team's day to day: integrations have gaps, key people aren't always
+        available, and the accounts in play became more valuable, not less. Keeping it moving meant
+        working around all of it, bridging data in with CSV imports, getting creative with Apollo's
+        filtering to keep running tests, and holding the scarce accounts for reps to work by hand
+        until the output earned trust.
+      </p>
       <p class="situation-stmt" data-reveal>
         None of it was what I'd <span class="situation-key">designed for</span>.
       </p>
@@ -121,10 +120,10 @@ const survived = [
     </section>
 
     <section class="case-section">
-      <h2 class="nar-head" data-reveal>Where it stands, where it goes</h2>
+      <h2 class="nar-head" data-reveal>In production</h2>
 
       <div class="close-group" data-reveal>
-        <p class="close-label">Where it stands</p>
+        <p class="close-label">Running today</p>
         <ul class="close-list">
           <li>All fourteen reps run it day to day</li>
           <li>Trained beyond the team: reps in EMEA and the email marketing group</li>
@@ -134,7 +133,7 @@ const survived = [
       </div>
 
       <div class="close-group" data-reveal>
-        <p class="close-label">Where it goes</p>
+        <p class="close-label">Being extended</p>
         <ul class="close-list">
           <li>Each audit line gets its own account sourcing and personas; the person who buys CMMC is not the person who buys SOC 2</li>
           <li>Account lists built upstream, so the model inherits a clean starting point instead of guessing</li>
@@ -184,7 +183,33 @@ const survived = [
     border-bottom: 2px solid var(--accent);
   }
 
-  .pause-exhibit { margin-top: 4vh; }
+  /* One-line proof of the working starting state */
+  .stood-strip {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 4vh;
+    max-width: 900px;
+    padding: 13px 18px;
+    border: 1px solid rgba(46, 74, 58, 0.4);
+    background: rgba(46, 74, 58, 0.06);
+  }
+  .stood-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .stood-line {
+    font-family: var(--font-display);
+    font-size: clamp(13.5px, 1.15vw, 16px);
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
 
   /* Standard body copy */
   .body {

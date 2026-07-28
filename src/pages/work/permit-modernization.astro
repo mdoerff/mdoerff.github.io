@@ -9,7 +9,6 @@ const facts = [
   { label: 'SECTOR', value: 'Government · Environmental public health' },
   { label: 'ROLE', value: 'Primary responsibility · system architecture and implementation' },
   { label: 'TIMELINE', value: 'Spring to Summer 2026' },
-  { label: 'STATUS', value: 'Built, validated, handed off', accent: true },
 ];
 ---
 
@@ -97,17 +96,12 @@ const facts = [
         an active production project in a government tenant.
       </p>
       <p class="body" data-reveal>
-        The clearest case is letters. I built three Word templates with content controls and then
-        didn't ship them. Part of that was fragility, since a letter flow that fails quietly means a
-        permit notice that never goes out. The better reason is that this is a regulatory program,
-        and the system shouldn't write to an applicant on behalf of staff. It sends exactly one
-        thing on its own: the confirmation that a submission was received. Everything else is a
-        reminder telling a person it's their turn. Staff stayed the decision-makers.
-      </p>
-      <p class="body" data-reveal>
-        Every other cut went the same way. The EPH manager who has run this program for years and I
-        took the list from roughly ninety columns to thirty-five, one field at a time. Does this
-        field earn its place, or is it a column nobody will ever fill?
+        Mid-build, more conversations with the EPH manager kept sharpening the picture of what
+        would actually benefit the team. We made keep-or-cut decisions against the original design,
+        and most of them were cuts: fewer columns in the lists, fewer and shallower automations,
+        fewer views. The wide version I had drawn got molded into the shape of their actual
+        practice, something the team would be glad to work in rather than something that overwhelms
+        them back into the spreadsheet.
       </p>
       <p class="closing-note" data-reveal>
         What got built is smaller than what was drawn. That was the point.
@@ -131,29 +125,43 @@ const facts = [
 
     <section class="case-section">
       <div class="sec-label" data-reveal>THE IMPACT</div>
-      <p class="body" data-reveal>
-        One centralized record in place of four disagreeing copies. Every permit timestamped and
-        moving through defined milestones. Work that ran on staff memory now runs on its own, and
-        incomplete applications are rejected at intake. The whole thing runs on Microsoft 365
-        licensing the department already owned, which is the reason they can actually keep it.
-      </p>
-      <p class="body" data-reveal>
-        The system was handed off in July 2026, so it hasn't produced a cycle-time number yet.
-        That's the point. The first thing it generates is the baseline that never existed: volume,
-        cycle time, where permits stall, and whether the thirty-day clock is being met.
-      </p>
-      <p class="body" data-reveal>
-        Pools is phase one. The same architecture extends to food service, lodging, groupcare, and
-        septic without rebuilding each time.
-      </p>
-    </section>
 
-    <section class="case-section">
-      <div class="sec-label" data-reveal>HOW IT CLOSED</div>
+      <div class="findings" data-reveal>
+        <div class="finding">
+          <h3 class="finding-title">One centralized record</h3>
+          <p class="finding-line">
+            A structured electronic intake system feeding one system of record, in place of four
+            disagreeing copies. Every permit timestamped, moving through defined milestones.
+          </p>
+        </div>
+        <div class="finding">
+          <h3 class="finding-title">Efficiency, with oversight preserved</h3>
+          <p class="finding-line">
+            Work that ran on staff memory now runs on its own, incomplete applications are rejected
+            at intake, and staff keep every decision.
+          </p>
+        </div>
+        <div class="finding">
+          <h3 class="finding-title">The baseline that never existed</h3>
+          <p class="finding-line">
+            Handed off in July 2026, the system's first product is measurement itself: volume,
+            cycle time, where permits stall, whether the thirty-day clock is met.
+          </p>
+        </div>
+        <div class="finding">
+          <h3 class="finding-title">A framework built to expand</h3>
+          <p class="finding-line">
+            Runs on Microsoft 365 licensing the department already owned, and the same architecture
+            extends to food service, lodging, groupcare, and septic.
+          </p>
+        </div>
+      </div>
+
       <p class="body" data-reveal>
-        I delivered a leadership summary and a staff guide, then ran a live walkthrough to train the
-        team. The EPH manager, the consultant, and the IT team were genuinely excited to see the
-        system come to life, and to get their time back from the repetitive manual work it replaces.
+        It closed the way engagements should: a leadership summary, a staff guide, and a live
+        walkthrough to train the team. The EPH manager, the consultant, and the IT team were
+        genuinely excited to see the system come to life, and to get their time back from the
+        repetitive manual work it replaces.
       </p>
       <p class="closing-note" data-reveal>
         The difference between a system that gets used and one that gets abandoned is almost
@@ -222,6 +230,35 @@ const facts = [
     color: var(--ink-muted-2);
   }
 
+  /* Impact findings: report-style hairline rows, serif finding + one line */
+  .findings { margin-top: 5vh; }
+  .finding {
+    display: grid;
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    gap: 0 3vw;
+    padding: 3.8vh 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.1);
+  }
+  .finding:last-child { border-bottom: 1px solid rgba(41, 33, 23, 0.1); }
+  .finding-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.25;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .finding-line {
+    margin: 0;
+    max-width: 72ch;
+    font-family: var(--font-sans);
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.6;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+
   /* Closing statement */
   .closing-note {
     margin: 5vh 0 0;
@@ -270,5 +307,6 @@ const facts = [
 
   @media (max-width: 720px) {
     .case-section { margin-top: 7vh; }
+    .finding { grid-template-columns: 1fr; gap: 8px; padding: 3vh 0; }
   }
 </style>

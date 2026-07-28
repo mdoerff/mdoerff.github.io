@@ -75,7 +75,13 @@ const { caseLabel, eyebrow, titleLine1, titleLine2, standfirst, nextLabel, nextN
   }
   .case-bar-back:hover { color: var(--accent); }
 
-  .case-body { padding: 0 4vw 10vh; }
+  /* Centered column: the measure caps stay, but the whitespace splits into
+     balanced margins on wide screens instead of piling up on the right */
+  .case-body {
+    max-width: calc(1150px + 8vw);
+    margin: 0 auto;
+    padding: 0 4vw 10vh;
+  }
 
   .case-head { padding: 6vh 0 4vh; max-width: 1150px; }
   .case-title {
