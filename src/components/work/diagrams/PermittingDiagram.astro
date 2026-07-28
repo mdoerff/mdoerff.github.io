@@ -1,8 +1,10 @@
 ---
-// FIG. 1 — Florida DOH permit intake, as found and as built.
+// Florida DOH permit intake, as found and as built.
 // Left: the real "before" — four people, disconnected copies, point-to-point
 // email, no shared center. Right: the same team connected to one shared
 // system of record. Every label is a real fact from the engagement.
+// Type floor: nothing under ~11.5 SVG units, so the smallest text still
+// renders legibly after the 1600-unit canvas scales into the content column.
 import DiagramDefs from './DiagramDefs.astro';
 ---
 
@@ -28,20 +30,20 @@ import DiagramDefs from './DiagramDefs.astro';
 
       <!-- ================= LEFT · AS FOUND ================= -->
       <g transform="rotate(-0.4 400 350)">
-        <text x="60" y="66" font-size="13" font-weight="700" letter-spacing="2" fill="var(--ink)">AS FOUND</text>
-        <text x="60" y="88" font-size="10.5" letter-spacing="1.6" fill="var(--grey-label)">DISCONNECTED COPIES · POINT-TO-POINT EMAIL</text>
+        <text x="60" y="70" font-size="18" font-weight="700" letter-spacing="2.2" fill="var(--ink)">AS FOUND</text>
+        <text x="60" y="96" font-size="12.5" letter-spacing="1.6" fill="var(--grey-label)">DISCONNECTED COPIES · POINT-TO-POINT EMAIL</text>
 
         <!-- applicant -->
-        <rect x="50" y="300" width="120" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-        <text x="110" y="326" font-size="11" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
+        <rect x="50" y="300" width="132" height="48" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+        <text x="116" y="329" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
 
         <!-- feeds into the department -->
-        <path d="M172 310 Q 232 248 292 182" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <path d="M292 182 l-9 1 m9 -1 l-4 8" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <text x="196" y="252" font-size="9.5" letter-spacing="1.2" fill="var(--grey-label)" transform="rotate(-38 196 252)">EMAIL</text>
-        <path d="M172 334 Q 232 396 292 428" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <path d="M292 428 l-9 -2 m9 2 l-6 7" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <text x="200" y="386" font-size="9.5" letter-spacing="1.2" fill="var(--grey-label)" transform="rotate(30 200 386)">PAPER</text>
+        <path d="M184 312 Q 240 248 296 184" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <path d="M296 184 l-9 1 m9 -1 l-4 8" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <text x="206" y="250" font-size="12" letter-spacing="1.2" fill="var(--grey-label)" transform="rotate(-40 206 250)">EMAIL</text>
+        <path d="M184 338 Q 240 396 296 428" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <path d="M296 428 l-9 -2 m9 2 l-6 7" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <text x="212" y="388" font-size="12" letter-spacing="1.2" fill="var(--grey-label)" transform="rotate(30 212 388)">PAPER</text>
 
         <!-- the mesh: everyone emails everyone -->
         <g fill="none" stroke="var(--ink)" stroke-width="0.85" opacity="0.55">
@@ -52,157 +54,120 @@ import DiagramDefs from './DiagramDefs.astro';
           <path d="M632 232 Q 662 325 632 418" />
           <path d="M432 446 Q 505 458 556 444" />
         </g>
-        <g font-size="8.5" letter-spacing="1.4" fill="var(--grey-faint)">
-          <text x="478" y="164">EMAIL</text>
-          <text x="452" y="290" transform="rotate(45 452 290)">EMAIL</text>
-          <text x="530" y="290" transform="rotate(-45 530 290)">EMAIL</text>
-          <text x="655" y="330" transform="rotate(90 655 330)">EMAIL</text>
-        </g>
+        <text x="497" y="318" font-size="12" letter-spacing="1.6" text-anchor="middle" fill="var(--grey-label)">EVERYONE EMAILS EVERYONE</text>
 
         <!-- staff nodes -->
         <g>
-          <rect x="300" y="140" width="130" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="365" y="164" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
-          <rect x="560" y="190" width="130" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="625" y="214" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
-          <rect x="300" y="420" width="130" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="365" y="444" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
-          <rect x="560" y="420" width="130" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="625" y="444" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="292" y="138" width="146" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="365" y="165" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
+          <rect x="556" y="188" width="138" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="625" y="215" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="296" y="418" width="138" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="365" y="445" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
+          <rect x="556" y="418" width="138" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="625" y="445" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
         </g>
 
         <!-- each person's own copy of the truth -->
         <g stroke="var(--ink-muted-4)" stroke-width="0.8" stroke-dasharray="2 3" fill="none">
-          <path d="M330 180 L240 196" />
-          <path d="M660 230 L668 252" />
-          <path d="M330 460 L250 474" />
-          <path d="M625 460 L620 480" />
+          <path d="M330 182 L245 200" />
+          <path d="M660 232 L668 254" />
+          <path d="M330 462 L255 476" />
+          <path d="M625 462 L620 482" />
         </g>
         <g>
-          <g transform="rotate(-1 165 211)">
-            <rect x="90" y="196" width="150" height="30" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-            <rect x="90" y="196" width="150" height="30" fill="url(#pd-ht)" />
-            <text x="165" y="215" font-size="9" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">EXCEL TRACKING COPY</text>
+          <g transform="rotate(-1 160 218)">
+            <rect x="62" y="200" width="196" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+            <rect x="62" y="200" width="196" height="36" fill="url(#pd-ht)" />
+            <text x="160" y="223" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">EXCEL TRACKING COPY</text>
           </g>
-          <g transform="rotate(1.2 655 267)">
-            <rect x="580" y="252" width="150" height="30" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-            <rect x="580" y="252" width="150" height="30" fill="url(#pd-ht)" />
-            <text x="655" y="271" font-size="9" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">EMAIL THREADS</text>
+          <g transform="rotate(1.2 660 272)">
+            <rect x="582" y="254" width="156" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+            <rect x="582" y="254" width="156" height="36" fill="url(#pd-ht)" />
+            <text x="660" y="277" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">EMAIL THREADS</text>
           </g>
-          <g transform="rotate(1 175 489)">
-            <rect x="105" y="474" width="140" height="30" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-            <rect x="105" y="474" width="140" height="30" fill="url(#pd-ht)" />
-            <text x="175" y="493" font-size="9" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">PAPER FILES</text>
+          <g transform="rotate(1 172 494)">
+            <rect x="98" y="476" width="148" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+            <rect x="98" y="476" width="148" height="36" fill="url(#pd-ht)" />
+            <text x="172" y="499" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">PAPER FILES</text>
           </g>
-          <g transform="rotate(-1.2 620 495)">
-            <rect x="520" y="480" width="200" height="30" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-            <rect x="520" y="480" width="200" height="30" fill="url(#pd-ht)" />
-            <text x="620" y="499" font-size="9" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">LETTERS TYPED BY HAND</text>
+          <g transform="rotate(-1.2 628 498)">
+            <rect x="512" y="480" width="232" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+            <rect x="512" y="480" width="232" height="36" fill="url(#pd-ht)" />
+            <text x="628" y="503" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">LETTERS TYPED BY HAND</text>
           </g>
         </g>
 
         <!-- the chase loop -->
-        <path d="M330 462 C 285 555, 140 555, 106 400" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" stroke-dasharray="5 5" />
-        <path d="M106 400 l-4 9 m4 -9 l7 7" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <text x="88" y="568" font-size="9.5" letter-spacing="1.2" fill="var(--grey-label)">INCOMPLETE APPLICATION · CHASE THE APPLICANT, AGAIN</text>
+        <path d="M330 464 C 285 560, 140 560, 106 402" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" stroke-dasharray="5 5" />
+        <path d="M106 402 l-4 9 m4 -9 l7 7" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <text x="88" y="580" font-size="12" letter-spacing="1.2" fill="var(--grey-label)">INCOMPLETE? CHASE THE APPLICANT, AGAIN</text>
 
-        <text x="60" y="642" font-size="11" letter-spacing="1.4" fill="var(--ink-muted-4)">STATUS LIVES IN FOUR PLACES AT ONCE · NONE OF THEM AGREE</text>
+        <text x="60" y="644" font-size="13.5" letter-spacing="1.4" fill="var(--ink-muted-4)">STATUS LIVES IN FOUR PLACES · NONE OF THEM AGREE</text>
       </g>
 
       <!-- ================= DIVIDER ================= -->
       <line x1="800" y1="70" x2="800" y2="640" stroke="var(--grey-faint)" stroke-width="1" stroke-dasharray="6 6" />
-      <text x="812" y="330" font-size="11" font-weight="700" letter-spacing="3" fill="var(--accent)" transform="rotate(90 812 330)">REBUILT &rarr;</text>
+      <text x="814" y="322" font-size="13" font-weight="700" letter-spacing="3" fill="var(--accent)" transform="rotate(90 814 322)">REBUILT &rarr;</text>
 
       <!-- ================= RIGHT · AS BUILT ================= -->
       <g transform="rotate(0.3 1200 350)">
-        <text x="860" y="66" font-size="13" font-weight="700" letter-spacing="2" fill="var(--accent)">AS BUILT</text>
-        <text x="860" y="88" font-size="10.5" letter-spacing="1.6" fill="var(--grey-label)">ONE SHARED SYSTEM OF RECORD</text>
+        <text x="860" y="70" font-size="18" font-weight="700" letter-spacing="2.2" fill="var(--accent)">AS BUILT</text>
+        <text x="860" y="96" font-size="12.5" letter-spacing="1.6" fill="var(--grey-label)">ONE SHARED SYSTEM OF RECORD</text>
 
         <!-- applicant → form -->
-        <rect x="850" y="130" width="120" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-        <text x="910" y="154" font-size="11" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
-        <path d="M972 150 h32 m0 0 l-8 -5 m8 5 l-8 5" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <rect x="846" y="126" width="132" height="48" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+        <text x="912" y="155" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
+        <path d="M980 150 h30 m0 0 l-8 -5 m8 5 l-8 5" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
 
-        <!-- microsoft form, with misregistration echo -->
-        <rect x="1013" y="115" width="170" height="64" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
-        <rect x="1013" y="115" width="170" height="64" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.2" />
-        <text x="1098" y="141" font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--ink)">MICROSOFT FORM</text>
-        <text x="1098" y="161" font-size="9" letter-spacing="1" text-anchor="middle" fill="var(--grey-label)">ONE INTAKE · REQUIRED FIELDS</text>
+        <!-- microsoft form, with misregistration echo; permit types fold into the caption -->
+        <rect x="1018" y="112" width="240" height="76" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="1018" y="112" width="240" height="76" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.2" />
+        <text x="1138" y="143" font-size="14.5" font-weight="700" text-anchor="middle" fill="var(--ink)">MICROSOFT FORM</text>
+        <text x="1138" y="167" font-size="12.5" letter-spacing="0.9" text-anchor="middle" fill="var(--grey-label)">ONE INTAKE · FOUR PERMIT TYPES</text>
 
-        <!-- four permit types -->
-        <g fill="none" stroke="var(--ink-muted-4)" stroke-width="0.85">
-          <path d="M1060 179 L1032 202" /><path d="M1085 179 L1122 202" />
-          <path d="M1112 179 L1218 202" /><path d="M1140 179 L1330 202" />
-        </g>
-        <g font-size="9" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-3)">
-          <text x="1030" y="216">NEW POOL</text>
-          <text x="1126" y="216">RESURFACING</text>
-          <text x="1222" y="216">MODIFICATION</text>
-          <text x="1336" y="216">OWNERSHIP CHANGE</text>
-        </g>
-        <g fill="none" stroke="var(--ink-muted-4)" stroke-width="0.85">
-          <path d="M1030 222 L1100 248" /><path d="M1126 222 L1128 248" />
-          <path d="M1222 222 L1160 248" /><path d="M1336 222 L1190 248" />
-        </g>
+        <!-- form feeds the hub -->
+        <path d="M1138 188 V 246" fill="none" stroke="var(--ink-muted-4)" stroke-width="1" />
+        <path d="M1138 246 l-5 -8 m5 8 l5 -8" fill="none" stroke="var(--ink-muted-4)" stroke-width="1" />
 
         <!-- migration annotation -->
-        <text x="968" y="240" font-size="9.5" letter-spacing="1" text-anchor="end" fill="var(--accent)">51 HISTORICAL RECORDS MIGRATED IN</text>
-        <path d="M972 244 Q 985 252 998 260" fill="none" stroke="var(--accent)" stroke-width="0.9" />
-        <path d="M998 260 l-8 -1 m8 1 l-5 -7" fill="none" stroke="var(--accent)" stroke-width="0.9" />
+        <text x="1000" y="228" font-size="12.5" letter-spacing="1" text-anchor="end" fill="var(--accent)">51 RECORDS MIGRATED IN</text>
+        <path d="M1006 234 Q 1022 246 1038 258" fill="none" stroke="var(--accent)" stroke-width="0.9" />
+        <path d="M1038 258 l-8 -1 m8 1 l-5 -7" fill="none" stroke="var(--accent)" stroke-width="0.9" />
 
         <!-- the hub: sharepoint list -->
-        <rect x="993" y="253" width="300" height="90" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
-        <rect x="993" y="253" width="300" height="90" fill="var(--bone)" stroke="var(--accent)" stroke-width="1.6" />
-        <text x="1143" y="292" font-size="15" font-weight="700" text-anchor="middle" fill="var(--ink)">SHAREPOINT LIST</text>
-        <text x="1143" y="316" font-size="9.5" letter-spacing="1.6" text-anchor="middle" fill="var(--accent)">ONE SHARED LIVE VIEW</text>
+        <rect x="993" y="253" width="300" height="96" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="993" y="253" width="300" height="96" fill="var(--bone)" stroke="var(--accent)" stroke-width="1.6" />
+        <text x="1143" y="295" font-size="17" font-weight="700" text-anchor="middle" fill="var(--ink)">SHAREPOINT LIST</text>
+        <text x="1143" y="322" font-size="12" letter-spacing="1.6" text-anchor="middle" fill="var(--accent)">ONE SHARED LIVE VIEW</text>
 
         <!-- same four people, now spokes to one hub -->
         <g fill="none" stroke="var(--ink)" stroke-width="0.85" opacity="0.75">
-          <path d="M962 288 L991 292" />
-          <path d="M962 342 L991 322" />
-          <path d="M1322 288 L1295 292" />
-          <path d="M1322 342 L1295 322" />
+          <path d="M968 290 L991 296" />
+          <path d="M968 344 L991 324" />
+          <path d="M1318 290 L1295 296" />
+          <path d="M1318 344 L1295 324" />
         </g>
         <g>
-          <rect x="832" y="270" width="130" height="36" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="897" y="292" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
-          <rect x="832" y="324" width="130" height="36" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="897" y="346" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
-          <rect x="1322" y="270" width="130" height="36" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="1387" y="292" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
-          <rect x="1322" y="324" width="130" height="36" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
-          <text x="1387" y="346" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="822" y="270" width="146" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="895" y="295" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
+          <rect x="822" y="326" width="146" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="895" y="351" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
+          <rect x="1318" y="270" width="146" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="1391" y="295" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="1318" y="326" width="146" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="1391" y="351" font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
         </g>
 
-        <!-- seven flows off the hub -->
-        <path d="M1143 343 V 383" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <path d="M955 383 H 1516" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
-        <g fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9">
-          <path d="M989 383 V 402" /><path d="M1074 383 V 402" /><path d="M1159 383 V 402" />
-          <path d="M1244 383 V 402" /><path d="M1329 383 V 402" /><path d="M1414 383 V 402" />
-          <path d="M1499 383 V 402" />
-        </g>
-        <g>
-          {[
-            { x: 950, l1: 'CONFIRM', l2: 'RECEIPT' },
-            { x: 1035, l1: 'NOTIFY', l2: 'STAFF' },
-            { x: 1120, l1: '30-DAY', l2: 'REVIEW CLOCK' },
-            { x: 1205, l1: 'ISSUED', l2: 'REMINDER' },
-            { x: 1290, l1: 'RE-INSPECT', l2: 'REMINDER' },
-            { x: 1375, l1: 'ENFORCE', l2: 'FLAG' },
-            { x: 1460, l1: 'INTAKE', l2: 'MAPPING' },
-          ].map((s) => (
-            <g>
-              <rect x={s.x} y="402" width="78" height="46" fill="var(--bone)" stroke="var(--ink)" stroke-width="0.9" />
-              <rect x={s.x} y="402" width="78" height="46" fill="url(#pd-ht)" opacity="0.5" />
-              <text x={s.x + 39} y="422" font-size="8.5" letter-spacing="0.6" text-anchor="middle" fill="var(--ink-muted-2)">{s.l1}</text>
-              <text x={s.x + 39} y="436" font-size="8.5" letter-spacing="0.6" text-anchor="middle" fill="var(--ink-muted-2)">{s.l2}</text>
-            </g>
-          ))}
-        </g>
-        <text x="1243" y="482" font-size="10.5" letter-spacing="2" text-anchor="middle" fill="var(--grey-label)">7 POWER AUTOMATE FLOWS</text>
+        <!-- the automation band: seven flows, one readable strip -->
+        <path d="M1143 349 V 396" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <path d="M1143 396 l-5 -8 m5 8 l5 -8" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <rect x="900" y="398" width="600" height="74" fill="var(--bone)" stroke="var(--ink)" stroke-width="0.9" />
+        <rect x="900" y="398" width="600" height="74" fill="url(#pd-ht)" opacity="0.5" />
+        <text x="1200" y="428" font-size="13.5" font-weight="700" letter-spacing="1.6" text-anchor="middle" fill="var(--ink)">SEVEN POWER AUTOMATE FLOWS</text>
+        <text x="1200" y="454" font-size="12.5" letter-spacing="0.9" text-anchor="middle" fill="var(--ink-muted-2)">CONFIRMATIONS · NOTIFICATIONS · 30-DAY CLOCK · REMINDERS · ENFORCEMENT</text>
 
-        <text x="860" y="642" font-size="11" letter-spacing="1.4" fill="var(--ink-muted-4)">SAME TEAM · ONE LIVE VIEW · NOTHING SUBMITTED INCOMPLETE</text>
+        <text x="860" y="644" font-size="13.5" letter-spacing="1.4" fill="var(--ink-muted-4)">SAME TEAM · ONE LIVE VIEW · NOTHING SUBMITTED INCOMPLETE</text>
       </g>
     </svg>
   </div>

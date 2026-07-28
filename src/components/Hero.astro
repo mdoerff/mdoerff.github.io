@@ -168,9 +168,10 @@ import portrait from '../assets/portrait.jpg';
     gap: 36px;
   }
   .mh-link {
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-muted-2);
     padding-bottom: 2px;
@@ -181,9 +182,10 @@ import portrait from '../assets/portrait.jpg';
   .mh-link:hover { color: var(--ink); border-bottom-color: var(--accent); }
   .mh-link.nav-active { color: var(--ink); border-bottom-color: var(--accent); }
   .mh-cta {
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
     padding-bottom: 2px;
@@ -193,12 +195,12 @@ import portrait from '../assets/portrait.jpg';
     flex-shrink: 0;
   }
   .mh-cta:hover { border-bottom-color: var(--accent); }
-  /* The double rule: slim line over hairline, newspaper nameplate style.
-     Kept light — the masthead should sit on the page, not press on it. */
+  /* The double rule: two hairlines, newspaper nameplate style.
+     Featherweight — the masthead should sit on the page, not press on it. */
   .mh-rule {
-    border-top: 2px solid rgba(41, 33, 23, 0.78);
-    border-bottom: 1px solid rgba(41, 33, 23, 0.45);
-    height: 2px;
+    border-top: 1px solid rgba(41, 33, 23, 0.6);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.3);
+    height: 3px;
   }
   /* Mobile-only second row of section links; hidden on desktop */
   .mh-nav-mobile { display: none; }
@@ -278,7 +280,7 @@ import portrait from '../assets/portrait.jpg';
     /* row 1 keeps only the stamp and the CTA; links move below the rule */
     .mh-nav { display: none; }
     .mh-row { justify-content: space-between; }
-    .mh-rule { border-top-width: 1.5px; height: 2px; }
+    .mh-rule { height: 2px; }
     .mh-nav-mobile {
       display: flex;
       justify-content: center;
