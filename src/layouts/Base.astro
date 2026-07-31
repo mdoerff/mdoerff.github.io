@@ -59,14 +59,6 @@ const {
       <Footer />
     </main>
 
-    <!-- Printer's crop marks, four viewport corners -->
-    <div class="crop-marks fx-marks" aria-hidden="true">
-      <div class="cm cm-tl"></div>
-      <div class="cm cm-tr"></div>
-      <div class="cm cm-bl"></div>
-      <div class="cm cm-br"></div>
-    </div>
-
     <!-- Fine film grain — over everything, type included (canonical data-URI) -->
     <div class="film-grain" aria-hidden="true"></div>
 
@@ -148,18 +140,6 @@ const {
     position: relative;
     z-index: 1;
   }
-
-  .crop-marks {
-    position: fixed;
-    inset: 0;
-    z-index: 70;
-    pointer-events: none;
-  }
-  .cm { position: absolute; width: 15px; height: 15px; }
-  .cm-tl { top: 10px; left: 10px; border-top: 1px solid rgba(41, 33, 23, 0.6); border-left: 1px solid rgba(41, 33, 23, 0.6); }
-  .cm-tr { top: 10px; right: 10px; border-top: 1px solid rgba(41, 33, 23, 0.6); border-right: 1px solid rgba(41, 33, 23, 0.6); }
-  .cm-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.6); border-left: 1px solid rgba(41, 33, 23, 0.6); }
-  .cm-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(41, 33, 23, 0.6); border-right: 1px solid rgba(41, 33, 23, 0.6); }
 
   .film-grain {
     position: fixed;

@@ -22,20 +22,14 @@ import portrait from '../assets/portrait.jpg';
     <!-- MASTHEAD: text links set on a double rule, like a newspaper nameplate -->
     <div class="masthead fx-stamp">
       <div class="mh-row">
-        <span class="monogram">RMTD</span>
         <nav class="mh-nav" aria-label="Sections">
           <a href="#work" class="mh-link nav-active">Case Studies</a>
           <a href="/#technical" class="mh-link">Technical</a>
           <a href="/#timeline" class="mh-link">Timeline</a>
         </nav>
-        <a href="mailto:michael@rmtdco.com" class="mh-cta">Get in touch</a>
+        <a href="mailto:michael@rmtdco.com" class="mh-cta"><span class="cta-full">Get in touch</span><span class="cta-short">Contact</span></a>
       </div>
       <div class="mh-rule" aria-hidden="true"></div>
-      <nav class="mh-nav-mobile" aria-label="Sections">
-        <a href="#work" class="mh-link nav-active">Case Studies</a>
-        <a href="/#technical" class="mh-link">Technical</a>
-        <a href="/#timeline" class="mh-link">Timeline</a>
-      </nav>
     </div>
 
     <!-- orienting caption, upper-left — serif line + mono metadata -->
@@ -152,19 +146,11 @@ import portrait from '../assets/portrait.jpg';
     gap: 24px;
     padding-bottom: 8px;
   }
-  .monogram {
-    display: inline-flex; align-items: center; justify-content: center;
-    height: 26px;
-    padding: 0 8px;
-    border: 1px solid rgba(41, 33, 23, 0.42);
-    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
-    color: var(--ink);
-    flex-shrink: 0;
-  }
+  /* Bare mark, no box: the type is the stamp */
   .mh-nav {
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 36px;
   }
   .mh-link {
@@ -195,6 +181,7 @@ import portrait from '../assets/portrait.jpg';
     flex-shrink: 0;
   }
   .mh-cta:hover { border-bottom-color: var(--accent); }
+  .cta-short { display: none; }
   /* The double rule: two hairlines, newspaper nameplate style.
      Featherweight — the masthead should sit on the page, not press on it. */
   .mh-rule {
@@ -202,8 +189,6 @@ import portrait from '../assets/portrait.jpg';
     border-bottom: 1px solid rgba(41, 33, 23, 0.3);
     height: 3px;
   }
-  /* Mobile-only second row of section links; hidden on desktop */
-  .mh-nav-mobile { display: none; }
 
   /* ---- Orienting caption (serif line + mono metadata) ----
      Hierarchy is scale + typeface only; no weight-based emphasis.
@@ -273,23 +258,17 @@ import portrait from '../assets/portrait.jpg';
     .mh-row { gap: 16px; }
   }
 
-  /* ---- Mobile ---- */
+  /* ---- Mobile: one row, no stamp, links spread edge to edge ---- */
   @media (max-width: 720px) {
-    .masthead { padding: 10px 6vw 0; }
-    .mh-row { padding-bottom: 8px; }
-    /* row 1 keeps only the stamp and the CTA; links move below the rule */
-    .mh-nav { display: none; }
-    .mh-row { justify-content: space-between; }
+    .masthead { padding: 10px 4.5vw 0; }
+    .mh-row { padding-bottom: 8px; justify-content: space-between; gap: 0; }
+    .mh-nav { flex: 0 1 auto; justify-content: flex-start; gap: 12px; }
+    .mh-link { font-size: 10px; letter-spacing: 0.04em; padding: 8px 0 2px; }
+    .mh-cta { font-size: 10px; letter-spacing: 0.04em; padding: 8px 0 2px; margin-left: 12px; }
+    .cta-full { display: none; }
+    .cta-short { display: inline; }
     .mh-rule { height: 2px; }
-    .mh-nav-mobile {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 9px 0 0;
-    }
-    /* padding grows the tap target without changing the visual line */
-    .mh-nav-mobile .mh-link { font-size: 10.5px; letter-spacing: 0.1em; padding: 10px 4px; }
-    .hero-caption { top: max(15%, 128px); left: 6vw; width: min(82vw, 440px); }
+    .hero-caption { top: max(15%, 96px); left: 6vw; width: min(82vw, 440px); }
     .caption-line { font-size: 19px; }
     .nameplate { left: 6vw; bottom: 9%; }
     .nm-initial { font-size: 5vw; }
@@ -315,6 +294,13 @@ import portrait from '../assets/portrait.jpg';
         linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.85) 35%, rgba(233, 225, 207, 0.45) 55%, transparent 72%),
         radial-gradient(70% 62% at 60% 40%, transparent 0%, transparent 22%, rgba(233, 225, 207, 0.3) 40%, rgba(233, 225, 207, 0.75) 58%, var(--bone) 74%);
     }
+  }
+
+  /* ---- Narrowest phones: keep the single nav row alive ---- */
+  @media (max-width: 374px) {
+    .mh-nav { gap: 8px; }
+    .mh-link, .mh-cta { letter-spacing: 0; }
+    .mh-cta { margin-left: 8px; }
   }
 
   /* ---- Wide-short "mobile" windows (zoomed desktops, split screens):

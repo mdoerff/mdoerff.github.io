@@ -12,7 +12,6 @@ import DiagramDefs from './DiagramDefs.astro';
   <figcaption class="fig-label">
     POOL PERMIT INTAKE · AS FOUND AND AS BUILT
   </figcaption>
-  <div class="fig-hint" aria-hidden="true">SCROLL SIDEWAYS FOR THE FULL DIAGRAM &rarr;</div>
   <div class="fig-scroll">
     <svg
       viewBox="0 0 1600 700"
@@ -171,7 +170,148 @@ import DiagramDefs from './DiagramDefs.astro';
       </g>
     </svg>
   </div>
+
+  <!-- Mobile: one fixed stage, tap to flip between the two states.
+       No sideways scroll, no added page length. -->
+  <div class="pd-flip">
+    <div class="flip-toggle" role="tablist" aria-label="Diagram state">
+      <button type="button" class="flip-btn flip-btn-found flip-btn-on" data-flip="found" aria-pressed="true">AS FOUND</button>
+      <button type="button" class="flip-btn flip-btn-built" data-flip="built" aria-pressed="false">AS BUILT</button>
+    </div>
+    <div class="flip-stage">
+      <svg
+        class="flip-panel flip-found flip-on"
+        viewBox="0 0 560 570"
+        role="img"
+        aria-label="As found: the applicant emails the department, four staff members exchange email in a mesh with separate copies of the truth, and status lives in four places at once."
+        style="font-family: var(--font-sans);"
+      >
+        <text x="30" y="44" font-size="18" font-weight="700" letter-spacing="2.2" fill="var(--ink)">AS FOUND</text>
+        <text x="30" y="68" font-size="12.5" letter-spacing="1.2" fill="var(--grey-label)">DISCONNECTED COPIES · POINT-TO-POINT EMAIL</text>
+
+        <rect x="30" y="94" width="150" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+        <text x="105" y="121" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
+        <path d="M110 138 Q 130 164 158 188" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <path d="M158 188 l-9 -1 m9 1 l-6 6" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <text x="196" y="166" font-size="12.5" letter-spacing="1" fill="var(--grey-label)">EMAIL · PAPER</text>
+
+        <!-- mesh under the boxes -->
+        <g fill="none" stroke="var(--ink)" stroke-width="0.85" opacity="0.55">
+          <path d="M145 216 Q 280 200 415 216" />
+          <path d="M145 236 Q 265 300 415 356" />
+          <path d="M415 236 Q 295 300 145 356" />
+          <path d="M145 376 Q 280 392 415 376" />
+          <path d="M120 236 Q 104 300 120 356" />
+          <path d="M440 236 Q 456 300 440 356" />
+        </g>
+
+        <g>
+          <rect x="45" y="192" width="160" height="46" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="125" y="220" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
+          <rect x="355" y="192" width="160" height="46" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="435" y="220" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="45" y="332" width="160" height="46" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="125" y="360" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
+          <rect x="355" y="332" width="160" height="46" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="435" y="360" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+        </g>
+
+        <g>
+          <rect x="168" y="277" width="224" height="24" fill="var(--bone)" opacity="0.85" />
+          <text x="280" y="294" font-size="12.5" letter-spacing="1.2" text-anchor="middle" fill="var(--grey-label)">EVERYONE EMAILS EVERYONE</text>
+        </g>
+
+        <text x="280" y="432" font-size="12.5" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-3)">SEPARATE COPIES: EXCEL · EMAIL · PAPER · LETTERS</text>
+        <text x="280" y="486" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">STATUS LIVES IN FOUR PLACES ·</text>
+        <text x="280" y="508" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">NONE OF THEM AGREE</text>
+      </svg>
+
+      <svg
+        class="flip-panel flip-built"
+        viewBox="0 0 560 570"
+        role="img"
+        aria-label="As built: the applicant submits through one Microsoft Form into one SharePoint list, the same four staff work from one shared live view, and seven Power Automate flows carry the follow-through."
+        style="font-family: var(--font-sans);"
+      >
+        <text x="30" y="44" font-size="18" font-weight="700" letter-spacing="2.2" fill="var(--accent)">AS BUILT</text>
+        <text x="30" y="68" font-size="12.5" letter-spacing="1.2" fill="var(--grey-label)">ONE SHARED SYSTEM OF RECORD</text>
+
+        <rect x="30" y="94" width="140" height="44" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+        <text x="100" y="121" font-size="13.5" font-weight="600" text-anchor="middle" fill="var(--ink)">APPLICANT</text>
+        <path d="M172 116 h34 m0 0 l-8 -5 m8 5 l-8 5" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+
+        <rect x="210" y="88" width="320" height="56" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="210" y="88" width="320" height="56" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.2" />
+        <text x="370" y="112" font-size="14" font-weight="700" text-anchor="middle" fill="var(--ink)">MICROSOFT FORM</text>
+        <text x="370" y="132" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--grey-label)">ONE INTAKE · FOUR PERMIT TYPES</text>
+
+        <path d="M370 144 V 196" fill="none" stroke="var(--ink-muted-4)" stroke-width="1" />
+        <path d="M370 196 l-5 -8 m5 8 l5 -8" fill="none" stroke="var(--ink-muted-4)" stroke-width="1" />
+        <text x="330" y="180" font-size="12.5" letter-spacing="0.8" text-anchor="end" fill="var(--accent)">51 RECORDS MIGRATED IN</text>
+        <path d="M336 184 Q 350 192 360 198" fill="none" stroke="var(--accent)" stroke-width="0.9" />
+
+        <rect x="150" y="200" width="260" height="84" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.35" transform="translate(3 -3)" />
+        <rect x="150" y="200" width="260" height="84" fill="var(--bone)" stroke="var(--accent)" stroke-width="1.6" />
+        <text x="280" y="236" font-size="16" font-weight="700" text-anchor="middle" fill="var(--ink)">SHAREPOINT LIST</text>
+        <text x="280" y="262" font-size="12" letter-spacing="1.4" text-anchor="middle" fill="var(--accent)">ONE SHARED LIVE VIEW</text>
+
+        <g fill="none" stroke="var(--ink)" stroke-width="0.85" opacity="0.75">
+          <path d="M138 246 L148 242" />
+          <path d="M138 306 L150 276" />
+          <path d="M422 246 L412 242" />
+          <path d="M422 306 L410 276" />
+        </g>
+        <g>
+          <rect x="16" y="226" width="122" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="77" y="251" font-size="12.5" font-weight="600" text-anchor="middle" fill="var(--ink)">EPH MANAGER</text>
+          <rect x="16" y="286" width="122" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="77" y="311" font-size="12.5" font-weight="600" text-anchor="middle" fill="var(--ink)">ADMIN</text>
+          <rect x="422" y="226" width="122" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="483" y="251" font-size="12.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+          <rect x="422" y="286" width="122" height="40" fill="var(--bone)" stroke="var(--ink)" stroke-width="1.1" />
+          <text x="483" y="311" font-size="12.5" font-weight="600" text-anchor="middle" fill="var(--ink)">INSPECTOR</text>
+        </g>
+
+        <path d="M280 284 V 342" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <path d="M280 342 l-5 -8 m5 8 l5 -8" fill="none" stroke="var(--ink-muted-4)" stroke-width="0.9" />
+        <rect x="60" y="344" width="440" height="88" fill="var(--bone)" stroke="var(--ink)" stroke-width="0.9" />
+        <rect x="60" y="344" width="440" height="88" fill="url(#pd-ht)" opacity="0.5" />
+        <text x="280" y="374" font-size="14" font-weight="700" letter-spacing="1.4" text-anchor="middle" fill="var(--ink)">SEVEN POWER AUTOMATE FLOWS</text>
+        <text x="280" y="398" font-size="12.5" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">CONFIRMATIONS · NOTIFICATIONS · 30-DAY CLOCK</text>
+        <text x="280" y="418" font-size="12.5" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">REMINDERS · ENFORCEMENT</text>
+
+        <text x="280" y="486" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">SAME TEAM · ONE LIVE VIEW ·</text>
+        <text x="280" y="508" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">NOTHING SUBMITTED INCOMPLETE</text>
+      </svg>
+    </div>
+  </div>
 </figure>
+
+<script>
+  function initPdFlip() {
+    const wrap = document.querySelector('.pd-flip');
+    if (!wrap || (wrap as HTMLElement).dataset.armed) return;
+    (wrap as HTMLElement).dataset.armed = '1';
+    const btns = [...wrap.querySelectorAll<HTMLButtonElement>('.flip-btn')];
+    const panels = {
+      found: wrap.querySelector('.flip-found')!,
+      built: wrap.querySelector('.flip-built')!,
+    };
+    btns.forEach((b) => {
+      b.addEventListener('click', () => {
+        const which = b.dataset.flip as 'found' | 'built';
+        btns.forEach((x) => {
+          const on = x === b;
+          x.classList.toggle('flip-btn-on', on);
+          x.setAttribute('aria-pressed', String(on));
+        });
+        panels.found.classList.toggle('flip-on', which === 'found');
+        panels.built.classList.toggle('flip-on', which === 'built');
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', initPdFlip);
+</script>
 
 <style>
   .fig { margin: 12vh 0 0; }
@@ -183,17 +323,41 @@ import DiagramDefs from './DiagramDefs.astro';
     margin-bottom: 4vh;
   }
   .fig-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .fig-hint { display: none; }
+
+  /* Mobile flip stage: hidden on desktop, replaces the wide drawing on phones */
+  .pd-flip { display: none; }
+  .flip-toggle { display: flex; gap: 10px; margin-bottom: 2.5vh; }
+  .flip-btn {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 8px 14px;
+    background: none;
+    border: 1px solid rgba(41, 33, 23, 0.42);
+    color: var(--ink-muted-2);
+    cursor: pointer;
+  }
+  .flip-btn-found.flip-btn-on { background: var(--ink); border-color: var(--ink); color: var(--bone); }
+  .flip-btn-built { border-color: rgba(46, 74, 58, 0.5); color: var(--accent); }
+  .flip-btn-built.flip-btn-on { background: var(--accent); border-color: var(--accent); color: var(--bone); }
+  .flip-stage { position: relative; aspect-ratio: 560 / 570; }
+  .flip-panel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .flip-panel.flip-on { opacity: 1; pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) {
+    .flip-panel { transition: none; }
+  }
+
   @media (max-width: 720px) {
-    .fig-scroll svg { min-width: 1500px; }
-    .fig-hint {
-      display: block;
-      margin-bottom: 2vh;
-      font-family: var(--font-sans);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      color: var(--grey-label);
-    }
+    .fig-scroll { display: none; }
+    .pd-flip { display: block; }
   }
 </style>

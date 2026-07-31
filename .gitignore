@@ -1,6 +1,7 @@
 # build
 node_modules/
 dist/
+dist-preview/
 .astro/
 
 # personal documents — never publish
