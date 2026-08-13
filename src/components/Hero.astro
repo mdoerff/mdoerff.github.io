@@ -1,9 +1,10 @@
 ---
 import portrait from '../assets/portrait.jpg';
+import { Image } from 'astro:assets';
 ---
 
 <header id="top" class="hero" aria-label="Michael Doerffler — introduction">
-  <div class="hero-field fx-develop">
+  <div class="hero-field">
     <!-- PORTRAIT, right. The fade (mask + cream edgefade) lives ON the photo box
          itself, so it travels with the photo and dissolves its edges the same way
          no matter the box's size or position — the blend is seamless on every
@@ -12,7 +13,20 @@ import portrait from '../assets/portrait.jpg';
     <div class="portrait-wrap" aria-hidden="true">
       <div class="portrait-content">
         <div class="portrait-img">
-          <img src={portrait.src} alt="" width={portrait.width} height={portrait.height} loading="eager" />
+          <!-- Through the image pipeline: the raw import shipped the original
+               1500x2000 JPEG untouched. The box is sized by CSS and the photo
+               is cropped by object-fit, so widths/sizes only change which file
+               the browser fetches, never how it renders. -->
+          <Image
+            src={portrait}
+            alt=""
+            widths={[640, 900, 1200, 1500]}
+            sizes="(max-width: 720px) 100vw, 60vw"
+            format="webp"
+            quality={72}
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
         <div class="portrait-softlight"></div>
         <div class="portrait-edgefade"></div>
@@ -20,30 +34,30 @@ import portrait from '../assets/portrait.jpg';
     </div>
 
     <!-- MASTHEAD: text links set on a double rule, like a newspaper nameplate -->
-    <div class="masthead fx-stamp">
+    <div class="masthead">
       <div class="mh-row">
         <nav class="mh-nav" aria-label="Sections">
           <a href="#work" class="mh-link nav-active">Case Studies</a>
           <a href="/#technical" class="mh-link">Technical</a>
           <a href="/#timeline" class="mh-link">Timeline</a>
         </nav>
-        <a href="mailto:michael@rmtdco.com" class="mh-cta"><span class="cta-full">Get in touch</span><span class="cta-short">Contact</span></a>
+        <a href="#contact" class="mh-cta"><span class="cta-full">Get in touch</span><span class="cta-short">Contact</span></a>
       </div>
       <div class="mh-rule" aria-hidden="true"></div>
     </div>
 
     <!-- orienting caption, upper-left — serif line + mono metadata -->
-    <div class="hero-caption fx-stamp">
+    <div class="hero-caption">
       <p class="caption-line">A few years of internships and projects have led me to the intersection of data, strategy, operations, and AI.</p>
       <div class="caption-meta">B.S. AI &amp; BUSINESS ANALYTICS · USF · DECEMBER 2026</div>
     </div>
 
     <!-- THE NAME — R · M · T · D read as one dark-green column → RMTDCO. -->
-    <div class="nameplate fx-settle">
+    <div class="nameplate">
       <div class="nm nm-initial">R</div>
       <div class="nm nm-michael"><span class="nm-accent">M</span>ICHAEL</div>
       <div class="nm nm-initial">T</div>
-      <div class="nm nm-doerffler"><span class="nm-accent">D</span>OERFFLER</div>
+      <h1 class="nm nm-doerffler"><span class="nm-accent">D</span>OERFFLER</h1>
     </div>
 
   </div>
@@ -133,18 +147,25 @@ import portrait from '../assets/portrait.jpg';
   }
 
   /* ---- Masthead: text links on a double rule, no dark slabs ---- */
+  /* Sizes here are viewport-relative so the masthead keeps the same proportion
+     to the nameplate on any monitor. Frozen px values used to leave the nav
+     stranded small on wide screens, which is why 125% zoom looked better. */
   .masthead {
     position: absolute;
     top: 0; left: 0; right: 0;
     z-index: 6;
-    padding: 12px 3vw 0;
+    padding: clamp(10px, 0.78vw, 20px) 3vw 0;
     font-family: var(--font-sans);
   }
   .mh-row {
     display: flex;
     align-items: center;
     gap: 24px;
-    padding-bottom: 8px;
+    /* Matched to the space above the words so the masthead is evenly set:
+       screen-top to text equals text to rule. It is padding-top minus 3px
+       because each link carries 2px padding and a 1px border below its text,
+       which would otherwise make the lower gap read heavier. */
+    padding-bottom: clamp(7px, calc(0.78vw - 3px), 17px);
   }
   /* Bare mark, no box: the type is the stamp */
   .mh-nav {
@@ -155,7 +176,10 @@ import portrait from '../assets/portrait.jpg';
   }
   .mh-link {
     font-family: var(--font-display);
-    font-size: 10.5px;
+    /* Scales with the viewport instead of sitting at a fixed size, so the nav
+       holds its proportion from a 13 inch laptop to a 27 inch monitor.
+       Mobile overrides this at 720px and stays as it was. */
+    font-size: clamp(11px, 0.81vw, 19px);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -169,7 +193,7 @@ import portrait from '../assets/portrait.jpg';
   .mh-link.nav-active { color: var(--ink); border-bottom-color: var(--accent); }
   .mh-cta {
     font-family: var(--font-display);
-    font-size: 10.5px;
+    font-size: clamp(11px, 0.81vw, 19px);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -182,6 +206,18 @@ import portrait from '../assets/portrait.jpg';
   }
   .mh-cta:hover { border-bottom-color: var(--accent); }
   .cta-short { display: none; }
+
+  /* Thumb targets without visual change. These links render ~24px tall on a
+     phone, under the 44px guideline, but padding them would thicken the
+     masthead. An overlay grows the tap area only. Horizontal inset stays at
+     4px because the mobile nav gap narrows to 8px, and overlapping targets
+     would send taps to the wrong link. */
+  .mh-link, .mh-cta { position: relative; }
+  .mh-link::after, .mh-cta::after {
+    content: '';
+    position: absolute;
+    inset: -11px -4px;
+  }
   /* The double rule: two hairlines, newspaper nameplate style.
      Featherweight — the masthead should sit on the page, not press on it. */
   .mh-rule {
@@ -203,23 +239,27 @@ import portrait from '../assets/portrait.jpg';
   .hero-caption {
     position: absolute;
     top: max(16%, 118px); left: 3vw;
-    width: min(34vw, 400px);
+    /* Was min(34vw, 400px): the 400px ceiling bound from ~1176px upward, so
+       the caption stopped widening while the nameplate kept scaling. */
+    width: clamp(340px, 26vw, 620px);
     z-index: 4;
   }
   .caption-line {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(18px, 1.5vw, 23px);
+    /* The 1.5vw was already right; only the old 23px ceiling was binding, from
+       about 1530px wide upward. Raising it is the whole fix here. */
+    font-size: clamp(18px, 1.5vw, 34px);
     line-height: 1.42;
     color: var(--ink-muted-1);
     text-wrap: pretty;
   }
   .caption-meta {
-    margin-top: 18px;
+    margin-top: clamp(14px, 1.15vw, 28px);
     font-family: var(--font-mono);
     font-weight: 400;
-    font-size: 10.5px;
+    font-size: clamp(10px, 0.68vw, 16px);
     letter-spacing: 0.16em;
     color: var(--grey-label);
   }
@@ -232,7 +272,9 @@ import portrait from '../assets/portrait.jpg';
     font-family: var(--font-display);
     transform-origin: 0% 100%;
   }
-  .nm { white-space: nowrap; }
+  /* .nm-doerffler is the page's <h1>; the margin reset keeps the browser's
+     default heading spacing from shifting the nameplate. */
+  .nm { white-space: nowrap; margin: 0; }
   .nm-initial { font-weight: 400; font-size: 2.3vw; line-height: 1.1; color: var(--accent); }
   .nm-michael {
     font-weight: 700; font-size: 4vw; line-height: 1.0; letter-spacing: -0.005em;
@@ -268,9 +310,14 @@ import portrait from '../assets/portrait.jpg';
     .cta-full { display: none; }
     .cta-short { display: inline; }
     .mh-rule { height: 2px; }
-    .hero-caption { top: max(15%, 96px); left: 6vw; width: min(82vw, 440px); }
+    /* Closer under the masthead: at 15% the gap grew with screen height and
+       left ~80px of nothing under the nav on a large phone. */
+    .hero-caption { top: max(11%, 78px); left: 6vw; width: min(82vw, 440px); }
     .caption-line { font-size: 19px; }
-    .nameplate { left: 6vw; bottom: 9%; }
+    /* iOS Safari's toolbars overlay the bottom of a 100svh box, so a pure
+       percentage put the name behind them on tall phones. A px floor plus the
+       safe-area inset keeps it clear. Same position in the composition. */
+    .nameplate { left: 6vw; bottom: max(56px, calc(9% + env(safe-area-inset-bottom, 0px))); }
     .nm-initial { font-size: 5vw; }
     .nm-michael { font-size: 9.5vw; }
     .nm-doerffler { font-size: 12vw; }
@@ -291,9 +338,12 @@ import portrait from '../assets/portrait.jpg';
        mobile width, clearing before the face in the photo's lower middle */
     .portrait-edgefade {
       background:
-        linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.85) 35%, rgba(233, 225, 207, 0.45) 55%, transparent 72%),
-        radial-gradient(70% 62% at 60% 40%, transparent 0%, transparent 22%, rgba(233, 225, 207, 0.3) 40%, rgba(233, 225, 207, 0.75) 58%, var(--bone) 74%);
+        linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.82) 28%, rgba(233, 225, 207, 0.34) 46%, rgba(233, 225, 207, 0.1) 60%, transparent 74%),
+        radial-gradient(70% 62% at 60% 40%, transparent 0%, transparent 26%, rgba(233, 225, 207, 0.18) 44%, rgba(233, 225, 207, 0.6) 60%, var(--bone) 76%);
     }
+    /* The soft-light haze compounds with the veil over the face; lighter on
+       phones where the photo is full-bleed behind the text. */
+    .portrait-softlight { opacity: 0.3; }
   }
 
   /* ---- Narrowest phones: keep the single nav row alive ---- */
@@ -317,5 +367,16 @@ import portrait from '../assets/portrait.jpg';
         linear-gradient(180deg, rgba(233, 225, 207, 0.94) 0%, rgba(233, 225, 207, 0.85) 38%, rgba(233, 225, 207, 0.4) 56%, transparent 72%),
         radial-gradient(46% 52% at 62% 58%, transparent 0%, transparent 26%, rgba(233, 225, 207, 0.35) 46%, rgba(233, 225, 207, 0.8) 62%, var(--bone) 76%);
     }
+  }
+
+  /* ---- Very short windows: phones turned sideways ----
+     A rotated phone is only ~360 to 390px tall, so the 580px floor overflowed
+     by nearly 200px and pushed the nameplate below the fold. 480px is the
+     lowest floor at which the caption and nameplate still clear each other on
+     every landscape size tested; dropping the floor entirely made them
+     collide. Gated on height, so no iPad or tablet ever reaches it: the
+     shortest iPad configuration is ~694px tall. */
+  @media (max-height: 520px) {
+    .hero { min-height: 480px; }
   }
 </style>

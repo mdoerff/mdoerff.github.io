@@ -45,32 +45,21 @@ a { color: inherit; text-decoration: none; }
 a:hover { color: var(--accent); }
 button { font: inherit; }
 
+/* Keyboard focus, site-wide. currentColor rather than a fixed accent: the
+   homepage alternates grounds (bone-on-green through the case index and
+   timeline, ink-on-bone everywhere else), so a green ring would disappear on
+   the green chapters. Inheriting the text colour is contrast-correct on both
+   by definition. Only shows for keyboard users, never on mouse clicks. */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
 ::selection { background: var(--accent); color: var(--bone); }
 
-/* ---- Entrance keyframes (canonical, from the prototype) ---- */
-@keyframes dfl-develop {
-  0%   { filter: blur(10px) contrast(0.8) saturate(0.8); }
-  30%  { filter: blur(7px) contrast(0.85) saturate(0.85); }
-  32%  { filter: blur(4px) contrast(0.9) saturate(0.92); }
-  64%  { filter: blur(2.5px) contrast(0.95) saturate(0.97); }
-  66%  { filter: blur(1px) contrast(0.98) saturate(1); }
-  100% { filter: none; }
-}
-@keyframes dfl-stamp { 0%, 82% { opacity: 0; } 84%, 100% { opacity: 1; } }
-@keyframes dfl-marks { 0%, 55% { opacity: 0; } 57%, 100% { opacity: 1; } }
-@keyframes dfl-settle {
-  0%   { transform: perspective(1400px) rotateX(20deg) translateY(48px) scale(0.96); opacity: 0; }
-  55%  { opacity: 1; }
-  100% { transform: perspective(1400px) rotateX(0deg) translateY(0) scale(1); opacity: 1; }
-}
-
-/* Entrance plays only when <html> carries .entrance (once per session,
-   set by the inline gate script before first paint). Without the class,
-   every element renders at its final state with no animation. */
-html.entrance .fx-develop { animation: dfl-develop 1.7s var(--ease-mech) both; }
-html.entrance .fx-settle  { animation: dfl-settle 1.5s var(--ease-mech) both; }
-html.entrance .fx-stamp   { animation: dfl-stamp 2s linear both; }
-html.entrance .fx-marks   { animation: dfl-marks 2s linear both; }
+/* The first-paint entrance (develop / stamp / settle) was removed: the hero
+   now renders at its final state immediately. Keyframes and the gate script
+   are gone with it; recoverable from git if it is ever wanted back. */
 
 /* ---- Reveal on scroll: re-fires on every entry (unlike the entrance) ---- */
 [data-reveal] {
@@ -92,12 +81,16 @@ html.entrance .fx-marks   { animation: dfl-marks 2s linear both; }
 @keyframes vt-in { from { opacity: 0; filter: blur(8px); } }
 
 /* ---- Case study shared typography ---- */
+/* Section headings. Some are <h2> so the document outline does not jump from
+   h1 straight to h3; margin:0 keeps the browser's heading spacing from moving
+   anything, since these were divs first. */
 .sec-label {
   font-family: var(--font-display);
   font-size: clamp(14px, 1.2vw, 17px);
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--ink);
+  margin: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -6,7 +6,7 @@
 // links. No name repetition anywhere.
 ---
 
-<footer class="foot" aria-label="Contact and site footer">
+<footer id="contact" class="foot" aria-label="Contact and site footer">
   <div class="foot-inner">
     <div class="foot-main" data-reveal>
       <div class="foot-mark" aria-hidden="true">
@@ -78,7 +78,10 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    /* 22px rather than 16 so each link's tap overlay clears the 44px guideline
+       without adjacent zones colliding and stealing each other's taps. The
+       links render 23.8px tall, so a 20px gap landed at 43.8. */
+    gap: 22px;
     min-width: 0;
     flex: 1;
   }
@@ -121,6 +124,21 @@
     padding-top: 12px;
   }
   .foot-nav { display: flex; align-items: baseline; gap: 24px; }
+
+  /* Thumb targets, layout untouched. The nav links render ~16px tall and the
+     contact links ~24px. Insets are capped by the gaps between them (18px in
+     the nav, 16px in the contact column) so no two targets ever overlap. */
+  .foot-nav a, .fl { position: relative; }
+  .foot-nav a::after {
+    content: '';
+    position: absolute;
+    inset: -15px -6px;
+  }
+  .fl::after {
+    content: '';
+    position: absolute;
+    inset: -11px -6px;
+  }
   /* Quiet frame word: marks the three links as destinations, not labels */
   .foot-nav-label {
     font-family: var(--font-sans);

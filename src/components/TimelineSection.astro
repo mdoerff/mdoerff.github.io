@@ -180,6 +180,17 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
         e.stopPropagation();
         shown === i ? hide() : show(i);
       });
+      // These are <g role="button">, not real buttons, so Enter and Space do
+      // not synthesise a click on their own. Without this, Space scrolls the
+      // page instead of toggling the card.
+      n.addEventListener('keydown', (e) => {
+        const k = (e as KeyboardEvent).key;
+        if (k === 'Enter' || k === ' ' || k === 'Spacebar') {
+          e.preventDefault();
+          e.stopPropagation();
+          shown === i ? hide() : show(i);
+        }
+      });
     });
     strip.addEventListener('pointerleave', hide);
     document.addEventListener('click', (e) => {
