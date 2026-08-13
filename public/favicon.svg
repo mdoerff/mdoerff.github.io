@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Michael Doerffler">
+  <style>
+    .ln { stroke: #2E4A3A; }
+    @media (prefers-color-scheme: dark) { .ln { stroke: #9DBFAA; } }
+  </style>
+  <path class="ln" d="M3 56 L30 29" stroke-width="10" fill="none"/>
+  <path class="ln" d="M30 29 L61 8" stroke-width="10" fill="none" stroke-dasharray="10 8"/>
+</svg>
