@@ -2,17 +2,61 @@
 import '../styles/global.css';
 import portrait from '../assets/portrait.jpg';
 import Footer from '../components/Footer.astro';
+import { getImage } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
+
+// The atmosphere layer is the portrait blurred 22px at half opacity, stretched
+// across the viewport. It never needed full resolution — it was shipping the
+// entire 274KB photo a second time on every page just to be smeared.
+const atmosphere = await getImage({ src: portrait, width: 64, format: 'webp', quality: 60 });
 
 interface Props {
   title?: string;
   description?: string;
+  /** Share card under /og/. Without one, scrapers pick the biggest image on
+   *  the page, which made the homepage link a photo of Michael. */
+  ogImage?: string;
+  /** Case pages pass their breadcrumb label so search results show
+   *  rmtdco.com › Work › <case> instead of a bare URL. */
+  breadcrumb?: string;
 }
 
 const {
-  title = 'Michael Doerffler — Business Analytics & AI',
+  title = 'Michael Doerffler · Business Analytics & AI',
   description = 'Michael Doerffler builds decision systems for agencies, sales teams, and portfolios. Business Analytics & AI, USF, Dec 2026.',
+  ogImage = '/og/home.png',
+  breadcrumb,
 } = Astro.props;
+
+// Each page's own address. Previously og:url was hardcoded to the homepage,
+// so sharing a case study told LinkedIn and Slack the wrong URL.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+// og:image must be absolute. make-preview.mjs rewrites this host so the
+// Netlify preview points at images that actually exist there.
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+
+// Structured data. Every value here already appears on the site — nothing is
+// asserted to Google that a visitor cannot also read.
+const isHome = Astro.url.pathname === '/';
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Michael Doerffler',
+  url: 'https://rmtdco.com',
+  jobTitle: 'Business Analytics and AI',
+  email: 'mailto:michael@rmtdco.com',
+  address: { '@type': 'PostalAddress', addressLocality: 'Tampa', addressRegion: 'FL', addressCountry: 'US' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of South Florida' },
+  sameAs: ['https://www.linkedin.com/in/michael-doerffler'],
+};
+const breadcrumbSchema = breadcrumb && {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Case Studies', item: 'https://rmtdco.com/#work' },
+    { '@type': 'ListItem', position: 2, name: breadcrumb, item: canonical },
+  ],
+};
 ---
 
 <!doctype html>
@@ -25,30 +69,50 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rmtdco.com" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Michael Doerffler" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#E9E1CF" />
+    <!-- The timeline's line: solid to now, dashed after. Bare on transparency
+         in the tab; the SVG is listed first because browsers prefer it and it
+         is the only one that can switch colour for dark chrome. The phone icon
+         carries a field because iOS composites transparency onto black. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />}
+    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Loaded without blocking first paint: the stylesheet is fetched as
+         print media, then promoted to all once it arrives. display=swap in the
+         URL means text renders in the fallback serif meanwhile rather than
+         staying invisible. <noscript> covers the rare case of JS being off. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
-    <!-- Entrance gate: runs before first paint. Plays once per session. -->
-    <script is:inline>
-      (function () {
-        try {
-          if (sessionStorage.getItem('dfl-entrance-v1') !== '1') {
-            document.documentElement.classList.add('entrance');
-            sessionStorage.setItem('dfl-entrance-v1', '1');
-          }
-        } catch (e) {}
-      })();
-    </script>
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <ClientRouter />
   </head>
   <body>
     <!-- Full-viewport atmosphere: the portrait's own colors, blurred wide,
          under a cream veil — one color world across the whole screen -->
-    <div class="photo-atmosphere" aria-hidden="true" style={`background-image: url(${portrait.src});`}></div>
+    <div class="photo-atmosphere" aria-hidden="true" style={`background-image: url(${atmosphere.src});`}></div>
     <div class="page-wash" aria-hidden="true"></div>
 
     <!-- Base paper tooth — always on (canonical turbulence data-URI) -->
@@ -77,10 +141,6 @@ const {
         els.forEach((el) => io.observe(el));
       }
       document.addEventListener('astro:page-load', initReveals);
-      // Entrance is a first-paint effect only; never replay it on SPA swaps.
-      document.addEventListener('astro:after-swap', () => {
-        document.documentElement.classList.remove('entrance');
-      });
     </script>
   </body>
 </html>
