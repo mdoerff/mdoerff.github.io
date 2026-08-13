@@ -9,6 +9,7 @@ dist-preview/
 *.zip
 Master Context*.pdf
 master-context-update-brief.md
+HANDOFF.md
 newfile730/
 
 # legacy root assets from the old site (old site lives in portfoliorepo/)
