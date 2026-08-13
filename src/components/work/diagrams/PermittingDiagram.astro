@@ -78,7 +78,7 @@ import DiagramDefs from './DiagramDefs.astro';
           <g transform="rotate(-1 160 218)">
             <rect x="62" y="200" width="196" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
             <rect x="62" y="200" width="196" height="36" fill="url(#pd-ht)" />
-            <text x="160" y="223" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">EXCEL TRACKING COPY</text>
+            <text x="160" y="223" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-2)">SPREADSHEET TRACKING COPY</text>
           </g>
           <g transform="rotate(1.2 660 272)">
             <rect x="582" y="254" width="156" height="36" fill="var(--bone)" stroke="var(--ink-muted-4)" stroke-width="0.9" />
@@ -174,7 +174,9 @@ import DiagramDefs from './DiagramDefs.astro';
   <!-- Mobile: one fixed stage, tap to flip between the two states.
        No sideways scroll, no added page length. -->
   <div class="pd-flip">
-    <div class="flip-toggle" role="tablist" aria-label="Diagram state">
+    <!-- Toggle buttons with aria-pressed, not tabs: a tablist role would
+         promise arrow-key navigation these do not implement. -->
+    <div class="flip-toggle" aria-label="Diagram state">
       <button type="button" class="flip-btn flip-btn-found flip-btn-on" data-flip="found" aria-pressed="true">AS FOUND</button>
       <button type="button" class="flip-btn flip-btn-built" data-flip="built" aria-pressed="false">AS BUILT</button>
     </div>
@@ -221,7 +223,7 @@ import DiagramDefs from './DiagramDefs.astro';
           <text x="280" y="294" font-size="12.5" letter-spacing="1.2" text-anchor="middle" fill="var(--grey-label)">EVERYONE EMAILS EVERYONE</text>
         </g>
 
-        <text x="280" y="432" font-size="12.5" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-3)">SEPARATE COPIES: EXCEL · EMAIL · PAPER · LETTERS</text>
+        <text x="280" y="432" font-size="12.5" letter-spacing="0.8" text-anchor="middle" fill="var(--ink-muted-3)">SEPARATE COPIES: SPREADSHEET · EMAIL · PAPER · LETTERS</text>
         <text x="280" y="486" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">STATUS LIVES IN FOUR PLACES ·</text>
         <text x="280" y="508" font-size="13.5" letter-spacing="1" text-anchor="middle" fill="var(--ink-muted-4)">NONE OF THEM AGREE</text>
       </svg>
