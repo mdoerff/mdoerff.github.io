@@ -1,0 +1,29 @@
+---
+// The three coursework projects, generated from shared data. Content is
+// byte-identical to what the modals carried.
+import Base from '../../layouts/Base.astro';
+import TechnicalLayout from '../../components/technical/TechnicalLayout.astro';
+import { projects } from '../../data/technical';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+---
+
+<Base
+  title={`${project.title} · Michael Doerffler`}
+  description={project.description}
+  ogImage={`/og/technical-${project.slug}.png`}
+>
+  <TechnicalLayout label={project.tag} title={project.title}>
+    <p class="tp-status">{project.tag}</p>
+    <h1 class="tp-title tp-title-sm">{project.title}</h1>
+    {project.paras.map((para) => <p class="tp-body-text">{para}</p>)}
+    <div class="spec-block">
+      <p class="spec-line"><span class="spec-key">STACK</span> {project.stack}</p>
+      <p class="spec-line"><span class="spec-key">METHOD</span> {project.method}</p>
+    </div>
+  </TechnicalLayout>
+</Base>

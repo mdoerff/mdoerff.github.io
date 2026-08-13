@@ -1,0 +1,70 @@
+---
+// The 3Rivers dossier. Hand-built rather than generated, because it carries a
+// diagram and a manager endorsement the coursework pages do not. Copy is
+// byte-identical to what the modal carried.
+import Base from '../../layouts/Base.astro';
+import TechnicalLayout from '../../components/technical/TechnicalLayout.astro';
+import SystemsJoinDiagram from '../../components/work/diagrams/SystemsJoinDiagram.astro';
+---
+
+<Base
+  title="3Rivers Federal Credit Union · Michael Doerffler"
+  description="A mortgage inquiry intelligence report built on protected member data at a federally regulated credit union, shaped directly with the team that uses it."
+  ogImage="/og/technical-3rivers.png"
+>
+  <TechnicalLayout label="DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION" title="3Rivers Federal Credit Union" wide>
+    <div class="sec-label">DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION</div>
+    <h1 class="tp-title">3Rivers Federal Credit Union</h1>
+
+    <div class="tp-cols">
+      <p class="tp-body-text">
+        3Rivers is a federally regulated credit union: real member data, enterprise systems, and
+        compliance obligations, staffed by people who had been doing data, AI, and finance work for
+        years. I spent a summer there as a Business Intelligence intern, working close to the data
+        layer on protected systems.
+      </p>
+      <p class="tp-body-text">
+        It was also the room where I was the least experienced person present. I spent it asking
+        questions, absorbing how experienced practitioners scope problems and handle data, and
+        carrying what I learned directly into the internship I was running in parallel that same
+        summer.
+      </p>
+    </div>
+
+    <div class="tp-proj">
+      <div>
+        <p class="tp-status">SHIPPED</p>
+        <h2 class="tp-proj-title">Mortgage Inquiry Intelligence Report</h2>
+      </div>
+      <div>
+        <p class="tp-body-text">
+          Delivered in Power BI. Joined SavvyMoney mortgage alerts with member and loan officer
+          data across three enterprise systems (Alkami, Exasol, network files), cleaning and
+          reconciling mismatched schemas in Power Query, normalizing SSN fields and identifiers. I
+          set up meetings with the mortgage team to learn what would make it genuinely valuable to
+          them, then took their feedback and iterated, building a tool they'd actually want to
+          use, giving officers early visibility into members shopping for a mortgage.
+        </p>
+      </div>
+    </div>
+
+    <div class="spec-block">
+      <p class="spec-line"><span class="spec-key">STACK</span> Power BI · Power Query · Exasol</p>
+      <p class="spec-line"><span class="spec-key">METHOD</span> Stakeholder-driven build with the mortgage team · multi-source sourcing · schema reconciliation · normalized identifiers across mismatched schemas</p>
+    </div>
+
+    <SystemsJoinDiagram />
+
+    <div class="endorse">
+      <p class="endorse-label">FROM MY MANAGER</p>
+      <p class="endorse-body">
+        "Michael is exceptionally adaptive, with a keen ability to quickly assess new situations
+        and respond effectively. He is a proactive communicator who ensures he understands project
+        scopes before execution and follows up after delivery to ensure outcomes were achieved.
+        Also, his positive energy helps assure a great team vibe, making him a great addition to
+        any team."
+      </p>
+      <p class="endorse-attr">Chad Gramling, AVP Business Intelligence</p>
+    </div>
+  </TechnicalLayout>
+</Base>

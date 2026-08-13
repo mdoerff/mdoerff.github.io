@@ -1,0 +1,194 @@
+---
+// Shared shell for the /technical/<project> pages. These were <dialog> overlays
+// on the homepage; the content and its type treatment are unchanged, only the
+// container is. Styles are the former .dlg-* rules, renamed to .tp-* now that
+// they dress a page rather than a modal, and scoped under .techpage so the
+// bespoke 3Rivers page can use the same treatment through the slot.
+interface Props {
+  label: string; // sticky bar label, e.g. the project's domain · context tag
+  title: string;
+  wide?: boolean; // the 3Rivers dossier ran wider than the coursework modals
+}
+const { label, title, wide = false } = Astro.props;
+---
+
+<div class="techpage">
+  <div class="tp-bar">
+    <span class="tp-bar-label">{label}</span>
+    <a href="/#technical" class="tp-bar-back">BACK TO TECHNICAL</a>
+  </div>
+
+  <article class={`tp-body ${wide ? 'tp-body-wide' : ''}`}>
+    <slot />
+
+    <footer class="tp-footer">
+      <a href="/#technical" class="tp-bar-back">BACK TO TECHNICAL &uarr;</a>
+    </footer>
+  </article>
+</div>
+
+<style is:global>
+  .techpage { position: relative; z-index: 2; }
+
+  /* Sticky bar: same treatment as the case study pages, so the two page types
+     feel like one site. */
+  .techpage .tp-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 4vw;
+    background: rgba(233, 225, 207, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(41, 33, 23, 0.12);
+  }
+  .techpage .tp-bar-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    color: var(--ink-muted-4);
+  }
+  .techpage .tp-bar-back {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted-3);
+    white-space: nowrap;
+    transition: color 0.15s;
+  }
+  .techpage .tp-bar-back:hover { color: var(--accent); }
+
+  .techpage .tp-body {
+    max-width: calc(660px + 8vw);
+    margin: 0 auto;
+    padding: 6vh 4vw 10vh;
+  }
+  .techpage .tp-body-wide { max-width: calc(1150px + 8vw); }
+
+  .techpage .tp-footer {
+    margin-top: 8vh;
+    padding-top: 3vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.14);
+  }
+
+  /* ---- Content treatment, carried over from the modals unchanged ---- */
+  .techpage .tp-title {
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .techpage .tp-title-sm { font-size: clamp(20px, 1.9vw, 26px); margin-top: 10px; }
+
+  .techpage .tp-status {
+    margin: 0 0 8px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .techpage .tp-body-text {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.1vw, 15.5px);
+    line-height: 1.65;
+    color: var(--ink-muted-2);
+    text-wrap: pretty;
+  }
+  .techpage .tp-body-text + .tp-body-text { margin-top: 2.5vh; }
+
+  .techpage .tp-cols {
+    margin-top: 3.5vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vh 3vw;
+  }
+
+  .techpage .tp-proj {
+    margin-top: 4.5vh;
+    padding-top: 3.5vh;
+    border-top: 1px solid rgba(41, 33, 23, 0.14);
+    display: grid;
+    grid-template-columns: minmax(220px, 340px) 1fr;
+    gap: 1.5vh 3vw;
+  }
+  .techpage .tp-proj-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 22px);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  /* STACK / METHOD spec metadata: true mono, small, scannable. His one
+     deliberate exception to the no-mono rule, scoped to spec metadata only. */
+  .techpage .spec-block {
+    margin-top: 4vh;
+    padding: 2.2vh 0 0;
+    border-top: 1px solid rgba(41, 33, 23, 0.2);
+  }
+  .techpage .spec-line {
+    margin: 0;
+    font-family: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Consolas, monospace;
+    font-size: 11.5px;
+    line-height: 1.75;
+    color: var(--ink-muted-2);
+  }
+  .techpage .spec-line + .spec-line { margin-top: 10px; }
+  .techpage .spec-key {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 1px 7px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--bone);
+    background: var(--accent);
+  }
+
+  .techpage .endorse {
+    margin: 5vh 0 0;
+    padding: 3.5vh 3vw;
+    background: rgba(46, 74, 58, 0.88);
+    border-radius: 14px;
+  }
+  .techpage .endorse-label {
+    margin: 0 0 12px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: rgba(233, 225, 207, 0.75);
+  }
+  .techpage .endorse-body {
+    margin: 0;
+    max-width: 820px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(14.5px, 1.25vw, 17px);
+    line-height: 1.55;
+    color: var(--bone);
+    text-wrap: pretty;
+  }
+  .techpage .endorse-attr {
+    margin: 14px 0 0;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(233, 225, 207, 0.7);
+  }
+
+  @media (max-width: 900px) {
+    .techpage .tp-cols { grid-template-columns: 1fr; }
+    .techpage .tp-proj { grid-template-columns: 1fr; }
+  }
+</style>
