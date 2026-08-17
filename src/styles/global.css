@@ -93,6 +93,28 @@ button { font: inherit; }
   margin: 0;
 }
 
+/* Narrative section headers: the header IS the headline. Shared by the A-LIGN
+   and Noll case pages, so it lives here rather than being scoped to one. */
+.nar-head {
+  margin: 0;
+  max-width: 1000px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* The footer's 18vh top padding is tuned for the homepage, where it follows
+   the timeline chapter and its green field dissolving out. A case page has
+   already ended with its own NEXT / BACK rule, so that runway plus the case
+   body's own bottom padding left a dead zone. Scoped to case pages by the
+   sibling selector; the homepage footer is untouched. The .page-content
+   prefix is there to out-specify Astro's scoped .foot rule. */
+.page-content .case + .foot { padding-top: 8vh; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   [data-reveal] { opacity: 1 !important; filter: none !important; }

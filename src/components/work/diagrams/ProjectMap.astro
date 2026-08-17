@@ -1,0 +1,153 @@
+---
+// Surface area map: one role down the middle, the parts of the business it
+// reached branching off either side. Its job is breadth. Depth is carried by
+// the themes and the two figures below it, so each branch gets a high-level
+// title and one line on what changed there, never a list of project names.
+const branches = [
+  {
+    side: 'left',
+    title: 'Executive reporting',
+    line: 'Performance review became a standing reporting cycle instead of an ad hoc conversation, and leadership reads the numbers self-serve rather than queuing a request.',
+  },
+  {
+    side: 'right',
+    title: 'Back-office operations',
+    line: 'Weekly tracking moved from manual upkeep to a self-computing source, and I handed ownership back rather than leaving the process dependent on me.',
+  },
+  {
+    side: 'left',
+    title: 'Field performance',
+    line: 'Nine per-person workbooks collapsed into one comparable dataset, and relationship activity turned into a metric leadership can hold agents to.',
+  },
+  {
+    side: 'right',
+    title: 'Voice of the client',
+    line: "Six years of unstructured client feedback now feeds the CEO's coaching as agent-level insight.",
+  },
+  {
+    side: 'left',
+    title: 'Segment strategy',
+    line: 'Twenty years of transactions, cut against the local luxury benchmark, showed how concentrated revenue was, and that case underwrote the launch of Noll Reserve.',
+  },
+  {
+    side: 'right',
+    title: 'Service line economics',
+    line: "A controlled cohort comparison gave Noll Team Interiors a quantified value proposition, drawn from the team's own closings.",
+  },
+];
+---
+
+<figure
+  class="sa"
+  data-reveal
+  aria-label="The domains the role reached: executive reporting, back-office operations, field performance, voice of the client, segment strategy, and service line economics."
+>
+  <p class="sa-head">AI AND BUSINESS STRATEGY INTERN</p>
+
+  <div class="sa-spine">
+    {branches.map((b) => (
+      <div class={`sa-row sa-${b.side}`}>
+        <div class="sa-slot sa-slot-l">
+          {b.side === 'left' && (
+            <div class="sa-branch">
+              <p class="sa-title">{b.title}</p>
+              <p class="sa-line">{b.line}</p>
+            </div>
+          )}
+        </div>
+        <div class="sa-tick" aria-hidden="true"></div>
+        <div class="sa-slot sa-slot-r">
+          {b.side === 'right' && (
+            <div class="sa-branch">
+              <p class="sa-title">{b.title}</p>
+              <p class="sa-line">{b.line}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <figcaption class="sa-cap">
+    Nobody asked for the Power BI system. I built it on the work that came before it: the tracking
+    sheet feeds it, the reporting framework became its per-agent view, and revenue per connection
+    is a plot inside it.
+  </figcaption>
+</figure>
+
+<style>
+  .sa { margin: 5vh 0 0; }
+
+  .sa-head {
+    margin: 0 0 1.4vh;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+
+  /* The rule down the middle is the role; branches hang off it */
+  .sa-spine { position: relative; }
+  .sa-spine::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--accent);
+  }
+
+  .sa-row {
+    display: grid;
+    grid-template-columns: 1fr 68px 1fr;
+    align-items: center;
+    padding: 2.4vh 0;
+  }
+  .sa-slot { min-width: 0; }
+  .sa-slot-l { text-align: right; padding-right: 4px; }
+  .sa-slot-r { padding-left: 4px; }
+  .sa-tick { height: 1px; background: rgba(41, 33, 23, 0.3); }
+
+  .sa-title {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(15px, 1.4vw, 19px);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .sa-line {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(12px, 1.05vw, 13.5px);
+    line-height: 1.6;
+    color: var(--grey-label);
+    text-wrap: pretty;
+  }
+
+  .sa-cap {
+    margin: 3.6vh 0 0;
+    max-width: 720px;
+    font-family: var(--font-sans);
+    font-size: clamp(12.5px, 1.05vw, 14px);
+    line-height: 1.65;
+    color: var(--grey-label);
+    text-wrap: pretty;
+  }
+
+  /* Phones: the rule moves to the edge and every branch sits to its right */
+  @media (max-width: 760px) {
+    .sa-head { text-align: left; padding-left: 22px; }
+    .sa-spine::before { left: 1px; margin-left: 0; }
+    .sa-row { grid-template-columns: 1fr; padding: 2vh 0 2vh 22px; }
+    .sa-slot-l { text-align: left; padding-right: 0; }
+    .sa-slot-r { padding-left: 0; }
+    .sa-slot:empty { display: none; }
+    .sa-tick { display: none; }
+    .sa-title { font-size: 16px; }
+  }
+</style>

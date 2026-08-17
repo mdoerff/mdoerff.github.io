@@ -8,9 +8,9 @@ interface Workstream {
 }
 interface Props {
   workstreams: Workstream[];
-  numbered?: boolean; // row indexes (01, 02...); on by default
+  numbered?: boolean; // row indexes (01, 02...); off by default, and no page opts in
 }
-const { workstreams, numbered = true } = Astro.props;
+const { workstreams, numbered = false } = Astro.props;
 ---
 
 <div class="approach">
