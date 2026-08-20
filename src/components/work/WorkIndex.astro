@@ -11,12 +11,6 @@ import { cases } from '../../data/cases';
 <section id="work" class="work" aria-label="Case studies">
   <div class="work-head" data-reveal>
     <h2 class="work-title">Case Studies</h2>
-    <!-- The chapter's standfirst: says what the three engagements have in
-         common before the rows list them. -->
-    <p class="work-intro">
-      Work that sits between technology and operations, from public-sector systems to AI
-      workflows and business intelligence.
-    </p>
   </div>
 
   <div class="work-list">
@@ -29,7 +23,7 @@ import { cases } from '../../data/cases';
           </div>
           <div class="row-side">
             <span class="row-meta">{c.meta}</span>
-            <span class="row-arrow" aria-hidden="true">&rarr;</span>
+            <span class="row-slip">READ THE CASE &rarr;</span>
           </div>
         </a>
       ) : (
@@ -131,19 +125,6 @@ import { cases } from '../../data/cases';
     color: var(--bone);
   }
 
-  .work-intro {
-    margin: 22px 0 0;
-    max-width: 780px;
-    font-family: var(--font-display);
-    font-weight: 400;
-    /* Matched to .tech-intro in TechnicalSection, so the two chapter captions
-       are set at the same size rather than the case index shouting louder. */
-    font-size: clamp(14px, 1.15vw, 16px);
-    line-height: 1.6;
-    color: rgba(233, 225, 207, 0.82);
-    text-wrap: pretty;
-  }
-
   .work-list { display: flex; flex-direction: column; }
 
   .work-row {
@@ -155,7 +136,7 @@ import { cases } from '../../data/cases';
     transition: background 0.25s;
   }
   a.work-row:hover { background: rgba(233, 225, 207, 0.06); color: inherit; }
-  a.work-row:hover .row-arrow { transform: translateX(6px); }
+  a.work-row:hover .row-slip { color: #9DBFAA; border-bottom-color: #9DBFAA; }
   a.work-row:hover .row-title { color: #9DBFAA; }
 
   .row-main { max-width: 620px; }
@@ -191,11 +172,21 @@ import { cases } from '../../data/cases';
     color: rgba(233, 225, 207, 0.62);
     white-space: nowrap;
   }
-  .row-arrow {
-    font-size: 26px;
-    line-height: 1;
-    color: #9DBFAA;
-    transition: transform 0.25s var(--ease-mech);
+  /* The same device the Technical section uses for VIEW THE DETAILS, set on the
+     green ground. A bare arrow was the only cue that these rows led anywhere,
+     and it was aria-hidden, so a screen reader got no hint at all and a touch
+     user got no hover to discover it. Words are the cue now. */
+  .row-slip {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: rgba(233, 225, 207, 0.75);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(233, 225, 207, 0.4);
+    transition: color 0.2s, border-color 0.2s;
   }
 
   .row-off { opacity: 0.4; }
