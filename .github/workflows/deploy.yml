@@ -54,15 +54,22 @@ jobs:
           set -euo pipefail
           # Give the CDN a moment to serve the new build before announcing it.
           sleep 30
-          urls=$(curl -sS --fail --retry 3 "https://${HOST}/sitemap-0.xml" \
-            | grep -o '<loc>[^<]*</loc>' \
-            | sed 's|</\?loc>||g' \
-            | jq -R . | jq -s .)
-          count=$(echo "$urls" | jq 'length')
-          if [ "$count" -eq 0 ]; then
-            echo "No URLs found in sitemap; refusing to submit an empty list."
-            exit 1
+          # No --fail, and no exit 1 below. The deploy has already succeeded
+          # by the time this runs, so nothing here should be able to turn the
+          # run red. A missing sitemap means the domain is not attached yet,
+          # which is worth a warning and nothing more.
+          sitemap=$(curl -sS --retry 3 "https://${HOST}/sitemap-0.xml" || true)
+          # Extract first, test for emptiness as a string, and only then build
+          # JSON. Doing the emptiness check inside the pipeline meant a failing
+          # grep fired `|| echo []` on top of output jq had already produced,
+          # so count came out as two values and the integer test broke.
+          locs=$(printf '%s' "$sitemap" | grep -o '<loc>[^<]*</loc>' | sed 's|</\?loc>||g' || true)
+          if [ -z "$locs" ]; then
+            echo "::warning::No URLs at https://${HOST}/sitemap-0.xml; skipping IndexNow."
+            exit 0
           fi
+          urls=$(printf '%s' "$locs" | jq -R . | jq -s .)
+          count=$(printf '%s' "$urls" | jq 'length')
           echo "Submitting $count URLs to IndexNow."
           payload=$(jq -n \
             --arg host "$HOST" \
