@@ -126,10 +126,22 @@ try {
     if (loc.includes('404')) fail('sitemap', 'includes the 404 page');
     if (loc.endsWith('.md')) fail('sitemap', `markdown mirrors should not be listed: ${loc}`);
   }
-  // Every page sharing one timestamp is the "lastmod: new Date()" bug coming back.
-  const stamps = new Set(entries.map((e) => e[2]).filter(Boolean));
-  if (entries.length > 1 && stamps.size === 1) {
-    fail('sitemap', 'every URL has the same lastmod; per-page dates are not being applied');
+  // lastmod has to be a real date and cannot be ahead of now. This used to also
+  // fail when every URL shared one timestamp, on the theory that identical dates
+  // meant `lastmod: new Date()` was back. That was wrong and it blocked a deploy:
+  // when a single commit touches every page, git honestly reports one date for
+  // all of them. The two cases are indistinguishable from dist alone, and the
+  // real bug is fixed at the source in src/data/page-dates.mjs, so this notes
+  // the condition instead of failing on it.
+  const stamps = entries.map((e) => e[2]).filter(Boolean);
+  if (stamps.length !== entries.length) fail('sitemap', 'some URLs are missing lastmod');
+  for (const s of stamps) {
+    const t = Date.parse(s);
+    if (Number.isNaN(t)) fail('sitemap', `lastmod is not a valid date: ${s}`);
+    else if (t > Date.now() + 86400000) fail('sitemap', `lastmod is in the future: ${s}`);
+  }
+  if (entries.length > 1 && new Set(stamps).size === 1) {
+    console.log('  note: all URLs share one lastmod, expected when one commit touched every page');
   }
 } catch {
   fail('sitemap', 'sitemap-0.xml was not generated');
