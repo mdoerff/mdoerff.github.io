@@ -4,9 +4,34 @@ import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
 import CaseColophon from '../../components/work/CaseColophon.astro';
 import CaseApproach from '../../components/work/CaseApproach.astro';
 import RepWorkDiagram from '../../components/work/diagrams/RepWorkDiagram.astro';
+import { ORGS } from '../../data/site';
+
+// The machine-readable restatement of this page. Every claim below is made in
+// plain language somewhere in the body copy.
+const work = {
+  name: 'AI Sales Workflow Automation, A-LIGN',
+  description:
+    'An AI prospecting workflow at a cybersecurity and compliance firm that looked finished and produced nothing. Michael Doerffler volunteered for it as a BDR intern, found the root cause, and rebuilt qualification in layers: accounts qualified before entry, a model qualifying contacts inside them against compliance criteria, and a rep making the final call with a written reason to override. Proven on the CMMC audit line at roughly a 1% bounce rate against a 6% team average, and now run daily by all fourteen reps on the team.',
+  about: [ORGS.align],
+  // Open-ended interval: the engagement is ongoing, and an end date would
+  // contradict the colophon.
+  temporalCoverage: '2026-05/..',
+  keywords: [
+    'AI workflow automation',
+    'Sales operations',
+    'Apollo',
+    'Salesforce',
+    'Outreach',
+    'Prompt engineering',
+    'Agentic workflow',
+    'Human in the loop',
+    'B2B prospecting',
+    'Cybersecurity compliance',
+  ],
+};
 
 const facts = [
-  { label: 'ROLE', value: 'BDR intern · The person who owns the Apollo build' },
+  { label: 'ROLE', value: 'BDR intern · From filling pipeline to building the systems behind it' },
   { label: 'ORG', value: 'A-LIGN · Cybersecurity compliance' },
   { label: 'TIMELINE', value: '2026 · Ongoing' },
   { label: 'TOOLS', value: 'Apollo · Salesforce · Outreach · Agentic workflow' },
@@ -38,10 +63,12 @@ const survived = [
 ---
 
 <Base
-  title="AI Prospecting Automation · Michael Doerffler"
-  description="A stalled AI prospecting build, picked up and scaled into the system fourteen reps work in every day."
+  title="AI Sales Workflow Automation · Michael Doerffler"
+  description="How I rebuilt and validated a stalled AI prospecting workflow at A-LIGN, scaled it across a 14-person BDR team, and helped prepare it for broader adoption."
   ogImage="/og/prospecting-automation.png"
-  breadcrumb="AI Prospecting Automation"
+  breadcrumb="AI Sales Workflow Automation"
+  ogType="article"
+  work={work}
 >
   <CaseStudyLayout
     caseLabel="A-LIGN · PROSPECTING AUTOMATION"
@@ -50,7 +77,7 @@ const survived = [
     titleLine2="without taking out the judgment."
     standfirst="I was hired to prospect. I ended up running the system the team prospects on."
     nextLabel="THE NOLL TEAM"
-    nextHref="/work/noll-team"
+    nextHref="/work/noll-team/"
   >
     <CaseColophon items={facts} />
 

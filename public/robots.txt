@@ -1,3 +1,15 @@
+# Everything on this site is a public portfolio. There is nothing here that is
+# not meant to be read, so every crawler gets the same answer: all of it.
+# That includes AI and retrieval crawlers (GPTBot, ClaudeBot, PerplexityBot,
+# Google-Extended and the rest) — they are covered by the wildcard below and
+# are deliberately not blocked, because being found and summarised correctly
+# is the point.
+#
+# Nothing private is served from this origin. Source, drafts, personal
+# documents and the old site are excluded at the repository level via
+# .gitignore and never reach the build output, so there is no path here worth
+# disallowing.
+
 User-agent: *
 Allow: /
 

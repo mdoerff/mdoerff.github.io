@@ -8,6 +8,17 @@
 
 <footer id="contact" class="foot" aria-label="Contact and site footer">
   <div class="foot-inner">
+    <!-- The one thing the site never said. A visitor who reaches the footer is
+         already convinced by the work; this tells them what to do about it,
+         and answers the question every recruiter asks second. Sits above the
+         contact row rather than inside it, so the mark and links keep their
+         layout untouched. -->
+    <p class="foot-seeking" data-reveal>
+      Graduating December 2026.
+      <span class="foot-seeking-key">Looking for full-time work at the intersection of
+      technology, data, and operations.</span>
+    </p>
+
     <div class="foot-main" data-reveal>
       <div class="foot-mark" aria-hidden="true">
         <span>R</span><span>M</span><span>T</span><span>D</span>
@@ -51,6 +62,18 @@
     z-index: 2;
     padding: 18vh 4vw 26px;
   }
+
+  .foot-seeking {
+    margin: 0 0 6vh;
+    max-width: 760px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(17px, 1.5vw, 23px);
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .foot-seeking-key { color: var(--accent); }
 
   .foot-main {
     display: flex;

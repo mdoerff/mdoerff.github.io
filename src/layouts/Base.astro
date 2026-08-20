@@ -4,11 +4,36 @@ import portrait from '../assets/portrait.jpg';
 import Footer from '../components/Footer.astro';
 import { getImage } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
+import { NAME, BIO_SHORT, PERSON_ID, SITE_ID, SITE_URL, personNode, personRef } from '../data/site';
+import { dateFor } from '../data/page-dates.mjs';
 
 // The atmosphere layer is the portrait blurred 22px at half opacity, stretched
 // across the viewport. It never needed full resolution — it was shipping the
 // entire 274KB photo a second time on every page just to be smeared.
 const atmosphere = await getImage({ src: portrait, width: 64, format: 'webp', quality: 60 });
+// The same photo at a size worth calling a portrait, for Person.image. Google
+// wants a real picture of the person here, not the share card.
+const personPhoto = await getImage({ src: portrait, width: 900, format: 'jpeg', quality: 78 });
+
+/** An organization named on a page, for a case study's `about`. */
+interface SchemaOrg {
+  name: string;
+  url?: string;
+}
+
+/** The project a case-study or technical page documents. Everything here has
+ *  to be readable on the page itself. */
+interface WorkNode {
+  name: string;
+  description: string;
+  /** Organizations the work was done for or inside. */
+  about?: SchemaOrg[];
+  /** When the work happened. Not datePublished: these pages document projects,
+   *  and the period is the honest date, not a publication timestamp. */
+  temporalCoverage?: string;
+  /** Tools and domains, matching what the page's own copy names. */
+  keywords?: string[];
+}
 
 interface Props {
   title?: string;
@@ -19,13 +44,30 @@ interface Props {
   /** Case pages pass their breadcrumb label so search results show
    *  rmtdco.com › Work › <case> instead of a bare URL. */
   breadcrumb?: string;
+  /** Where the breadcrumb's first rung points. Technical pages hang off
+   *  /#technical, case studies off /#work. */
+  breadcrumbRoot?: 'work' | 'technical';
+  /** og:type. The homepage is a profile, project pages are articles about a
+   *  piece of work, everything else is a plain page. */
+  ogType?: 'website' | 'profile' | 'article';
+  /** Only the 404 sets this. Nothing public is ever withheld from a crawler. */
+  noindex?: boolean;
+  /** Emits ProfilePage instead of WebPage and inlines the full Person node. */
+  isProfile?: boolean;
+  /** The project this page documents, emitted as the page's mainEntity. */
+  work?: WorkNode;
 }
 
 const {
-  title = 'Michael Doerffler',
-  description = 'Michael Doerffler builds decision systems for agencies, sales teams, and portfolios. Business Analytics & AI, USF, Dec 2026.',
+  title = NAME,
+  description = BIO_SHORT,
   ogImage = '/og/home.png',
   breadcrumb,
+  breadcrumbRoot = 'work',
+  ogType = 'website',
+  noindex = false,
+  isProfile = false,
+  work,
 } = Astro.props;
 
 // Each page's own address. Previously og:url was hardcoded to the homepage,
@@ -34,29 +76,112 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // og:image must be absolute. make-preview.mjs rewrites this host so the
 // Netlify preview points at images that actually exist there.
 const ogImageUrl = new URL(ogImage, Astro.site).href;
+const personImageUrl = new URL(personPhoto.src, Astro.site).href;
 
-// Structured data. Every value here already appears on the site — nothing is
-// asserted to Google that a visitor cannot also read.
-const isHome = Astro.url.pathname === '/';
-const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Michael Doerffler',
-  url: 'https://rmtdco.com',
-  jobTitle: 'Business Analytics and AI',
-  email: 'mailto:michael@rmtdco.com',
-  address: { '@type': 'PostalAddress', addressLocality: 'Tampa', addressRegion: 'FL', addressCountry: 'US' },
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of South Florida' },
-  sameAs: ['https://www.linkedin.com/in/michael-doerffler'],
-};
+// Search-engine verification. Both consoles accept a file upload instead, but
+// a meta tag survives a rebuild and a DNS move. Fill these in from Google
+// Search Console and Bing Webmaster Tools; empty means nothing is emitted.
+const GOOGLE_SITE_VERIFICATION = '';
+const BING_SITE_VERIFICATION = '';
+
+// Google Analytics 4. Paste the measurement ID (G-XXXXXXXXXX) to switch it on;
+// empty means no script is served at all, so the site ships no third-party
+// JavaScript until this is filled in.
+//
+// GA is a feedback loop for people, not for search: it is not a ranking signal
+// and crawlers do not execute it. The consoles above are what report crawler
+// behaviour.
+const GA_MEASUREMENT_ID = '';
+
+// Machine-readable twin of this page, emitted by scripts/make-machine-mirrors.mjs
+// after the build. Advertised so an agent can fetch clean markdown instead of
+// parsing styled HTML. Only the case and technical pages have one.
+const mirrorPath =
+  Astro.url.pathname === '/'
+    ? '/index.md'
+    : /^\/(work|technical)\/.+/.test(Astro.url.pathname)
+      ? Astro.url.pathname.replace(/\/$/, '') + '.md'
+      : null;
+const mirrorUrl = mirrorPath ? new URL(mirrorPath, Astro.site).href : null;
+
+// ---- Structured data ------------------------------------------------------
+// One @graph per page rather than several loose blocks, so the nodes can point
+// at each other by @id. Every value restates something on the page.
+const pageModified = dateFor(Astro.url.pathname);
+const pageId = `${canonical}#page`;
+const workId = `${canonical}#work`;
+const crumbId = `${canonical}#breadcrumb`;
+
+const nodes: Record<string, unknown>[] = [];
+
+nodes.push(isProfile ? personNode(personImageUrl) : personRef);
+
+nodes.push({
+  '@type': 'WebSite',
+  '@id': SITE_ID,
+  url: `${SITE_URL}/`,
+  name: NAME,
+  description: BIO_SHORT,
+  inLanguage: 'en-US',
+  publisher: { '@id': PERSON_ID },
+});
+
 const breadcrumbSchema = breadcrumb && {
-  '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
+  '@id': crumbId,
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Case Studies', item: 'https://rmtdco.com/#work' },
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: breadcrumbRoot === 'technical' ? 'Technical Projects' : 'Case Studies',
+      item: `${SITE_URL}/#${breadcrumbRoot}`,
+    },
     { '@type': 'ListItem', position: 2, name: breadcrumb, item: canonical },
   ],
 };
+
+const workSchema = work && {
+  '@type': 'CreativeWork',
+  '@id': workId,
+  name: work.name,
+  description: work.description,
+  url: canonical,
+  author: { '@id': PERSON_ID },
+  creator: { '@id': PERSON_ID },
+  ...(work.about && {
+    about: work.about.map((o) => ({ '@type': 'Organization', name: o.name, ...(o.url && { url: o.url }) })),
+  }),
+  ...(work.temporalCoverage && { temporalCoverage: work.temporalCoverage }),
+  ...(work.keywords && { keywords: work.keywords.join(', ') }),
+  inLanguage: 'en-US',
+  isPartOf: { '@id': SITE_ID },
+  ...(pageModified && { dateModified: pageModified }),
+};
+
+nodes.push({
+  '@type': isProfile ? 'ProfilePage' : 'WebPage',
+  '@id': pageId,
+  url: canonical,
+  name: title,
+  description,
+  isPartOf: { '@id': SITE_ID },
+  inLanguage: 'en-US',
+  primaryImageOfPage: { '@type': 'ImageObject', url: ogImageUrl },
+  // From git history, same source as the sitemap's lastmod. Retrieval systems
+  // weight recency, and the site emitted no date at all before this.
+  ...(pageModified && { dateModified: pageModified }),
+  ...(isProfile
+    ? { mainEntity: { '@id': PERSON_ID }, about: { '@id': PERSON_ID } }
+    : work
+      ? { mainEntity: { '@id': workId }, about: { '@id': workId } }
+      : {}),
+  ...(breadcrumbSchema && { breadcrumb: { '@id': crumbId } }),
+});
+
+if (workSchema) nodes.push(workSchema);
+if (breadcrumbSchema) nodes.push(breadcrumbSchema);
+
+const graph = { '@context': 'https://schema.org', '@graph': nodes };
 ---
 
 <!doctype html>
@@ -66,17 +191,30 @@ const breadcrumbSchema = breadcrumb && {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={NAME} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="Michael Doerffler" />
+    <meta property="og:site_name" content={NAME} />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
+    <!-- X/Twitter reads og:* as a fallback, but Slack, Discord and iMessage
+         all prefer the card tags when present, and summary_large_image is the
+         only way to get the 1200x630 share card rather than a thumbnail. -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={title} />
     <link rel="canonical" href={canonical} />
+    {GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
+    {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
+    {mirrorUrl && <link rel="alternate" type="text/markdown" href={mirrorUrl} title="Markdown version" />}
     <meta name="theme-color" content="#E9E1CF" />
     <!-- The timeline's line: solid to now, dashed after. Bare on transparency
          in the tab; the SVG is listed first because browsers prefer it and it
@@ -87,26 +225,48 @@ const breadcrumbSchema = breadcrumb && {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    {isHome && <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />}
-    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Loaded without blocking first paint: the stylesheet is fetched as
-         print media, then promoted to all once it arrives. display=swap in the
-         URL means text renders in the fallback serif meanwhile rather than
-         staying invisible. <noscript> covers the rare case of JS being off. -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    <!-- Fonts are self-hosted from /fonts/ and declared in global.css, so
+         there is nothing to preconnect to and no third-party stylesheet to
+         load without blocking. These two faces carry first paint (the
+         nameplate and all body copy), so they are fetched in parallel with
+         the CSS rather than waiting for it to parse. The latin-ext cuts are
+         left to load on demand; almost nothing on this site needs them. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/libre-baskerville-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin.woff2" crossorigin />
+    <!-- Google Analytics 4. Nothing is emitted until GA_MEASUREMENT_ID is set.
+         The pageview wiring is not the stock snippet on purpose: ClientRouter
+         swaps pages without a document load, so gtag's automatic page_view
+         would fire once per session and every visit would read as a
+         single-page bounce no matter how much someone actually read. So the
+         automatic one is turned off and each view is sent from
+         astro:page-load, which fires on first load and after every swap. The
+         armed flag guards against a second listener if the script re-runs,
+         matching the __gfUpdate and dataset.armed guards used elsewhere. -->
+    {GA_MEASUREMENT_ID && (
+      <Fragment>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script
+          is:inline
+          set:html={`
+window.dataLayer = window.dataLayer || [];
+function gtag(){ window.dataLayer.push(arguments); }
+window.gtag = gtag;
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
+if (!window.__gaArmed) {
+  window.__gaArmed = true;
+  document.addEventListener('astro:page-load', function () {
+    window.gtag('event', 'page_view', {
+      page_location: window.location.href,
+      page_title: document.title,
+      page_referrer: document.referrer || undefined,
+    });
+  });
+}`}
+        />
+      </Fragment>
+    )}
     <ClientRouter />
   </head>
   <body>
@@ -118,10 +278,13 @@ const breadcrumbSchema = breadcrumb && {
     <!-- Base paper tooth — always on (canonical turbulence data-URI) -->
     <div class="paper-tooth" aria-hidden="true"></div>
 
+    <!-- The footer sits outside <main> on purpose: a <footer> only becomes the
+         page's contentinfo landmark when it is a direct child of <body>, and
+         screen-reader users navigate to contact details by that landmark. -->
     <main class="page-content">
       <slot />
-      <Footer />
     </main>
+    <Footer />
 
     <!-- Fine film grain — over everything, type included (canonical data-URI) -->
     <div class="film-grain" aria-hidden="true"></div>

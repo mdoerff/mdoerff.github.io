@@ -10,12 +10,24 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+
+// The stack line is already a list; reusing it as keywords keeps the machine
+// summary and the visible spec block from drifting.
+const work = {
+  name: project.title,
+  description: project.paras.join(' '),
+  keywords: [...project.stack.split(' · '), ...project.domains],
+};
 ---
 
 <Base
   title={`${project.title} · Michael Doerffler`}
   description={project.description}
   ogImage={`/og/technical-${project.slug}.png`}
+  breadcrumb={project.title}
+  breadcrumbRoot="technical"
+  ogType="article"
+  work={work}
 >
   <TechnicalLayout label={project.tag} title={project.title}>
     <p class="tp-status">{project.tag}</p>

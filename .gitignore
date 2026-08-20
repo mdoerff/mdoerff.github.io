@@ -17,3 +17,7 @@ newfile730/
 /*.png
 /*.pdf
 /index.html
+
+# old site assets: kept on disk, not tracked
+portfoliorepo/
+retired/

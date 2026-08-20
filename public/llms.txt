@@ -1,0 +1,77 @@
+# Michael Doerffler
+
+> Early-career technology and business professional working where data, AI, and automation meet how an organization actually runs. B.S. in Artificial Intelligence and Business Analytics, University of South Florida, December 2026. Based in Tampa, Florida.
+
+The recurring pattern across the work: entering environments where useful information, processes, or technology already exist but sit fragmented, manual, stalled, or unused, then structuring the problem, building or repairing the technical system, and carrying it far enough that the people involved can use it. Every project below was carried past analysis into implementation, adoption, or handoff.
+
+Canonical site: https://rmtdco.com/
+
+## Looking for
+
+Full-time roles from December 2026 in technology and management consulting, data and analytics
+or business intelligence, business systems and solutions, or GTM and revenue operations.
+Based in Tampa, Florida.
+
+## Machine-readable copies
+
+Every case study and technical project is also published as clean markdown, and every page
+advertises its own copy with a link rel="alternate" of type text/markdown. Fetch these
+instead of parsing the HTML.
+
+- https://rmtdco.com/llms-full.txt (everything below, in one file)
+- https://rmtdco.com/index.md (homepage, including the full 22-entry work history)
+- https://rmtdco.com/work/permit-modernization.md
+- https://rmtdco.com/work/prospecting-automation.md
+- https://rmtdco.com/work/noll-team.md
+- https://rmtdco.com/technical/3rivers.md
+- https://rmtdco.com/technical/default-risk.md
+- https://rmtdco.com/technical/sports-cities.md
+- https://rmtdco.com/technical/finedu.md
+
+## Case studies
+
+- [Public Health System Modernization](https://rmtdco.com/work/permit-modernization/): A county pool permitting program at the Florida Department of Health ran on email, a spreadsheet, and staff memory. After the project stalled, Michael took over the technical build and delivered a Microsoft 365 system of record: Microsoft Forms intake, seven Power Automate flows, a SharePoint list with fifty-one migrated historical records, role-based views separating day-to-day permit management from an inspector view, and a documented handoff with staff training in July 2026.
+- [AI Sales Workflow Automation](https://rmtdco.com/work/prospecting-automation/): An AI prospecting workflow at A-LIGN, a cybersecurity and compliance firm, looked finished and produced nothing. Michael volunteered for it as a BDR intern, rebuilt qualification in layers with a rep making the final call, proved it on the CMMC audit line at roughly a 1% bounce rate against a 6% team average, and it is now run daily by all fourteen reps on the team. The day to day has moved from working pipeline to building and running the systems behind it, and the GTM and BDR teams now bring enablement work to him. Ongoing.
+- [Data & Analytics in Real Estate](https://rmtdco.com/work/noll-team/): Eight months connecting The Noll Team's sales, CRM, performance, and client data into business intelligence. Standardized records across nine agents, automated the recurring tracking, and built a Power BI system on a Power Query star schema with DAX measures over a reporting environment covering 8,523 client connections, 189 sales, and $63.7M in volume. Segmented twenty years of transactions, ran an LLM workflow over four hundred client surveys, and handed the systems over with SOPs and recorded training.
+
+## Technical projects
+
+- [3Rivers Federal Credit Union](https://rmtdco.com/technical/3rivers/): A Power BI mortgage inquiry intelligence report built during a Business Intelligence internship at a federally regulated credit union, joining member and loan officer data across three enterprise systems and shaped with the mortgage team that uses it.
+- [Modeling Default Risk](https://rmtdco.com/technical/default-risk/): An end-to-end loan default pipeline in Python, with k-Means borrower segmentation and a model selected on recall over accuracy, turned into a proposed two-stage lending strategy.
+- [Do Sports Teams Make Cities Richer?](https://rmtdco.com/technical/sports-cities/): 90 teams across three leagues and four seasons joined to federal income and employment data for 40 metro areas in Tableau. The finding was that teams cluster in cities that were already wealthy.
+- [FinEdu](https://rmtdco.com/technical/finedu/): A normalized relational database and query layer in MySQL for a financial-literacy venture carried since founding an investment club in high school.
+
+## Capabilities demonstrated
+
+- Diagnosing operational problems: a stalled government build, manual tracking, underused business data, an AI workflow that needed rebuilding.
+- Working with stakeholders: public health leadership, government IT, a CEO, BDR reps and managers, real-estate agents, office operations.
+- Building technical systems: Microsoft 365 architecture, Power Automate, SharePoint, Forms, Power BI, Power Query, DAX, SQL, Python, LLM workflows, Tableau.
+- Connecting technology to business outcomes: operational efficiency, management visibility, scalable reporting, sales workflow adoption, coaching insight, segmentation strategy.
+- Thinking past the build: documentation, SOPs, recorded training, repeatability, adoption, handoff.
+
+## Experience
+
+Professional, newest first
+- A-LIGN, BDR. May 2026 to present. Cybersecurity and compliance.
+- Florida Department of Health, via Troubadour Health. April to July 2026.
+- The Noll Team, AI and Business Strategy Intern. May to December 2025.
+- 3Rivers Federal Credit Union, Business Intelligence Intern. May to August 2025.
+- BM Solutions, co-founded. Summer to Fall 2024.
+- Middle America Homes, real estate sales and marketing intern. June 2022 to January 2023.
+
+Leadership and education
+- B.S. Artificial Intelligence and Business Analytics, University of South Florida, December 2026.
+- Delta Tau Delta, VP of Programming. August 2025 to August 2026.
+- Delta Tau Delta, Social Media Chair. February to August 2025.
+- Peer Leader, Bulls Business Community. Fall 2024.
+- USF Investment Club, Global Markets Division. 2023.
+- Homestead Investment Club, founded. 2021 to 2022.
+
+Earlier work, 2020 to 2025
+- Service, retail and campus jobs held alongside school: Salsa Grille, YMCA, Wendy's,
+  Catalyst Fitness, Target, tutoring, Dick's Sporting Goods.
+
+## Contact
+
+- Email: michael@rmtdco.com
+- LinkedIn: https://www.linkedin.com/in/michael-doerffler

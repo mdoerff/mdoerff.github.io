@@ -52,12 +52,17 @@ import { Image } from 'astro:assets';
       <div class="caption-meta">B.S. AI &amp; BUSINESS ANALYTICS · USF · DECEMBER 2026</div>
     </div>
 
-    <!-- THE NAME — R · M · T · D read as one dark-green column → RMTDCO. -->
+    <!-- THE NAME — R · M · T · D read as one dark-green column → RMTDCO.
+         The plate splits the name across four lines, so the heading on its own
+         used to read DOERFFLER to anything that reads markup rather than
+         layout. The given name is repeated into the heading out of sight: the
+         composition is untouched, and the page's one h1 now says the whole
+         name. MICHAEL above it is marked decorative so it is not read twice. -->
     <div class="nameplate">
       <div class="nm nm-initial">R</div>
-      <div class="nm nm-michael"><span class="nm-accent">M</span>ICHAEL</div>
+      <div class="nm nm-michael" aria-hidden="true"><span class="nm-accent">M</span>ICHAEL</div>
       <div class="nm nm-initial">T</div>
-      <h1 class="nm nm-doerffler"><span class="nm-accent">D</span>OERFFLER</h1>
+      <h1 class="nm nm-doerffler"><span class="a11y-text">Michael </span><span class="nm-accent">D</span>OERFFLER</h1>
     </div>
 
   </div>

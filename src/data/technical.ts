@@ -13,7 +13,23 @@ export interface TechnicalProject {
   method: string;
   /** Meta description for the page. Kept under 155 so search results do not cut it. */
   description: string;
+  /** Structured-data only: the subject areas the project demonstrates. These
+   *  restate what the tag and the copy already say. No dates: the site does
+   *  not state when the coursework ran, so neither does the markup. */
+  domains: string[];
 }
+
+/** The 3Rivers dossier: hand-built rather than generated, because it carries a
+ *  diagram and a manager endorsement the coursework pages do not. Its card copy
+ *  sits here rather than inline in TechnicalSection so the section renders from
+ *  data like the three coursework projects beside it. */
+export const featured = {
+  slug: '3rivers',
+  tag: 'DATA ENGINEERING & BI · REGULATED FINANCIAL INSTITUTION',
+  title: '3Rivers Federal Credit Union',
+  blurb:
+    'A mortgage inquiry intelligence report built on protected member data, shaped directly with the team that uses it.',
+};
 
 export const projects: TechnicalProject[] = [
   {
@@ -28,6 +44,7 @@ export const projects: TechnicalProject[] = [
     stack: 'Python · scikit-learn · Keras · pandas',
     method: 'EDA · k-Means clustering (k=4, silhouette 0.514) · Decision Tree vs. neural network · model selection on recall/F1 over accuracy · cluster-to-default-rate mapping into a two-stage pipeline',
     description: 'An end-to-end pipeline predicting loan defaults, selected on recall over accuracy, and turned into a two-stage lending strategy the business could act on.',
+    domains: ['Machine learning', 'Predictive modeling', 'Clustering', 'Credit risk', 'Model evaluation'],
   },
   {
     slug: 'sports-cities',
@@ -41,6 +58,7 @@ export const projects: TechnicalProject[] = [
     stack: 'Tableau · Excel · public data (Spotrac, Sports Reference, BEA, BLS, Census, OMB)',
     method: 'County-to-MSA aggregation via OMB delineations · shared Metro Area join key · three-table model (360 team-seasons across 40 metros) · correlation vs. causation via growth comparison',
     description: '90 teams, four seasons, joined to federal economic data for 40 metros. The finding: teams cluster in cities that were already wealthy.',
+    domains: ['Data integration', 'Data visualization', 'Public economic data', 'Correlation and causation', 'Sports economics'],
   },
   {
     slug: 'finedu',
@@ -54,5 +72,6 @@ export const projects: TechnicalProject[] = [
     stack: 'MySQL · SQL',
     method: 'ERD and schema design · 3NF normalization · PK/FK constraints · many-to-many resolution via bridge table · complex queries (multi-table JOINs, nested subqueries, window functions)',
     description: 'The financial-literacy venture I have carried since high school, given a real backend: a 3NF relational database and the queries a business would ask.',
+    domains: ['Database design', 'Relational modeling', 'Normalization', 'Window functions', 'Financial literacy'],
   },
 ];

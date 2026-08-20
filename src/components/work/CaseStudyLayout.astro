@@ -119,7 +119,10 @@ const { caseLabel, eyebrow, titleLine1, titleLine2, standfirst, nextLabel, nextN
     letter-spacing: 0.16em;
     color: var(--ink-muted-4);
   }
-  .case-next-note { color: var(--grey-faint); }
+  /* grey-label, not grey-faint: this is small text and grey-faint sits at
+     3.03:1 on paper. grey-faint stays the token for diagram strokes and
+     decorative glyphs, which carry no contrast requirement. */
+  .case-next-note { color: var(--grey-label); }
   a.case-next-live { transition: color 0.15s; }
   a.case-next-live:hover { color: var(--accent); }
 

@@ -3,7 +3,6 @@
 // Precision aesthetic: clean bone ground, sharp line, weighted nodes.
 // Time is LINEAR: every node and year tick sits exactly where the
 // calendar puts it. Hover/tap/focus a node for detail on demand.
-// Hover copy is PLACEHOLDER until Michael supplies the real lines.
 
 // Linear time → x mapping (decimal year → svg x).
 const T0 = 2020.42, T1 = 2027.05, X0 = 70, X1 = 1390;
@@ -16,28 +15,28 @@ const yFor = (x: number) => LY0 + ((x - LX0) / (LX1 - LX0)) * (LY1 - LY0);
 // All 22 entries, exact order and dates from Michael. w = visual weight:
 // 1 small blip · 2 mid · 3 major. future = open node past today.
 const entries = [
-  { start: 'JUN 2020', end: 'MAR 2022', title: 'Salsa Grille', d: 2020.42, w: 2, text: 'A first consistent paycheck, earned in high school. Left with a love of Mexican food and the ability to roll a perfect burrito.' },
-  { start: 'SEP 2020', end: 'MAR 2021', title: 'YMCA, referee', d: 2020.67, w: 1, text: 'Refereed little league football and basketball.' },
-  { start: 'FEB 2021', end: 'JUL 2021', title: "Wendy's", d: 2021.08, w: 1, text: 'Sixteen, working Wendy’s and Salsa Grille at the same time. If you can’t tell yet, I like a full plate.' },
-  { start: 'FALL 2021', end: 'FALL 2022', title: 'Homestead Investment Club, founded', d: 2021.7, w: 2, text: 'Teaching myself investing and entrepreneurship turned into founding a club that put like minds together. Five members grew to thirty, with simulations, guest professionals, and a group that went on to great colleges and internships.' },
-  { start: 'FEB 2022', end: 'JUN 2022', title: 'Catalyst Fitness, receptionist', d: 2022.08, w: 1, text: 'Front desk at my local gym: great relationships with the regulars, a free membership, and time for schoolwork on the slow shifts.' },
-  { start: 'JUN 2022', end: 'JAN 2023', title: 'Middle America Homes, real estate sales and marketing intern', d: 2022.42, w: 2, text: 'Turned a club connection into a for-credit internship on an eight-person real estate wholesaling team. Ran text and cold-call outreach, qualified leads, and handled the data entry and payroll nobody else wanted.' },
-  { start: 'DEC 2022', end: null, title: 'Graduated high school', d: 2022.92, w: 2, text: 'Finished a semester early, on purpose, to work and save before college. A 4.0 the whole way and fifty transferable college credits.' },
-  { start: 'SPRING 2023', end: 'FALL 2023', title: 'Target', d: 2023.2, w: 1, text: 'Long hours all spring and summer, banking everything for the move to Florida. The light at the end of the tunnel was a whole new chapter.' },
-  { start: 'SUMMER 2023', end: 'FALL 2023', title: 'USF Investment Club', d: 2023.45, w: 1, text: 'Global Markets Division plus a selective cohort preparing for the investment banking cycle. It confirmed I could do traditional finance, and revealed I would rather explore other paths.' },
-  { start: 'FALL 2023', end: null, title: 'Moved from Fort Wayne to Tampa for college', d: 2023.7, w: 2, text: 'A thousand-mile drive from my hometown and everything I had ever known. More excited than scared: the opportunity ahead was worth leaving the comfort zone behind.' },
-  { start: 'FALL 2023', end: 'SPRING 2024', title: 'Tutor', d: 2023.7, w: 1, text: 'Focused my first year on grades and finding my footing in the Bulls Business Community. Became the person people came to for business calculus and computers in business.' },
-  { start: 'SUMMER 2024', end: 'FALL 2024', title: 'BM Solutions, co-founded', d: 2024.45, w: 2, text: 'No internships landed, so Brady and I printed flyers and started knocking doors; our first client signed on day one. Ten weeks of sunrise-to-sunset work grew it to forty-plus clients and $13K in revenue from a standing start.' },
-  { start: 'FALL 2024', end: 'FALL 2024', title: 'Peer Leader, Bulls Business Community', d: 2024.7, w: 2, text: 'Chose the business living-learning community deliberately as a freshman, then came back as a Peer Leader, mentoring incoming students and running the community’s professional programming.' },
-  { start: 'FALL 2024', end: null, title: 'Switched major to AI & Business Analytics', d: 2024.7, w: 3, text: 'College was not challenging me enough, so I traded the comfortable major for the one that scared me a little. Skills that compound into any career, with entrepreneurship kept as a minor.' },
-  { start: 'FEB 2025', end: 'AUG 2025', title: 'Delta Tau Delta, Social Media Chair', d: 2025.08, w: 1, text: 'Put my high school graphic design coursework to work and ended up owning the chapter’s whole visual identity: website, graphics, animations, one consistent brand. Recruitment content began outperforming paid vendor work.' },
-  { start: 'SPRING 2025', end: 'SPRING 2025', title: "Dick's Sporting Goods", d: 2025.2, w: 1, text: 'Retail associate in the golf department, surrounded by seriously experienced golfers. Learned the sport from them and got hooked myself.' },
-  { start: 'MAY 2025', end: 'AUG 2025', title: '3Rivers Federal Credit Union, BI intern', d: 2025.33, w: 2, text: 'The least experienced person in a room of seasoned data, IT, and finance professionals, which was exactly the point. Coursework, 3Rivers, and the Noll Team all ran at once, each feeding the others.' },
-  { start: 'MAY 2025', end: 'DEC 2025', title: 'Noll Team, analytics', d: 2025.33, w: 3, text: 'Their first collegiate intern, in a role Brad and I invented together. Eight months across strategy, operations, and the numbers, capped by a seat on his podcast talking AI in small business.' },
-  { start: 'AUG 2025', end: 'AUG 2026', title: 'Delta Tau Delta, VP of Programming', d: 2025.58, w: 2, text: 'Ran the operational side of an eighty-member organization: full event calendar, semester budget, vendor contracts, and university approvals, through a fifteen-chair team.' },
-  { start: 'APR 2026', end: 'JUL 2026', title: 'Florida DOH', d: 2026.25, w: 3, text: 'Brought in through Troubadour Health to accelerate a stalled government build, and ended up the one building it. A fully manual permitting process became an automated system, closed with training, a full handoff, and a CEO letter saying the work exceeded what an internship typically delivers.' },
-  { start: 'MAY 2026', end: 'AUG 2026', title: 'A-LIGN, BDR', d: 2026.33, w: 3, text: 'Came in through the sales door: cold outreach, qualification, the BDR grind. Then a side project fixing broken software quietly turned the job into building and running the systems behind the sales.' },
-  { start: 'DEC 2026', end: null, title: 'Graduation', d: 2026.92, w: 3, future: true, text: 'Four and a half years of leaving the comfort zone and learning from everyone around me. Graduation just gives that instinct more room to run.' },
+  { start: 'JUN 2020', end: 'MAR 2022', title: 'Salsa Grille', d: 2020.42, w: 2, group: 'earlier', text: 'A first consistent paycheck, earned in high school. Left with a love of Mexican food and the ability to roll a perfect burrito.' },
+  { start: 'SEP 2020', end: 'MAR 2021', title: 'YMCA, referee', d: 2020.67, w: 1, group: 'earlier', text: 'Refereed little league football and basketball.' },
+  { start: 'FEB 2021', end: 'JUL 2021', title: "Wendy's", d: 2021.08, w: 1, group: 'earlier', text: 'Sixteen, working Wendy’s and Salsa Grille at the same time. If you can’t tell yet, I like a full plate.' },
+  { start: 'FALL 2021', end: 'FALL 2022', title: 'Homestead Investment Club, founded', d: 2021.7, w: 2, group: 'leadership', text: 'Teaching myself investing and entrepreneurship turned into founding a club that put like minds together. Five members grew to thirty, with simulations, guest professionals, and a group that went on to great colleges and internships.' },
+  { start: 'FEB 2022', end: 'JUN 2022', title: 'Catalyst Fitness, receptionist', d: 2022.08, w: 1, group: 'earlier', text: 'Front desk at my local gym: great relationships with the regulars, a free membership, and time for schoolwork on the slow shifts.' },
+  { start: 'JUN 2022', end: 'JAN 2023', title: 'Middle America Homes, real estate sales and marketing intern', d: 2022.42, w: 2, group: 'professional', text: 'Turned a club connection into a for-credit internship on an eight-person real estate wholesaling team. Ran text and cold-call outreach, qualified leads, and handled the data entry and payroll nobody else wanted.' },
+  { start: 'DEC 2022', end: null, title: 'Graduated high school', d: 2022.92, w: 2, group: 'leadership', text: 'Finished a semester early, on purpose, to work and save before college. A 4.0 the whole way and fifty transferable college credits.' },
+  { start: 'SPRING 2023', end: 'FALL 2023', title: 'Target', d: 2023.2, w: 1, group: 'earlier', text: 'Long hours all spring and summer, banking everything for the move to Florida. The light at the end of the tunnel was a whole new chapter.' },
+  { start: 'SUMMER 2023', end: 'FALL 2023', title: 'USF Investment Club', d: 2023.45, w: 1, group: 'leadership', text: 'Global Markets Division plus a selective cohort preparing for the investment banking cycle. It confirmed I could do traditional finance, and revealed I would rather explore other paths.' },
+  { start: 'FALL 2023', end: null, title: 'Moved from Fort Wayne to Tampa for college', d: 2023.7, w: 2, group: 'leadership', text: 'A thousand-mile drive from my hometown and everything I had ever known. More excited than scared: the opportunity ahead was worth leaving the comfort zone behind.' },
+  { start: 'FALL 2023', end: 'SPRING 2024', title: 'Tutor', d: 2023.7, w: 1, group: 'earlier', text: 'Focused my first year on grades and finding my footing in the Bulls Business Community. Became the person people came to for business calculus and computers in business.' },
+  { start: 'SUMMER 2024', end: 'FALL 2024', title: 'BM Solutions, co-founded', d: 2024.45, w: 2, group: 'professional', text: 'No internships landed, so Brady and I printed flyers and started knocking doors; our first client signed on day one. Ten weeks of sunrise-to-sunset work grew it to forty-plus clients and $13K in revenue from a standing start.' },
+  { start: 'FALL 2024', end: 'FALL 2024', title: 'Peer Leader, Bulls Business Community', d: 2024.7, w: 2, group: 'leadership', text: 'Chose the business living-learning community deliberately as a freshman, then came back as a Peer Leader, mentoring incoming students and running the community’s professional programming.' },
+  { start: 'FALL 2024', end: null, title: 'Switched major to AI & Business Analytics', d: 2024.7, w: 3, group: 'leadership', text: 'College was not challenging me enough, so I traded the comfortable major for the one that scared me a little. Skills that compound into any career, with entrepreneurship kept as a minor.' },
+  { start: 'FEB 2025', end: 'AUG 2025', title: 'Delta Tau Delta, Social Media Chair', d: 2025.08, w: 1, group: 'leadership', text: 'Put my high school graphic design coursework to work and ended up owning the chapter’s whole visual identity: website, graphics, animations, one consistent brand. Recruitment content began outperforming paid vendor work.' },
+  { start: 'SPRING 2025', end: 'SPRING 2025', title: "Dick's Sporting Goods", d: 2025.2, w: 1, group: 'earlier', text: 'Retail associate in the golf department, surrounded by seriously experienced golfers. Learned the sport from them and got hooked myself.' },
+  { start: 'MAY 2025', end: 'AUG 2025', title: '3Rivers Federal Credit Union, BI intern', d: 2025.33, w: 2, group: 'professional', text: 'The least experienced person in a room of seasoned data, IT, and finance professionals, which was exactly the point. Coursework, 3Rivers, and the Noll Team all ran at once, each feeding the others.' },
+  { start: 'MAY 2025', end: 'DEC 2025', title: 'Noll Team, analytics', d: 2025.33, w: 3, group: 'professional', text: 'Their first collegiate intern, in a role Brad and I invented together. Eight months across strategy, operations, and the numbers, capped by a seat on his podcast talking AI in small business.' },
+  { start: 'AUG 2025', end: 'AUG 2026', title: 'Delta Tau Delta, VP of Programming', d: 2025.58, w: 2, group: 'leadership', text: 'Ran the operational side of an eighty-member organization: full event calendar, semester budget, vendor contracts, and university approvals, through a fifteen-chair team.' },
+  { start: 'APR 2026', end: 'JUL 2026', title: 'Florida DOH', d: 2026.25, w: 3, group: 'professional', text: 'Brought in through Troubadour Health to accelerate a stalled government build, and ended up the one building it. A fully manual permitting process became an automated system, closed with training, a full handoff, and a CEO letter saying the work exceeded what an internship typically delivers.' },
+  { start: 'MAY 2026', end: 'PRESENT', title: 'A-LIGN, BDR', d: 2026.33, w: 3, group: 'professional', text: 'Came in through the sales door: cold outreach, qualification, the BDR grind. Then a side project fixing broken software quietly turned the job into building and running the systems behind the sales, and the enablement work is what the GTM and BDR teams started coming to me for.' },
+  { start: 'DEC 2026', end: null, title: 'Graduation', d: 2026.92, w: 3, group: 'leadership', future: true, text: 'Three years of leaving the comfort zone and learning from everyone around me. Graduation just gives that instinct more room to run.' },
 ];
 
 // Plot positions, nudging same-date entries apart so every node is hoverable.
@@ -50,6 +49,79 @@ const nodes = entries.map((e) => {
   return { ...e, x, y: yFor(x) };
 });
 
+// ---- The machine-readable view of the same entries ------------------------
+// The plot is chronological, because that is what a timeline is, and it encodes
+// rank visually: a 3.2px dot for a high-school job, a 7px dot with a halo for
+// the DOH build. Rendering that same order as a flat list threw the rank away,
+// so anything summarising the page met a 2020 restaurant job first and reached
+// the real work twentieth.
+//
+// Same twenty-two entries, nothing removed. Grouped, and newest first inside
+// each group, so the professional record leads. The early service jobs are
+// named together rather than each carrying its own paragraph: that copy was
+// written for someone who chose to hover a dot, and reads oddly as a bullet in
+// a machine-generated summary of a job candidate.
+const byRecent = (a: typeof entries[number], b: typeof entries[number]) => b.d - a.d;
+const inGroup = (g: string) => entries.filter((e) => e.group === g);
+
+const machineGroups = [
+  { heading: 'Professional experience', items: [...inGroup('professional')].sort(byRecent) },
+  { heading: 'Leadership and education', items: [...inGroup('leadership')].sort(byRecent) },
+  {
+    heading: 'Earlier work, 2020 to 2025',
+    // Chronological here, and only the employer: it reads as one line of
+    // context rather than a list of jobs.
+    summary:
+      'Service, retail and campus jobs held alongside school: ' +
+      inGroup('earlier')
+        .map((e) => e.title.split(',')[0])
+        .join(', ') +
+      '.',
+  },
+];
+
+// ---- The same plot, stood up for phones --------------------------------
+// A 1600-unit wide drawing cannot be read on a 375px screen: the first pass
+// scrolled sideways and showed a third of a life at a time, the second turned
+// it into a list 1.8 viewports tall. Twenty-two entries at the 44px minimum
+// touch target is 968px of tap zones before a word of text, so no list fits a
+// screen. This keeps it a plot and moves the target off the dots and onto the
+// whole line: one handle, dragged, with the card following.
+//
+// Positions are in a virtual 0-1000 space rather than pixels so the track can
+// be any height, and reuse the same linear time mapping and the same
+// same-date nudge the horizontal plot uses.
+const VSPAN = 1000;
+const vForDate = (d: number) => ((d - T0) / (T1 - T0)) * VSPAN;
+const MIN_GAP_V = 21;
+let lastV = -Infinity;
+const vnodes = entries.map((e, i) => {
+  let v = vForDate(e.d);
+  if (v < lastV + MIN_GAP_V) v = lastV + MIN_GAP_V;
+  lastV = v;
+  return { ...e, i, v };
+});
+// Chapters of life alongside the plot, so a phone reader can place an entry
+// without reading its dates. Bands, not points: each spans real dates and is
+// measured with the same vForDate mapping the dots use, so a label can never
+// drift from the entries it covers.
+//
+// Deliberately only two. The nine months between finishing high school and the
+// drive to Tampa are left unlabelled: the gap between the two rules says
+// "between" on its own, and a third label there was 54px of text in a 54px
+// band, which clips the moment the track shortens on a smaller phone.
+const eras = [
+  { label: 'HIGH SCHOOL', from: 2020.42, to: 2022.92 },
+  { label: 'COLLEGE', from: 2023.7, to: 2026.92 },
+].map((e) => ({
+  ...e,
+  top: (vForDate(e.from) / VSPAN) * 100,
+  height: ((vForDate(e.to) - vForDate(e.from)) / VSPAN) * 100,
+}));
+
+const dateLabel = (e: { start: string; end: string | null }) =>
+  `${e.start}${e.end ? ' to ' + e.end : ''}`;
+
 const NOW = 2026.55; // solid ink through today; dashed ahead
 const xNow = xFor(NOW);
 const R = { 1: 3.2, 2: 5, 3: 7 } as const;
@@ -58,10 +130,11 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
 
 <section id="timeline" class="tl" aria-label="Timeline">
   <div class="tl-head" data-reveal>
-    <div class="sec-label">TIMELINE</div>
+    <h2 class="sec-label">TIMELINE</h2>
     <p class="tl-sub">
       A first job in June 2020, a degree in December 2026, and twenty-two entries between them.
-      The line never flattens.
+      New work, people worth learning from, and a bigger set of skills walking into the next one
+      every time.
     </p>
     <p class="tl-note">Rest on a node for the detail.</p>
   </div>
@@ -75,13 +148,17 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
 
     <div class="strip-hint" aria-hidden="true">SCROLL THE PLOT · TAP A NODE &rarr;</div>
     <div class="strip" id="tl-strip">
-      <svg viewBox="0 0 1600 300" id="tl-svg" style="width: 100%; height: auto; display: block;" aria-hidden="true">
+      <!-- Not aria-hidden: the nodes inside are focusable, and a focusable
+           element inside an aria-hidden subtree is reachable by keyboard but
+           invisible to a screen reader. The plot's own lines and ticks carry
+           no roles, so nothing decorative is announced. -->
+      <svg viewBox="0 0 1600 300" id="tl-svg" style="width: 100%; height: auto; display: block;" role="group" aria-label="Work history plotted on a linear time axis, June 2020 to December 2026">
         <!-- baseline + year ticks (bone on the green field) -->
         <line x1="70" y1="262" x2="1390" y2="262" stroke="rgba(233,225,207,0.2)" stroke-width="1" />
         {years.map((yr) => (
           <g>
             <line x1={xFor(yr)} y1="258" x2={xFor(yr)} y2="266" stroke="rgba(233,225,207,0.4)" stroke-width="1" />
-            <text x={xFor(yr)} y="284" font-size="11" letter-spacing="1.5" text-anchor="middle" fill="rgba(233,225,207,0.5)" style="font-family: var(--font-sans);">{yr}</text>
+            <text x={xFor(yr)} y="284" font-size="11" letter-spacing="1.5" text-anchor="middle" fill="rgba(233,225,207,0.62)" style="font-family: var(--font-sans);">{yr}</text>
           </g>
         ))}
 
@@ -90,10 +167,10 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
         <line x1={xNow} y1={yFor(xNow)} x2={LX1} y2={LY1} stroke="rgba(233,225,207,0.5)" stroke-width="1.6" stroke-dasharray="5 6" />
         <path d={`M ${LX1} ${LY1} L 1490 ${LY1 - 14} L 1566 ${LY1 - 24}`} fill="none" stroke="rgba(233,225,207,0.45)" stroke-width="1.4" stroke-dasharray="3 7" />
         <path d={`M 1566 ${LY1 - 24} l -9 -1 m 9 1 l -7 6`} fill="none" stroke="rgba(233,225,207,0.6)" stroke-width="1.3" />
-        <text x="1578" y={LY1 - 36} font-size="10" letter-spacing="1.6" text-anchor="end" fill="rgba(233,225,207,0.55)" style="font-family: var(--font-sans);">STILL DRAWING</text>
+        <text x="1578" y={LY1 - 36} font-size="10" letter-spacing="1.6" text-anchor="end" fill="rgba(233,225,207,0.62)" style="font-family: var(--font-sans);">STILL DRAWING</text>
 
         <!-- origin annotation: the humble anchor, clear of the axis -->
-        <text x="70" y={LY0 + 26} font-size="10" letter-spacing="1.6" fill="rgba(233,225,207,0.55)" style="font-family: var(--font-sans);">JUN 2020 · THE FIRST JOB</text>
+        <text x="70" y={LY0 + 26} font-size="10" letter-spacing="1.6" fill="rgba(233,225,207,0.62)" style="font-family: var(--font-sans);">JUN 2020 · THE FIRST JOB</text>
 
         <!-- the twenty-two nodes, weighted -->
         {nodes.map((n, i) => (
@@ -101,9 +178,11 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
             class={`tnode tnode-w${n.w} ${n.future ? 'tnode-future' : ''}`}
             data-i={i}
             data-text={(n as any).text || ''}
+            data-title={n.title}
+            data-dates={`${n.start}${n.end ? ' to ' + n.end : ''}`}
             tabindex="0"
             role="button"
-            aria-label={`${n.title}. ${n.start}${n.end ? ' to ' + n.end : ''}.`}
+            aria-label={`${n.title}. ${n.start}${n.end ? ' to ' + n.end : ''}. ${(n as any).text || ''}`}
             style={`--rd: ${i * 0.06}s;`}
           >
             <circle class="tnode-hit" cx={n.x} cy={n.y} r="14" fill="transparent" />
@@ -116,6 +195,83 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
           </g>
         ))}
       </svg>
+    </div>
+  </div>
+
+  <!-- The same twenty-two entries as text. The plot holds them in attributes
+       and reveals them on hover, which a person can read and an indexer
+       cannot: attribute values are not page content, so the entire work
+       history was invisible to search engines and to anything reading the
+       page rather than operating it.
+
+       Grouped and newest-first rather than mirroring the plot's chronology,
+       for the reason given at machineGroups above. Marked aria-hidden because
+       a screen reader already reaches every entry through the plot's labelled
+       nodes and should not be given all of it a second time. -->
+  <div class="a11y-text tl-text" aria-hidden="true">
+    {machineGroups.map((g) => (
+      <Fragment>
+        <h3>{g.heading}</h3>
+        {g.summary ? (
+          <p>{g.summary}</p>
+        ) : (
+          <ul>
+            {g.items.map((e) => (
+              <li>
+                <strong>{e.title}</strong>. {e.start}{e.end ? ` to ${e.end}` : ''}. {e.text}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Fragment>
+    ))}
+  </div>
+
+  <!-- Phones get the same plot, stood on its end. Not a list: twenty-two
+       entries at the 44px minimum touch target is 968px of tap zones before a
+       word of text, so a list can never fit a screen. The target here is the
+       whole line, and the handle carries the card with it. The full 2020 to
+       2026 arc stays visible, which is the thing the plot is for. -->
+  <div class="scrub">
+    <div
+      class="scrub-track"
+      id="scrub-track"
+      role="slider"
+      tabindex="0"
+      aria-label="Work history, June 2020 to December 2026"
+      aria-valuemin="1"
+      aria-valuemax={vnodes.length}
+      aria-valuenow={vnodes.length}
+      aria-valuetext={`${vnodes[vnodes.length - 1].title}. ${dateLabel(vnodes[vnodes.length - 1])}.`}
+    >
+      <div class="scrub-eras" aria-hidden="true">
+        {eras.map((e) => (
+          <div class="scrub-era" style={`top:${e.top.toFixed(3)}%;height:${e.height.toFixed(3)}%`}>
+            <span class="scrub-era-rule"></span>
+            <span class="scrub-era-label">{e.label}</span>
+          </div>
+        ))}
+      </div>
+      <span class="scrub-line" aria-hidden="true"></span>
+      <span class="scrub-lit" id="scrub-lit" aria-hidden="true"></span>
+      {vnodes.map((n) => (
+        <span
+          class={`scrub-dot scrub-w${n.w} ${n.future ? 'scrub-future' : ''}`}
+          style={`top:${((n.v / VSPAN) * 100).toFixed(3)}%`}
+          data-i={n.i}
+          data-title={n.title}
+          data-dates={dateLabel(n)}
+          data-text={n.text}
+          aria-hidden="true"
+        ></span>
+      ))}
+      <span class="scrub-handle" id="scrub-handle" aria-hidden="true"></span>
+    </div>
+
+    <div class="scrub-card" id="scrub-card">
+      <p class="scrub-dates" id="scrub-dates"></p>
+      <p class="scrub-title" id="scrub-title"></p>
+      <p class="scrub-text" id="scrub-text"></p>
     </div>
   </div>
 </section>
@@ -133,14 +289,16 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     const wrap = card.parentElement as HTMLElement;
     const nodes = [...strip.querySelectorAll<SVGGElement>('.tnode')];
 
-    // Card copy comes from each node's data-text (Michael's own lines,
-    // confirmed one by one); placeholder only where a line is still owed.
-    const data = nodes.map((n) => {
-      const label = n.getAttribute('aria-label') || '';
-      const [title, dates] = label.split('. ');
-      const text = n.getAttribute('data-text') || 'One to two sentences of detail land here.';
-      return { title, dates: (dates || '').replace(/\.$/, ''), text };
-    });
+    // Card copy comes from each node's data-* attributes. It used to be parsed
+    // back out of aria-label, which meant the label could only ever hold what
+    // the card needed; now the label carries the detail sentence too, so a
+    // screen reader gets the entry in full without having to trigger a card
+    // that is itself aria-hidden.
+    const data = nodes.map((n) => ({
+      title: n.getAttribute('data-title') || '',
+      dates: n.getAttribute('data-dates') || '',
+      text: n.getAttribute('data-text') || '',
+    }));
 
     let shown = -1;
     const show = (i: number) => {
@@ -203,15 +361,132 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   document.addEventListener('astro:page-load', initTimeline);
 </script>
 
+<script>
+  // The mobile plot's handle. Kept separate from initTimeline: that one drives
+  // the horizontal SVG, this one drives the vertical track, and only ever one
+  // of them is on screen.
+  function initScrub() {
+    const track = document.getElementById('scrub-track');
+    const card = document.getElementById('scrub-card');
+    if (!track || !card) return;
+    const t = track as HTMLElement;
+    if (t.dataset.armed) return;
+    t.dataset.armed = '1';
+
+    const dots = [...track.querySelectorAll<HTMLElement>('.scrub-dot')];
+    const handle = document.getElementById('scrub-handle') as HTMLElement;
+    const lit = document.getElementById('scrub-lit') as HTMLElement;
+    const elDates = document.getElementById('scrub-dates')!;
+    const elTitle = document.getElementById('scrub-title')!;
+    const elText = document.getElementById('scrub-text')!;
+
+    // Percent down the track, read back off the style the template wrote, so
+    // the geometry has exactly one source of truth.
+    const pct = dots.map((d) => parseFloat(d.style.top));
+    let active = -1;
+
+    const show = (i: number) => {
+      if (i === active) return;
+      active = i;
+      const d = dots[i];
+      const p = pct[i];
+      handle.style.top = p + '%';
+      lit.style.height = p + '%';
+      dots.forEach((n, k) => (n.style.opacity = k === i ? '1' : ''));
+      elDates.textContent = d.dataset.dates || '';
+      elTitle.textContent = d.dataset.title || '';
+      elText.textContent = d.dataset.text || '';
+      track.setAttribute('aria-valuenow', String(i + 1));
+      track.setAttribute('aria-valuetext', `${d.dataset.title}. ${d.dataset.dates}.`);
+      // Clamped so a card near either end cannot run past the block.
+      const h = track.getBoundingClientRect().height;
+      if (h) {
+        const ch = card.getBoundingClientRect().height;
+        const want = (p / 100) * h - ch / 2;
+        (card as HTMLElement).style.top = Math.max(0, Math.min(h - ch, want)) + 'px';
+      }
+    };
+
+    // Nearest node to wherever the finger is, not the node directly under it:
+    // the dots are 5 to 9px and the point of this design is that you never
+    // have to hit one.
+    const pick = (clientY: number) => {
+      const r = track.getBoundingClientRect();
+      if (!r.height) return;
+      const p = ((clientY - r.top) / r.height) * 100;
+      let best = 0, bestD = Infinity;
+      for (let i = 0; i < pct.length; i++) {
+        const d = Math.abs(pct[i] - p);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      show(best);
+    };
+
+    let dragging = false;
+    track.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      // Capture keeps the drag alive if the finger leaves the track, but it
+      // throws on a pointer the browser no longer considers active. Not worth
+      // failing the whole handler over.
+      try { track.setPointerCapture((e as PointerEvent).pointerId); } catch {}
+      pick((e as PointerEvent).clientY);
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (dragging) pick((e as PointerEvent).clientY);
+    });
+    const stop = (e: Event) => {
+      dragging = false;
+      const id = (e as PointerEvent).pointerId;
+      try { if (id !== undefined && track.hasPointerCapture(id)) track.releasePointerCapture(id); } catch {}
+    };
+    track.addEventListener('pointerup', stop);
+    track.addEventListener('pointercancel', stop);
+
+    // Keyboard, because the track is a slider and because the crawler list is
+    // aria-hidden: this is the only route to the entries for anyone not using
+    // a pointer.
+    track.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key;
+      let next = active;
+      if (k === 'ArrowDown' || k === 'ArrowRight') next = Math.min(dots.length - 1, active + 1);
+      else if (k === 'ArrowUp' || k === 'ArrowLeft') next = Math.max(0, active - 1);
+      else if (k === 'Home') next = 0;
+      else if (k === 'End') next = dots.length - 1;
+      else return;
+      e.preventDefault();
+      show(next);
+    });
+
+    // Opens on the most recent entry, the one worth seeing first.
+    show(dots.length - 1);
+    // The card's clamp depends on measured heights, so redo it once the track
+    // actually has a size.
+    const remeasure = () => { const i = active; active = -1; show(i); };
+    window.addEventListener('resize', remeasure, { passive: true });
+    requestAnimationFrame(remeasure);
+  }
+  document.addEventListener('astro:page-load', initScrub);
+</script>
+
 <style>
   /* The timeline sits on the returned green field (the fixed #green-field
      crossfades back in as this chapter arrives, mirroring the case studies
      hand-off). Content is set bone-on-green like the work index.
      (The film grain overlay in Base sits above everything, so it stays.) */
+  /* The chapter claims a whole screen. Before this the section was ~0.78 of a
+     viewport and the plot inside it only ~0.27, so the timeline was a thin band
+     with the technical chapter above and the footer below always in shot at the
+     same time. It read as a divider rather than a chapter. Nothing about the
+     plot changed; it just stopped being crowded. svh, not vh, because mobile
+     browser chrome makes vh taller than the visible area. */
   .tl {
     position: relative;
     z-index: 2;
-    padding: 16vh 4vw 12vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12vh 4vw;
     scroll-margin-top: 4vh;
   }
   .tl-head .sec-label { color: var(--bone); }
@@ -306,11 +581,172 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   @keyframes tl-draw { to { stroke-dashoffset: 0; } }
   @keyframes tl-node { to { opacity: 1; } }
 
+  /* ---- The mobile plot, stood on its end ------------------------------- */
+  /* Hidden on desktop, where the horizontal drawing does this job. */
+  .scrub { display: none; }
+
   @media (max-width: 720px) {
-    .tl { padding: 12vh 6vw 10vh; }
+    /* The horizontal drawing and its hover card go away entirely on phones. */
+    .plot-wrap { display: none; }
+    .tl-note { display: none; }
+
+    .scrub {
+      display: block;
+      position: relative;
+      /* Sized so head + plot + card clear one screen inside the section's
+         100svh. Capped, or a tall phone stretches the dots apart until the
+         early years read as empty space. */
+      height: min(58svh, 460px);
+      margin-top: 3vh;
+    }
+
+    /* The track is the touch target: 44px wide, full height, and the line runs
+       down its middle. Nothing smaller ever needs to be hit. */
+    .scrub-track {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      /* 66px, not 44: the left 22 carry the era labels, and the line and its
+         dots sit in the remaining 44 so the touch target is still full size. */
+      width: 66px;
+      cursor: pointer;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .scrub-track:focus-visible { outline: 2px solid var(--bone); outline-offset: 2px; border-radius: 4px; }
+
+    /* Chapter labels, set vertically so they cost no horizontal room and read
+       along the line rather than across it. Behind the dots, quieter than
+       everything else, and pointer-events off so they never eat a drag. */
+    .scrub-eras {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 34px;
+      pointer-events: none;
+    }
+    .scrub-era {
+      position: absolute;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    /* A hairline the height of the band: the label alone would not show where
+       the chapter starts and stops. */
+    .scrub-era-rule {
+      position: absolute;
+      right: 0;
+      top: 3px;
+      bottom: 3px;
+      width: 1px;
+      background: rgba(233, 225, 207, 0.28);
+    }
+    .scrub-era-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin-right: 7px;
+      font-family: var(--font-sans);
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      color: rgba(233, 225, 207, 0.5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+      max-height: 100%;
+    }
+
+    .scrub-line, .scrub-lit {
+      position: absolute;
+      left: 43px;
+      width: 2px;
+      border-radius: 1px;
+    }
+    .scrub-line { top: 0; bottom: 0; background: rgba(233, 225, 207, 0.28); }
+    /* Travelled portion, so the handle reads as a position in a span. */
+    .scrub-lit { top: 0; height: 100%; background: var(--bone); opacity: 0.85; }
+
+    /* Same weighting the plot uses: a blip is small, a major entry is large
+       and takes the accent green. */
+    .scrub-dot {
+      position: absolute;
+      left: 44px;
+      width: 5px;
+      height: 5px;
+      margin: -2.5px 0 0 -2.5px;
+      border-radius: 50%;
+      background: var(--bone);
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .scrub-w2 { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; opacity: 0.9; }
+    .scrub-w3 { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; opacity: 1; background: #9DBFAA; }
+    .scrub-future { background: #1F332A; border: 2px solid #9DBFAA; }
+
+    .scrub-handle {
+      position: absolute;
+      left: 44px;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border-radius: 50%;
+      background: #9DBFAA;
+      border: 3px solid #1F332A;
+      box-sizing: border-box;
+      pointer-events: none;
+      transition: top 0.12s var(--ease-mech);
+    }
+
+    /* Card sits beside the line and is clamped by the script so it can never
+       run past either end of the track. */
+    .scrub-card {
+      position: absolute;
+      left: 78px;
+      right: 0;
+      top: 0;
+    }
+    .scrub-dates {
+      margin: 0 0 5px;
+      font-family: var(--font-sans);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: #9DBFAA;
+    }
+    .scrub-title {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 17px;
+      line-height: 1.25;
+      color: var(--bone);
+      text-wrap: pretty;
+    }
+    .scrub-text {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(233, 225, 207, 0.72);
+      text-wrap: pretty;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scrub-handle { transition: none; }
+    }
+  }
+
+  @media (max-width: 720px) {
+    /* Tighter than desktop: the caption runs to six lines on a phone, and the
+       section has to stay inside one screen. Taken from whitespace rather than
+       from the track, because shrinking the track squeezes the 2025 dots,
+       which already sit about 9px apart. */
+    .tl { padding: 8vh 6vw 7vh; }
     .plot-wrap { margin-top: 5vh; }
-    .strip { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .strip svg { min-width: 1200px; }
     .strip-hint {
       display: block;
       margin-bottom: 2.5vh;
@@ -321,5 +757,13 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       color: rgba(233, 225, 207, 0.55);
     }
     .tl-card { width: 250px; }
+  }
+  /* Short phones. The caption is six lines whatever the screen height, so on a
+     667px device the section ran 25px past one viewport. Reclaimed from
+     whitespace only: the track keeps its 58svh so the 2025 cluster does not
+     get any tighter than the ~7px it already sits at. */
+  @media (max-width: 720px) and (max-height: 700px) {
+    .tl { padding: 5vh 6vw 4vh; }
+    .scrub { margin-top: 2vh; }
   }
 </style>

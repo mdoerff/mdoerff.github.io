@@ -5,7 +5,7 @@
 // green Case Studies chapter fades out (driven by WorkIndex's scroll handler).
 // The projects themselves now live at /technical/<slug>. This section is their
 // index; the content is shared so the two can never drift apart.
-import { projects } from '../data/technical';
+import { projects, featured } from '../data/technical';
 
 // The skill stream: the whole technical profile in motion. Four lanes of
 // tools (serif), each pulling its own techniques (chips) along with it, so
@@ -68,21 +68,18 @@ const lanes = [
   </div>
 
   <div class="featured" data-reveal>
-    <a class="feat-hero" href="/technical/3rivers">
+    <a class="feat-hero" href={`/technical/${featured.slug}/`}>
       <span class="fh-body">
-        <span class="fr-chip">DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION</span>
-        <span class="fh-title">3Rivers Federal Credit Union</span>
-        <span class="fh-desc">
-          A mortgage inquiry intelligence report built on protected member data, shaped directly
-          with the team that uses it.
-        </span>
+        <span class="fr-chip">{featured.tag}</span>
+        <span class="fh-title">{featured.title}</span>
+        <span class="fh-desc">{featured.blurb}</span>
       </span>
       <span class="fr-slip">VIEW THE DETAILS &rarr;</span>
     </a>
 
     <div class="feat-cols">
       {projects.map((p) => (
-        <a class="feat-col" href={`/technical/${p.slug}`}>
+        <a class="feat-col" href={`/technical/${p.slug}/`}>
           <span class="fr-chip">{p.tag}</span>
           <span class="fc-title">{p.title}</span>
           <span class="fr-slip">+ EXPAND</span>

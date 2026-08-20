@@ -1,28 +1,7 @@
 ---
 // Case Studies index — homepage section. Rows are named, never numbered.
-const cases = [
-  {
-    title: 'Public Health System Modernization',
-    desc: 'A county permitting project had stalled, so I stepped into the technical build and helped turn it into a working digital system with automated workflows, centralized records, and a clean handoff to the department.',
-    meta: 'FLORIDA DEPARTMENT OF HEALTH · GOVERNMENT · 2026',
-    href: '/work/permit-modernization',
-    live: true,
-  },
-  {
-    title: 'AI Sales Workflow Automation',
-    desc: 'What started as an early AI prospecting workflow became a repeatable system for a 14-person BDR team, with my work focused on rebuilding, testing, and making it usable enough to support broader adoption.',
-    meta: 'A-LIGN · B2B CYBERSECURITY COMPLIANCE · 2026',
-    href: '/work/prospecting-automation',
-    live: true,
-  },
-  {
-    title: 'Data & Analytics in Real Estate',
-    desc: 'A brokerage had years of sales, relationship, and client data but no connected way to use it. I built the reporting, analysis, and systems that helped turn it into usable business intelligence.',
-    meta: 'THE NOLL TEAM · DATA & ANALYTICS · 2025',
-    href: '/work/noll-team',
-    live: true,
-  },
-];
+// The rows come from src/data/cases.ts.
+import { cases } from '../../data/cases';
 ---
 
 <!-- The green chapter: fixed field that crossfades in as you scroll out of
@@ -32,6 +11,12 @@ const cases = [
 <section id="work" class="work" aria-label="Case studies">
   <div class="work-head" data-reveal>
     <h2 class="work-title">Case Studies</h2>
+    <!-- The chapter's standfirst: says what the three engagements have in
+         common before the rows list them. -->
+    <p class="work-intro">
+      Work that sits between technology and operations, from public-sector systems to AI
+      workflows and business intelligence.
+    </p>
   </div>
 
   <div class="work-list">
@@ -146,6 +131,19 @@ const cases = [
     color: var(--bone);
   }
 
+  .work-intro {
+    margin: 22px 0 0;
+    max-width: 780px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    /* Matched to .tech-intro in TechnicalSection, so the two chapter captions
+       are set at the same size rather than the case index shouting louder. */
+    font-size: clamp(14px, 1.15vw, 16px);
+    line-height: 1.6;
+    color: rgba(233, 225, 207, 0.82);
+    text-wrap: pretty;
+  }
+
   .work-list { display: flex; flex-direction: column; }
 
   .work-row {
@@ -188,7 +186,9 @@ const cases = [
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.16em;
-    color: rgba(233, 225, 207, 0.5);
+    /* 0.62 not 0.5: at 10px this is small text, and 0.5 lands at 3.77:1
+       against the green, under the 4.5:1 WCAG AA floor. 0.62 gives 4.97. */
+    color: rgba(233, 225, 207, 0.62);
     white-space: nowrap;
   }
   .row-arrow {

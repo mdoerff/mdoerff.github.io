@@ -5,12 +5,35 @@
 import Base from '../../layouts/Base.astro';
 import TechnicalLayout from '../../components/technical/TechnicalLayout.astro';
 import SystemsJoinDiagram from '../../components/work/diagrams/SystemsJoinDiagram.astro';
+import { ORGS } from '../../data/site';
+
+const work = {
+  name: 'Mortgage Inquiry Intelligence Report, 3Rivers Federal Credit Union',
+  description:
+    'A Power BI report built during a Business Intelligence internship at a federally regulated credit union. Michael Doerffler joined SavvyMoney mortgage alerts with member and loan officer data across three enterprise systems, reconciling mismatched schemas in Power Query and normalizing identifiers, then shaped the report with the mortgage team so loan officers get early visibility into members shopping for a mortgage.',
+  about: [ORGS.threeRivers],
+  temporalCoverage: '2025-05/2025-08',
+  keywords: [
+    'Business intelligence',
+    'Power BI',
+    'Power Query',
+    'Exasol',
+    'Data engineering',
+    'Schema reconciliation',
+    'Stakeholder-driven development',
+    'Regulated financial data',
+  ],
+};
 ---
 
 <Base
   title="3Rivers Federal Credit Union · Michael Doerffler"
   description="A mortgage inquiry intelligence report built on protected member data at a federally regulated credit union, shaped directly with the team that uses it."
   ogImage="/og/technical-3rivers.png"
+  breadcrumb="3Rivers Federal Credit Union"
+  breadcrumbRoot="technical"
+  ogType="article"
+  work={work}
 >
   <TechnicalLayout label="DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION" title="3Rivers Federal Credit Union" wide>
     <div class="sec-label">DATA ENGINEERING &amp; BI · REGULATED FINANCIAL INSTITUTION</div>
@@ -64,7 +87,9 @@ import SystemsJoinDiagram from '../../components/work/diagrams/SystemsJoinDiagra
         Also, his positive energy helps assure a great team vibe, making him a great addition to
         any team."
       </p>
-      <p class="endorse-attr">Chad Gramling, AVP Business Intelligence</p>
+      <!-- Role, not name: individuals appear on this site as roles. The DOH
+           page's named quote is the one deliberate exception. -->
+      <p class="endorse-attr">AVP Business Intelligence, 3Rivers Federal Credit Union</p>
     </div>
   </TechnicalLayout>
 </Base>

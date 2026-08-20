@@ -3,6 +3,30 @@ import Base from '../../layouts/Base.astro';
 import CaseStudyLayout from '../../components/work/CaseStudyLayout.astro';
 import CaseColophon from '../../components/work/CaseColophon.astro';
 import PermittingDiagram from '../../components/work/diagrams/PermittingDiagram.astro';
+import { ORGS } from '../../data/site';
+
+// The machine-readable restatement of this page. Every claim below is made in
+// plain language somewhere in the body copy.
+const work = {
+  name: 'Public Health System Modernization, Florida Department of Health',
+  description:
+    'A county pool permitting program run on email, a spreadsheet and staff memory, rebuilt on Microsoft 365 as a single automated system of record. Michael Doerffler took over the technical build after it stalled and carried it through system architecture, structured Microsoft Forms intake, seven Power Automate flows, a SharePoint list holding fifty-one migrated historical records, role-based views separating day-to-day permit management from a stripped-back inspector view, testing, deployment, staff training and a documented handoff in July 2026.',
+  about: [ORGS.doh, ORGS.troubadour],
+  temporalCoverage: '2026-04/2026-07',
+  keywords: [
+    'Public-sector technology',
+    'Process automation',
+    'Microsoft 365',
+    'Microsoft Forms',
+    'SharePoint Lists',
+    'Power Automate',
+    'Workflow automation',
+    'System of record',
+    'Role-based views',
+    'Requirements gathering',
+    'Deployment and handoff',
+  ],
+};
 
 const facts = [
   { label: 'CLIENT', value: 'Florida DOH · Manatee County (via Troubadour Health)' },
@@ -13,10 +37,12 @@ const facts = [
 ---
 
 <Base
-  title="IT System Modernization · Michael Doerffler"
-  description="A county health department's pool permitting had stalled. I rebuilt it as a single automated system of record, giving them data to manage the work with."
+  title="Public Health System Modernization · Michael Doerffler"
+  description="How I took over the stalled technical build of a county permitting project and delivered a working Microsoft 365 system of record for the Florida Department of Health."
   ogImage="/og/permit-modernization.png"
-  breadcrumb="IT System Modernization"
+  breadcrumb="Public Health System Modernization"
+  ogType="article"
+  work={work}
 >
   <CaseStudyLayout
     caseLabel="FLORIDA DOH · PERMIT MODERNIZATION"
@@ -25,7 +51,7 @@ const facts = [
     titleLine2="to a system of record."
     standfirst="A county health department's pool permitting modernization had stalled. I picked it up, rebuilt the program as a single automated system of record, and gave the department something it never had: data it could actually manage the work with."
     nextLabel="A-LIGN"
-    nextHref="/work/prospecting-automation"
+    nextHref="/work/prospecting-automation/"
   >
     <CaseColophon items={facts} />
 
@@ -68,11 +94,17 @@ const facts = [
       <h2 class="sec-label" data-reveal>WHAT GOT BUILT</h2>
       <p class="situation-stmt" data-reveal>One intake, one record, seven flows.</p>
       <p class="body" data-reveal>
-        The form is designed against two things at once: the spreadsheet staff already lived in, and
-        the DH 4159 state form. Matching both meant the new system produced records staff would
-        recognize and the state would accept. The SharePoint list behind it is the program's first
-        real system of record, with fifty-one historical records migrated in and status values
-        rebuilt to match the milestones the manager already used rather than generic labels.
+        Intake is a Microsoft Form, designed against two things at once: the spreadsheet staff
+        already lived in, and the DH 4159 state form. Matching both meant the new system produced
+        records staff would recognize and the state would accept. The SharePoint list behind it is
+        the program's first real system of record, with fifty-one historical records migrated in
+        and status values rebuilt to match the milestones the manager already used rather than
+        generic labels. The seven flows that move a permit between those milestones run on Power
+        Automate.
+      </p>
+      <p class="body" data-reveal>
+        The views split by who is looking. Day-to-day permit management sits in one, a stripped-back
+        inspector view in another, so each role opens to the fields its own work actually needs.
       </p>
       <p class="body" data-reveal>
         A version of this system already existed in another county, built for septic permits.

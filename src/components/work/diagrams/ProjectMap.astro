@@ -1,38 +1,38 @@
 ---
 // Surface area map: one role down the middle, the parts of the business it
-// reached branching off either side. Its job is breadth. Depth is carried by
-// the themes and the two figures below it, so each branch gets a high-level
-// title and one line on what changed there, never a list of project names.
+// reached branching off either side. Its only job is breadth, so every line
+// here is written for the business and none of them names a tool or explains
+// how anything was built. That belongs to the section underneath.
 const branches = [
   {
     side: 'left',
     title: 'Executive reporting',
-    line: 'Performance review became a standing reporting cycle instead of an ad hoc conversation, and leadership reads the numbers self-serve rather than queuing a request.',
+    line: 'Performance review became a standing cycle instead of an ad hoc conversation, and leadership reads the numbers without asking anyone for them.',
   },
   {
     side: 'right',
     title: 'Back-office operations',
-    line: 'Weekly tracking moved from manual upkeep to a self-computing source, and I handed ownership back rather than leaving the process dependent on me.',
+    line: 'Weekly tracking stopped being somebody\'s manual chore, and ownership went back to the office rather than staying with me.',
   },
   {
     side: 'left',
     title: 'Field performance',
-    line: 'Nine per-person workbooks collapsed into one comparable dataset, and relationship activity turned into a metric leadership can hold agents to.',
+    line: 'Nine agents kept their numbers nine different ways. Now they sit side by side, and relationship activity is something leadership can hold people to.',
   },
   {
     side: 'right',
     title: 'Voice of the client',
-    line: "Six years of unstructured client feedback now feeds the CEO's coaching as agent-level insight.",
+    line: "Six years of client feedback nobody had read end to end now reaches the CEO as coaching material, agent by agent.",
   },
   {
     side: 'left',
     title: 'Segment strategy',
-    line: 'Twenty years of transactions, cut against the local luxury benchmark, showed how concentrated revenue was, and that case underwrote the launch of Noll Reserve.',
+    line: 'Twenty years of transactions showed how much of the revenue sat in a thin slice at the top, and that finding went into the decision to launch Noll Reserve.',
   },
   {
     side: 'right',
     title: 'Service line economics',
-    line: "A controlled cohort comparison gave Noll Team Interiors a quantified value proposition, drawn from the team's own closings.",
+    line: "Noll Team Interiors got a case for what staging is worth, made out of the team's own closings rather than an industry statistic.",
   },
 ];
 ---
@@ -67,12 +67,6 @@ const branches = [
       </div>
     ))}
   </div>
-
-  <figcaption class="sa-cap">
-    Nobody asked for the Power BI system. I built it on the work that came before it: the tracking
-    sheet feeds it, the reporting framework became its per-agent view, and revenue per connection
-    is a plot inside it.
-  </figcaption>
 </figure>
 
 <style>
@@ -125,16 +119,6 @@ const branches = [
     font-family: var(--font-sans);
     font-size: clamp(12px, 1.05vw, 13.5px);
     line-height: 1.6;
-    color: var(--grey-label);
-    text-wrap: pretty;
-  }
-
-  .sa-cap {
-    margin: 3.6vh 0 0;
-    max-width: 720px;
-    font-family: var(--font-sans);
-    font-size: clamp(12.5px, 1.05vw, 14px);
-    line-height: 1.65;
     color: var(--grey-label);
     text-wrap: pretty;
   }

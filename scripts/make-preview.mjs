@@ -8,10 +8,12 @@
 // The canonical tags are deliberately LEFT pointing at rmtdco.com — combined
 // with noindex that is belt and braces against duplicate-content indexing.
 //
-// og:image is absolute and points at rmtdco.com, where the images do not exist
-// yet — so on the preview the share card would come up blank. Rewrite just that
-// tag to the preview host. canonical and og:url stay on rmtdco.com, which is
-// correct next to noindex.
+// Absolute URLs that resolve to a FILE have to be repointed, or the preview
+// silently pulls from rmtdco.com, which still serves the old site:
+//   og:image and twitter:image  — otherwise the share card comes up blank
+//   rel="alternate"             — the markdown mirrors, otherwise 404
+// canonical and og:url deliberately stay on rmtdco.com: combined with noindex
+// that is belt and braces against the preview being indexed as a duplicate.
 //
 // Usage: node scripts/make-preview.mjs [origin]
 //        default origin: https://mdportfo.netlify.app
@@ -57,6 +59,7 @@ const PREVIEW_ORIGIN = (process.argv[2] || 'https://mdportfo.netlify.app').repla
 const NOINDEX = '<meta name="robots" content="noindex, nofollow" />';
 let pages = 0;
 let imagesRepointed = 0;
+let mirrorsRepointed = 0;
 function processPages(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -70,6 +73,14 @@ function processPages(dir) {
         /(<meta property="og:image" content=")https:\/\/rmtdco\.com/g,
         (_m, head) => { imagesRepointed++; return head + PREVIEW_ORIGIN; }
       );
+      html = html.replace(
+        /(<meta name="twitter:image" content=")https:\/\/rmtdco\.com/g,
+        (_m, head) => { imagesRepointed++; return head + PREVIEW_ORIGIN; }
+      );
+      html = html.replace(
+        /(<link rel="alternate"[^>]*?href=")https:\/\/rmtdco\.com/g,
+        (_m, head) => { mirrorsRepointed++; return head + PREVIEW_ORIGIN; }
+      );
       fs.writeFileSync(p, html);
       pages++;
     }
@@ -77,7 +88,16 @@ function processPages(dir) {
 }
 processPages(OUT);
 
-// 3. robots.txt locked down, sitemaps dropped
+// 3. the IndexNow key belongs to rmtdco.com only
+let keyRemoved = false;
+for (const f of fs.readdirSync(OUT)) {
+  if (/^[0-9a-f]{16,}\.txt$/.test(f)) {
+    fs.rmSync(path.join(OUT, f));
+    keyRemoved = true;
+  }
+}
+
+// 4. robots.txt locked down, sitemaps dropped
 fs.writeFileSync(path.join(OUT, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 let maps = 0;
 for (const f of fs.readdirSync(OUT)) {
@@ -89,7 +109,9 @@ for (const f of fs.readdirSync(OUT)) {
 
 console.log('dist-preview ready');
 console.log('  pages with noindex : ' + pages);
-console.log('  og:image host      : ' + PREVIEW_ORIGIN + ' (' + imagesRepointed + ' rewritten)');
+console.log('  image hosts        : ' + PREVIEW_ORIGIN + ' (' + imagesRepointed + ' rewritten)');
+console.log('  md mirror links    : ' + mirrorsRepointed + ' repointed');
+console.log('  IndexNow key       : ' + (keyRemoved ? 'removed' : 'none found'));
 console.log('  CNAME removed      : ' + !fs.existsSync(cname));
 console.log('  sitemaps removed   : ' + maps);
 console.log('  robots.txt         : Disallow: /');

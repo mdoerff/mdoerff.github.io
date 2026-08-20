@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        # The sitemap's lastmod and the pages' dateModified come from commit
+        # history, so the build needs more than the default shallow clone.
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Build with Astro
         uses: withastro/action@v3
 
@@ -29,3 +33,53 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Tell the IndexNow engines the site changed rather than waiting to be
+  # crawled. Bing, Yandex, Seznam and Naver share this endpoint, and Bing is
+  # the index ChatGPT and Copilot lean on, so this is the shortest path from
+  # "deployed" to "an AI can find it". Google does not participate.
+  #
+  # Runs after the deploy so the URLs it submits are actually live, and reads
+  # the published sitemap rather than a build artifact, which keeps this job
+  # independent of the other two.
+  ping-indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit URLs to IndexNow
+        env:
+          HOST: rmtdco.com
+          KEY: daa9496b9447dd5f98ede9e23b18de12
+        run: |
+          set -euo pipefail
+          # Give the CDN a moment to serve the new build before announcing it.
+          sleep 30
+          urls=$(curl -sS --fail --retry 3 "https://${HOST}/sitemap-0.xml" \
+            | grep -o '<loc>[^<]*</loc>' \
+            | sed 's|</\?loc>||g' \
+            | jq -R . | jq -s .)
+          count=$(echo "$urls" | jq 'length')
+          if [ "$count" -eq 0 ]; then
+            echo "No URLs found in sitemap; refusing to submit an empty list."
+            exit 1
+          fi
+          echo "Submitting $count URLs to IndexNow."
+          payload=$(jq -n \
+            --arg host "$HOST" \
+            --arg key "$KEY" \
+            --arg loc "https://${HOST}/${KEY}.txt" \
+            --argjson urlList "$urls" \
+            '{host: $host, key: $key, keyLocation: $loc, urlList: $urlList}')
+          code=$(curl -sS -o /tmp/indexnow.out -w '%{http_code}' \
+            -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "$payload")
+          echo "IndexNow responded $code"
+          cat /tmp/indexnow.out || true
+          # 200 accepted, 202 accepted but key still being validated.
+          case "$code" in
+            200|202) exit 0 ;;
+            # A submission problem should not fail a deploy that already
+            # succeeded; surface it and move on.
+            *) echo "::warning::IndexNow submission returned $code"; exit 0 ;;
+          esac
