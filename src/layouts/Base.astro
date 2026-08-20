@@ -47,11 +47,6 @@ interface Props {
   /** Where the breadcrumb's first rung points. Technical pages hang off
    *  /#technical, case studies off /#work. */
   breadcrumbRoot?: 'work' | 'technical';
-  /** Share-card headline, when it should differ from <title>. The share cards
-   *  carry his name in large type, so a title that also leads with it prints
-   *  the same name twice in one card. <title> keeps the name, because that is
-   *  the search result and the browser tab; this is only the card. */
-  ogTitle?: string;
   /** og:type. The homepage is a profile, project pages are articles about a
    *  piece of work, everything else is a plain page. */
   ogType?: 'website' | 'profile' | 'article';
@@ -67,7 +62,6 @@ const {
   title = NAME,
   description = BIO_SHORT,
   ogImage = '/og/home.png',
-  ogTitle,
   breadcrumb,
   breadcrumbRoot = 'work',
   ogType = 'website',
@@ -82,7 +76,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // og:image must be absolute. make-preview.mjs rewrites this host so the
 // Netlify preview points at images that actually exist there.
 const ogImageUrl = new URL(ogImage, Astro.site).href;
-const cardTitle = ogTitle ?? title;
 const personImageUrl = new URL(personPhoto.src, Astro.site).href;
 
 // Search-engine verification. Both consoles accept a file upload instead, but
@@ -200,7 +193,7 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
     <meta name="description" content={description} />
     <meta name="author" content={NAME} />
     {noindex && <meta name="robots" content="noindex, follow" />}
-    <meta property="og:title" content={cardTitle} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
@@ -214,7 +207,7 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
          all prefer the card tags when present, and summary_large_image is the
          only way to get the 1200x630 share card rather than a thumbnail. -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={cardTitle} />
+    <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={title} />
