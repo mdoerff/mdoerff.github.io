@@ -271,5 +271,42 @@ button { font: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  [data-reveal] { opacity: 1 !important; filter: none !important; }
+  [data-reveal] { opacity: 1 !important; filter: none !important; transform: none !important; }
 }
+
+/* ---- Touch-device motion: composite, don't repaint ----------------------
+   `opacity` and `transform` are the only two properties a browser can animate
+   on the compositor without repainting. Everything else — `filter: blur()`
+   above all — forces the element to be re-rasterized at a new radius on every
+   single frame of the animation.
+
+   Two places were paying that toll on phones:
+
+   The scroll reveals. A case page carries about thirty `[data-reveal]`
+   elements, each transitioning a 7px blur over 0.7s, and the observer toggles
+   the class on exit as well as entry — so scrolling back up re-blurs
+   everything that just resolved. Thirty simultaneous blur rasterizations,
+   triggered by scrolling, is the stutter felt while scrolling. Touch devices
+   get a short rise instead: same "settles into place" read, zero repaints.
+
+   The page transition. `::view-transition-*(root)` is a snapshot of the whole
+   viewport, and blurring it means blurring every pixel on screen, twice, for
+   0.68s — starting at the exact moment of a tap. That is most of the "takes a
+   second to load". The crossfade survives; the blur does not. */
+@media (hover: none) {
+  [data-reveal] {
+    filter: none;
+    transform: translate3d(0, 14px, 0);
+    transition: opacity 0.4s ease, transform 0.45s var(--ease-mech);
+  }
+  [data-reveal].is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) { animation: vt-out-flat 0.16s var(--ease-mech) both; }
+    ::view-transition-new(root) { animation: vt-in-flat 0.22s var(--ease-mech) both; }
+  }
+}
+@keyframes vt-out-flat { to { opacity: 0; } }
+@keyframes vt-in-flat { from { opacity: 0; } }

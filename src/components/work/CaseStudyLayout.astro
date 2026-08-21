@@ -59,6 +59,20 @@ const { caseLabel, eyebrow, titleLine1, titleLine2, standfirst, nextLabel, nextN
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(41, 33, 23, 0.12);
   }
+
+  /* `backdrop-filter` on a sticky bar re-samples and re-blurs the strip of
+     page behind it every scroll frame — the one region guaranteed to be
+     changing while you scroll. On a phone that is a per-frame blur running
+     the length of every case page. At 0.96 alpha there is nothing left to
+     see through, so the blur was buying an effect no one could observe.
+     Desktop keeps the glass. */
+  @media (hover: none) {
+    .case-bar {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(233, 225, 207, 0.96);
+    }
+  }
   .case-bar-label {
     font-family: var(--font-mono);
     font-size: 10.5px;

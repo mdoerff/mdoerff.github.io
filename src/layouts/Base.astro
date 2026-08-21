@@ -289,15 +289,36 @@ if (!window.__gaArmed) {
     <!-- Fine film grain — over everything, type included (canonical data-URI) -->
     <div class="film-grain" aria-hidden="true"></div>
 
-    <!-- Reveal-on-scroll: toggles on every viewport entry/exit, so it replays.
+    <!-- Reveal-on-scroll. On a pointer device this replays: the class toggles
+         on every viewport entry AND exit, so a section re-animates each time
+         you scroll back to it.
+
+         Touch devices reveal once and then stop being observed. Replaying is
+         the wrong behaviour on a phone twice over. It costs the most exactly
+         when it can be felt — a flick scroll re-triggers a screenful of
+         animations at once — and it reads as a fault rather than an effect,
+         because scrolling up to re-read something you just read makes it
+         dissolve and resolve again under your thumb. Unobserving also lets
+         the observer empty out as you descend, so a long case page gets
+         cheaper to scroll the further down you are.
+
          astro:page-load fires on first load and after every client-side swap. -->
     <script>
       function initReveals() {
         const els = document.querySelectorAll('[data-reveal]');
         if (!els.length) return;
+        const once = window.matchMedia('(hover: none)').matches;
         const io = new IntersectionObserver(
           (entries) => {
-            for (const e of entries) e.target.classList.toggle('is-visible', e.isIntersecting);
+            for (const e of entries) {
+              if (once) {
+                if (!e.isIntersecting) continue;
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              } else {
+                e.target.classList.toggle('is-visible', e.isIntersecting);
+              }
+            }
           },
           { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
         );
@@ -373,5 +394,25 @@ if (!window.__gaArmed) {
     opacity: var(--grain-o);
     background-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22300%22%20height=%22300%22%3E%3Cfilter%20id=%22g%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.72%22%20numOctaves=%222%22%20stitchTiles=%22stitch%22%20seed=%227%22/%3E%3CfeColorMatrix%20type=%22matrix%22%20values=%220%200%200%200%200.16%200%200%200%200%200.13%200%200%200%200%200.09%200%200%200%200.62%200%22/%3E%3C/filter%3E%3Crect%20width=%22300%22%20height=%22300%22%20filter=%22url(%23g)%22/%3E%3C/svg%3E');
     background-size: 300px 300px;
+  }
+
+  /* Both texture layers are fixed, cover the whole viewport, and blend with
+     `multiply`. A blended layer cannot be composited on its own: the browser
+     must re-rasterize the layer AND everything showing through it for every
+     frame in which the backdrop changes — which, for a fixed layer over a
+     scrolling page, is every frame of every scroll. The film grain sits at
+     z-index 80, above all content, so this pulled the whole page off the
+     compositor's fast path. That is the scroll stutter on a phone: not slow
+     JavaScript (the scroll handler measures 0.02ms) but a full-screen repaint
+     per frame on a GPU with a fraction of a desktop's fill rate.
+
+     Both textures are dark noise over a light cream page, where `multiply`
+     and ordinary alpha compositing land within a shade of each other, so
+     touch devices keep the grain and lose the blend. Opacities are trimmed
+     because straight compositing reads a little heavier. Desktop is
+     untouched. */
+  @media (hover: none) {
+    .paper-tooth { mix-blend-mode: normal; opacity: 0.26; }
+    .film-grain { mix-blend-mode: normal; opacity: calc(var(--grain-o) * 0.8); }
   }
 </style>

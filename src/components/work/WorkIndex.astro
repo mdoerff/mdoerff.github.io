@@ -53,6 +53,7 @@ import { cases } from '../../data/cases';
     const tech = document.getElementById('technical');
     const grid = document.getElementById('blueprint-field');
     const tl = document.getElementById('timeline');
+    const bone = document.getElementById('bone-field');
     const w = window as typeof window & { __gfUpdate?: () => void };
     if (w.__gfUpdate) {
       window.removeEventListener('scroll', w.__gfUpdate);
@@ -60,9 +61,13 @@ import { cases } from '../../data/cases';
       w.__gfUpdate = undefined;
     }
     if (!field || !work) return;
+    // Resolved once rather than per scroll event: this was the one DOM query
+    // inside the handler, and it ran on every frame of every scroll to find
+    // an element that never moves.
+    const foot = document.querySelector('.foot');
     const smooth = (p: number) => p * p * (3 - 2 * p);
     const clamp = (p: number) => Math.min(1, Math.max(0, p));
-    const update = () => {
+    const apply = () => {
       const vh = window.innerHeight || 1;
       const pIn = smooth(clamp(1 - work.getBoundingClientRect().top / (vh * 0.85)));
       const pOut = tech ? smooth(clamp(1 - tech.getBoundingClientRect().top / (vh * 0.7))) : 0;
@@ -70,7 +75,6 @@ import { cases } from '../../data/cases';
       // The footer is shorter than a viewport, so its top can only travel
       // (footer height) px into view before the page ends: scale the fade
       // to the distance that actually exists, or it would never complete.
-      const foot = document.querySelector('.foot');
       let pFt = 0;
       if (foot) {
         const fr = foot.getBoundingClientRect();
@@ -82,13 +86,26 @@ import { cases } from '../../data/cases';
       // page ends on the hero's own paper atmosphere: full circle.
       (field as HTMLElement).style.opacity = String(Math.min(1, pIn * (1 - pOut) + pTl) * (1 - pFt));
       if (grid) (grid as HTMLElement).style.opacity = String(pOut * (1 - pTl));
-      const bone = document.getElementById('bone-field');
       if (bone) bone.style.opacity = String(pOut * (1 - pTl));
+    };
+    // Scroll events fire faster than the screen refreshes, especially during
+    // a touch flick, and each pass here reads four layout rects — a forced
+    // reflow — then writes to three full-viewport layers. Coalescing into one
+    // rAF collapses that to at most one pass per painted frame, and lines the
+    // writes up with the frame that will actually display them.
+    let queued = false;
+    const update = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        apply();
+      });
     };
     w.__gfUpdate = update;
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update, { passive: true });
-    update();
+    apply();
   }
   document.addEventListener('astro:page-load', initChapterFields);
 </script>

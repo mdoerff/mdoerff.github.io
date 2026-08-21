@@ -46,6 +46,16 @@ const { label, title, wide = false } = Astro.props;
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(41, 33, 23, 0.12);
   }
+
+  /* Same per-frame backdrop blur as the case pages' sticky bar; same fix.
+     See CaseStudyLayout.astro. */
+  @media (hover: none) {
+    .techpage .tp-bar {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(233, 225, 207, 0.96);
+    }
+  }
   .techpage .tp-bar-label {
     font-family: var(--font-mono);
     font-size: 10.5px;

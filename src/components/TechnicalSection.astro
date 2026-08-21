@@ -363,3 +363,29 @@ const lanes = [
     .featured { padding: 24px 16px 28px; }
   }
 </style>
+
+<script>
+  // Four marquee lanes running `infinite`. An animation does not stop when it
+  // scrolls out of view — the compositor keeps ticking the transform on all
+  // four lanes for as long as the page is open, including the whole time the
+  // reader is somewhere else entirely. On a phone that is a thread that never
+  // goes idle, competing with the scroll it is not even visible during.
+  //
+  // Paused off-screen, resumed on. `animation-play-state` holds the position,
+  // so the stream picks up mid-flow rather than snapping back to the start.
+  function initStreamGate() {
+    const stream = document.querySelector('.stream');
+    if (!(stream instanceof HTMLElement) || stream.dataset.gated) return;
+    stream.dataset.gated = 'true';
+    const io = new IntersectionObserver(
+      ([e]) => stream.classList.toggle('is-offscreen', !e.isIntersecting),
+      { rootMargin: '100px' }
+    );
+    io.observe(stream);
+  }
+  document.addEventListener('astro:page-load', initStreamGate);
+</script>
+
+<style>
+  .stream.is-offscreen .lane-inner { animation-play-state: paused; }
+</style>
