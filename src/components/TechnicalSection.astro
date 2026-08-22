@@ -373,15 +373,19 @@ const lanes = [
   //
   // Paused off-screen, resumed on. `animation-play-state` holds the position,
   // so the stream picks up mid-flow rather than snapping back to the start.
+  // Kept across swaps so the previous page's observer can be disconnected:
+  // page-load fires again after every navigation, and an observer left
+  // watching a detached .stream is never collected.
+  let streamIO;
   function initStreamGate() {
+    streamIO?.disconnect();
     const stream = document.querySelector('.stream');
-    if (!(stream instanceof HTMLElement) || stream.dataset.gated) return;
-    stream.dataset.gated = 'true';
-    const io = new IntersectionObserver(
+    if (!(stream instanceof HTMLElement)) return;
+    streamIO = new IntersectionObserver(
       ([e]) => stream.classList.toggle('is-offscreen', !e.isIntersecting),
       { rootMargin: '100px' }
     );
-    io.observe(stream);
+    streamIO.observe(stream);
   }
   document.addEventListener('astro:page-load', initStreamGate);
 </script>

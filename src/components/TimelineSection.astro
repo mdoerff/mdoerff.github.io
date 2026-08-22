@@ -462,6 +462,13 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     // The card's clamp depends on measured heights, so redo it once the track
     // actually has a size.
     const remeasure = () => { const i = active; active = -1; show(i); };
+    // initScrub runs again after every client-side swap, and each run closed
+    // over a fresh `remeasure`, so the old one could never be removed by
+    // reference and every navigation left another resize handler on window
+    // driving a dead timeline. Detach the previous one first.
+    const w = window as typeof window & { __tlRemeasure?: () => void };
+    if (w.__tlRemeasure) window.removeEventListener('resize', w.__tlRemeasure);
+    w.__tlRemeasure = remeasure;
     window.addEventListener('resize', remeasure, { passive: true });
     requestAnimationFrame(remeasure);
   }

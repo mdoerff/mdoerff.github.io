@@ -38,22 +38,25 @@ const facts = [
 ];
 
 // What the build had to survive: five constraints, each a titled row.
+// One row per distinct constraint, so scale, structure, commercial timing,
+// scarcity and human judgment each get said once. Scarce accounts and shared
+// credits used to be two rows saying the same thing about finite resources.
 const survived = [
   {
     title: 'A team of fourteen, not a workflow of one',
     body: `Fourteen personal workflows is fourteen things to maintain and fourteen ways to drift. I built one workflow per audit line feeding a shared list reps filter themselves, so there's a single place to fix and a standard everyone runs the same way.`,
   },
   {
-    title: `An account layer that wasn't always there`,
-    body: `When SOC 2 struggled, the layered structure told me where to look. The problem was never the prompt, it was that the qualified account list underneath it didn't exist yet.`,
+    title: `Two audit lines that don't share a buyer`,
+    body: `What worked for CMMC didn't transfer. The buyer changes with the audit line, so the personas, the account sourcing, and the criteria the model reads against all had to be rebuilt per line rather than copied across. Treating them as one market was the fastest way to produce confident nonsense.`,
   },
   {
-    title: `Inventory we couldn't afford to waste`,
-    body: `With CMMC paused, SOC 2 accounts got more valuable, not less. Running an untested version against them would have burned the accounts the team most needed. We paused it and reps work those by hand. That was a call made with the BDR manager, not a technical one.`,
+    title: `A quarter that doesn't pause for a rebuild`,
+    body: `Reps had numbers to hit while I was still changing the thing they prospect on. Every revision had to land without disrupting live pipeline, so tests ran on batches rather than the whole list. How fast to push changes was a call I made with the managers, not one I made in the build.`,
   },
   {
-    title: 'Credits that had to be spent carefully',
-    body: `Volume stopped being the constraint the moment the workflow ran, since we can process as many accounts as we choose. But every enrichment run costs from a finite pool the whole org shares, so the question became how much to run rather than how much was possible. How many accounts go through a test batch before scaling, whether verification runs against a full list or only the contacts most likely to bounce, and what to tell a rep who wants more contacts when more contacts means spending the team's budget on lower-quality output. The answer is usually fewer, better, and a reason why.`,
+    title: 'Accounts and credits that both ran out',
+    body: `With CMMC paused, SOC 2 accounts got more valuable, not less, and every enrichment run spends from a pool the whole org shares. The question stopped being how many accounts we could process and became how many were worth it. Scarce accounts stayed with reps by hand until the output earned trust.`,
   },
   {
     title: 'Reps who still need their own judgment',
