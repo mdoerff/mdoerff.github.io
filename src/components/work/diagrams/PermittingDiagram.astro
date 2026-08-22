@@ -312,7 +312,8 @@ import DiagramDefs from './DiagramDefs.astro';
       });
     });
   }
-  document.addEventListener('astro:page-load', initPdFlip);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPdFlip, { once: true });
+  else initPdFlip();
 </script>
 
 <style>

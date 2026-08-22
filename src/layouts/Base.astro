@@ -3,7 +3,6 @@ import '../styles/global.css';
 import portrait from '../assets/portrait.jpg';
 import Footer from '../components/Footer.astro';
 import { getImage } from 'astro:assets';
-import { ClientRouter } from 'astro:transitions';
 import { NAME, BIO_SHORT, PERSON_ID, SITE_ID, SITE_URL, personNode, personRef } from '../data/site';
 import { dateFor } from '../data/page-dates.mjs';
 
@@ -235,14 +234,12 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
     <link rel="preload" as="font" type="font/woff2" href="/fonts/libre-baskerville-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin.woff2" crossorigin />
     <!-- Google Analytics 4. Nothing is emitted until GA_MEASUREMENT_ID is set.
-         The pageview wiring is not the stock snippet on purpose: ClientRouter
-         swaps pages without a document load, so gtag's automatic page_view
-         would fire once per session and every visit would read as a
-         single-page bounce no matter how much someone actually read. So the
-         automatic one is turned off and each view is sent from
-         astro:page-load, which fires on first load and after every swap. The
-         armed flag guards against a second listener if the script re-runs,
-         matching the __gfUpdate and dataset.armed guards used elsewhere. -->
+         This is the stock snippet again. It was hand-wired to send a
+         page_view from astro:page-load because ClientRouter swapped pages
+         without a document load, which would have made every visit read as a
+         single-page bounce. Navigation is real document loads now, so gtag's
+         own automatic page_view is both correct and one less thing to keep
+         in step. -->
     {GA_MEASUREMENT_ID && (
       <Fragment>
         <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
@@ -253,21 +250,10 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){ window.dataLayer.push(arguments); }
 window.gtag = gtag;
 gtag('js', new Date());
-gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
-if (!window.__gaArmed) {
-  window.__gaArmed = true;
-  document.addEventListener('astro:page-load', function () {
-    window.gtag('event', 'page_view', {
-      page_location: window.location.href,
-      page_title: document.title,
-      page_referrer: document.referrer || undefined,
-    });
-  });
-}`}
+gtag('config', '${GA_MEASUREMENT_ID}');`}
         />
       </Fragment>
     )}
-    <ClientRouter />
   </head>
   <body>
     <!-- Full-viewport atmosphere: the portrait's own colors, blurred wide,
@@ -300,19 +286,9 @@ if (!window.__gaArmed) {
          because scrolling up to re-read something you just read makes it
          dissolve and resolve again under your thumb. Unobserving also lets
          the observer empty out as you descend, so a long case page gets
-         cheaper to scroll the further down you are.
-
-         astro:page-load fires on first load and after every client-side swap. -->
+         cheaper to scroll the further down you are. -->
     <script>
-      // Held across swaps so the previous page's observer can be torn down.
-      // ClientRouter fires page-load again after every swap, and an
-      // IntersectionObserver keeps a strong reference to everything it
-      // observes — so without this each navigation left behind a live
-      // observer still watching a screenful of detached nodes. Measured at 33
-      // of them after a dozen taps, none collectable, all still processed.
-      let revealIO;
       function initReveals() {
-        revealIO?.disconnect();
         const els = document.querySelectorAll('[data-reveal]');
         if (!els.length) return;
         const once = window.matchMedia('(hover: none)').matches;
@@ -330,10 +306,12 @@ if (!window.__gaArmed) {
           },
           { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
         );
-        revealIO = io;
         els.forEach((el) => io.observe(el));
       }
-      document.addEventListener('astro:page-load', initReveals);
+      // Module scripts are deferred, so the document is already parsed by the
+      // time this runs; the readyState check is belt and braces.
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initReveals, { once: true });
+      else initReveals();
     </script>
   </body>
 </html>

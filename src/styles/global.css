@@ -224,14 +224,6 @@ button { font: inherit; }
   filter: none;
 }
 
-/* ---- Page-to-page cross-blur (view transitions) ---- */
-@media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root) { animation: vt-out 0.28s var(--ease-mech) both; }
-  ::view-transition-new(root) { animation: vt-in 0.4s var(--ease-mech) both; }
-}
-@keyframes vt-out { to { opacity: 0; filter: blur(8px); } }
-@keyframes vt-in { from { opacity: 0; filter: blur(8px); } }
-
 /* ---- Case study shared typography ---- */
 /* Section headings. Some are <h2> so the document outline does not jump from
    h1 straight to h3; margin:0 keeps the browser's heading spacing from moving
@@ -289,10 +281,9 @@ button { font: inherit; }
    triggered by scrolling, is the stutter felt while scrolling. Touch devices
    get a short rise instead: same "settles into place" read, zero repaints.
 
-   The page transition. `::view-transition-*(root)` is a snapshot of the whole
-   viewport, and blurring it means blurring every pixel on screen, twice, for
-   0.68s — starting at the exact moment of a tap. That is most of the "takes a
-   second to load". The crossfade survives; the blur does not. */
+   (The page transition used to pay it too, blurring a snapshot of the whole
+   viewport twice on every tap. That went out with ClientRouter: navigation is
+   native again, so there is no snapshot to blur.) */
 @media (hover: none) {
   [data-reveal] {
     filter: none;
@@ -303,10 +294,4 @@ button { font: inherit; }
     transform: translate3d(0, 0, 0);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    ::view-transition-old(root) { animation: vt-out-flat 0.16s var(--ease-mech) both; }
-    ::view-transition-new(root) { animation: vt-in-flat 0.22s var(--ease-mech) both; }
-  }
 }
-@keyframes vt-out-flat { to { opacity: 0; } }
-@keyframes vt-in-flat { from { opacity: 0; } }

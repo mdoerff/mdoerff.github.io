@@ -45,8 +45,7 @@ import { cases } from '../../data/cases';
   // Scroll-driven chapter crossfades. The green field darkens in as the case
   // studies reach the viewport, then dissolves as the technical chapter
   // arrives, whose blueprint grid fades up in its place. One listener drives
-  // both layers; re-armed on every page load/swap with the previous listener
-  // detached first so they never stack up.
+  // both layers.
   function initChapterFields() {
     const field = document.getElementById('green-field');
     const work = document.getElementById('work');
@@ -107,7 +106,8 @@ import { cases } from '../../data/cases';
     window.addEventListener('resize', update, { passive: true });
     apply();
   }
-  document.addEventListener('astro:page-load', initChapterFields);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initChapterFields, { once: true });
+  else initChapterFields();
 </script>
 
 <style>
