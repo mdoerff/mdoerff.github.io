@@ -21,7 +21,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build with Astro
-        uses: withastro/action@v3
+        # Pinned to a SHA, not the v3 tag: this is the one action here that
+        # GitHub does not own, and a tag is a moving ref its author can
+        # repoint at any commit. Bump deliberately, not silently.
+        uses: withastro/action@56781b97402ce0487b7e61ce2cb960c0e2cc5289 # v3.0.2
 
   deploy:
     needs: build

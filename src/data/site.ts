@@ -31,7 +31,7 @@ export const AVAILABLE_FROM = '2026-12';
 
 /** Shorter form, for og:description and the homepage meta description. */
 export const BIO_SHORT =
-  'Early-career technology and business professional building data, AI, and automation systems for a health department, a compliance firm, and a brokerage.';
+  'Early-career technology and business professional building data, AI, and automation systems for a health department, cybersecurity compliance firm A-LIGN, and a brokerage.';
 
 /** Subjects the site demonstrates. Each one has a case study or a technical
  *  project behind it; none is here to catch a search term. */
