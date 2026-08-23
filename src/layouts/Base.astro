@@ -78,9 +78,14 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
 const personImageUrl = new URL(personPhoto.src, Astro.site).href;
 
 // Search-engine verification. Both consoles accept a file upload instead, but
-// a meta tag survives a rebuild and a DNS move. Fill these in from Google
-// Search Console and Bing Webmaster Tools; empty means nothing is emitted.
-const GOOGLE_SITE_VERIFICATION = '';
+// a meta tag survives a rebuild and a DNS move. Empty means nothing is emitted.
+//
+// Google's tag is load-bearing beyond Google: Search Console was first
+// verified through the Google Analytics tag, and Bing was verified by
+// importing from Search Console rather than with a token of its own. So this
+// one meta tag is the anchor for both consoles once the GA tag goes, and
+// Bing has no independent anchor until a DNS record gives it one.
+const GOOGLE_SITE_VERIFICATION = '3MgZn9RcPC1o3hqxIgRjRdTncp_6k7vIliQECD3hRsQ';
 const BING_SITE_VERIFICATION = '';
 
 // Google Analytics 4. Paste the measurement ID (G-XXXXXXXXXX) to switch it on;
