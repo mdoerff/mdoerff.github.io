@@ -34,7 +34,7 @@ Nothing about the site's copy requires touching layout code. Almost all of it is
 | All 22 timeline entries, the era labels, the timeline caption | `src/components/TimelineSection.astro` |
 | The availability line and contact links in the footer | `src/components/Footer.astro` |
 | A case study's full body copy | `src/pages/work/<case>.astro` |
-| A page's title and description, and the analytics tokens | `src/layouts/Base.astro` |
+| A page's title and description, the verification and analytics tags | `src/layouts/Base.astro` |
 | The summary written for AI systems | `public/llms.txt` (hand-maintained) |
 
 Three rules of thumb: `src/data/` is content, `src/components/` is content plus layout, and
@@ -81,13 +81,20 @@ malformed sitemap. If the build fails, read its output: it names the page and th
   "Site not found" while the `github.io` address works.
 - **`public/CNAME` is not the authority** for the custom domain under GitHub Actions
   deployment. It ships with the build, but the setting above is what GitHub obeys.
-- **Analytics ships nothing until configured.** `GA_MEASUREMENT_ID` in `src/layouts/Base.astro`
-  is empty by default, and no third-party script is served while it is.
+- **Analytics only counts the real site, and you can take yourself out of it.** The Plausible
+  tag in `src/layouts/Base.astro` is only rendered when Astro builds for production, so
+  `npm run dev` serves pages with no analytics in them at all, and the built tracker only
+  initializes when the page is served from rmtdco.com, which keeps `npm run preview` and the
+  Netlify preview silent. Your own visits to the live site do count until you opt out: open
+  rmtdco.com/?analytics=off once in each browser on each device, and ?analytics=on to undo it.
+  Custom events only appear in the dashboard if a goal with the exact same name exists in the
+  Plausible site settings.
 
 ## Branches
 
 - **`main`** — the site. This is what deploys.
-- **`old-site`** — the pre-Astro site, kept as an archive. Nothing builds from it.
+- **`old-site`** — deleted from GitHub in August 2026 after an unredacted client screenshot
+  was found on it. Archived locally as `archive/old-site` on the machine that deleted it.
 
 ## Local commands
 

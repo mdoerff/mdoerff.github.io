@@ -88,14 +88,13 @@ const personImageUrl = new URL(personPhoto.src, Astro.site).href;
 const GOOGLE_SITE_VERIFICATION = '3MgZn9RcPC1o3hqxIgRjRdTncp_6k7vIliQECD3hRsQ';
 const BING_SITE_VERIFICATION = '';
 
-// Google Analytics 4. Paste the measurement ID (G-XXXXXXXXXX) to switch it on;
-// empty means no script is served at all, so the site ships no third-party
-// JavaScript until this is filled in.
-//
-// GA is a feedback loop for people, not for search: it is not a ranking signal
-// and crawlers do not execute it. The consoles above are what report crawler
-// behaviour.
-const GA_MEASUREMENT_ID = 'G-EZZY1FFJDJ';
+// Plausible. The account is keyed on the domain, which already lives once in
+// site.ts, so it is derived rather than retyped: if the site ever moves, the
+// tag and the runtime guard below move with it. The script URL is the
+// site-keyed tracker from the Plausible dashboard; the key identifies the
+// site, so there is no data-domain attribute to keep in step.
+const PLAUSIBLE_DOMAIN = new URL(SITE_URL).host;
+const PLAUSIBLE_SRC = 'https://plausible.io/js/pa-s_fRFBu_daUcEZGVVZpgL.js';
 
 // Machine-readable twin of this page, emitted by scripts/make-machine-mirrors.mjs
 // after the build. Advertised so an agent can fetch clean markdown instead of
@@ -238,25 +237,67 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
          left to load on demand; almost nothing on this site needs them. -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/libre-baskerville-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin.woff2" crossorigin />
-    <!-- Google Analytics 4. Nothing is emitted until GA_MEASUREMENT_ID is set.
-         This is the stock snippet again. It was hand-wired to send a
-         page_view from astro:page-load because ClientRouter swapped pages
-         without a document load, which would have made every visit read as a
-         single-page bounce. Navigation is real document loads now, so gtag's
-         own automatic page_view is both correct and one less thing to keep
-         in step. -->
-    {GA_MEASUREMENT_ID && (
+    <!-- Plausible, in place of Google Analytics 4. GA shipped on the order of
+         a hundred kilobytes of JavaScript from two Google origins, set
+         two-year cookies, and was ungated, so every editing session and every
+         preview counted as a real visit on the real property. This tracker is
+         about six kilobytes from one origin and sets no cookies.
+
+         It is gated twice, and the gates are different in kind. The first is
+         build time: this block only renders when Astro builds for production,
+         so the dev server hands over pages with no analytics in them at all.
+         The second is run time: the tracker does nothing until init is
+         called, and init is only called when the page is served from the real
+         host. That second gate is not redundant, because `astro preview` and
+         the Netlify preview both serve a production build, so the first gate
+         has already passed by the time they are reached. The tracker also
+         refuses loopback hosts on its own and checks the opt-out flag below
+         on every event, both read from its source rather than assumed.
+
+         The author's own visits: opening /?analytics=off once in a browser
+         sets a localStorage flag the tracker honors from then on, and
+         /?analytics=on clears it. Per browser and per device; the console
+         line is the only confirmation, nothing is added to the page.
+
+         Feature toggles such as outbound links live in the Plausible site
+         settings and take effect without touching this snippet. Exactly two
+         custom events are fired here, both decisions rather than reading,
+         because a pageview already covers reading: the masthead call to
+         action, which jumps within the page and so has never left a trace in
+         anything, and the email address, which outbound-link tracking cannot
+         see because a mailto anchor has no host to compare. A goal with each
+         exact name must exist in Plausible or the events are accepted and
+         silently discarded. The click listener hangs off document because
+         this runs before the body is parsed. -->
+    {import.meta.env.PROD && (
       <Fragment>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
         <script
           is:inline
           set:html={`
-window.dataLayer = window.dataLayer || [];
-function gtag(){ window.dataLayer.push(arguments); }
-window.gtag = gtag;
-gtag('js', new Date());
-gtag('config', '${GA_MEASUREMENT_ID}');`}
+(function () {
+  try {
+    var choice = new URLSearchParams(location.search).get('analytics');
+    if (choice === 'off') {
+      localStorage.setItem('plausible_ignore', 'true');
+      console.log('Analytics is now off in this browser. Undo with ?analytics=on');
+    } else if (choice === 'on') {
+      localStorage.removeItem('plausible_ignore');
+      console.log('Analytics is now on in this browser.');
+    }
+  } catch (e) {}
+  window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+  window.plausible.init = window.plausible.init || function (i) { window.plausible.o = i || {}; };
+  if (location.hostname === '${PLAUSIBLE_DOMAIN}') window.plausible.init();
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.slice(-8) === '#contact') window.plausible('Contact CTA');
+    else if (href.indexOf('mailto:') === 0) window.plausible('Email click');
+  });
+})();`}
         />
+        <script is:inline async src={PLAUSIBLE_SRC}></script>
       </Fragment>
     )}
   </head>
