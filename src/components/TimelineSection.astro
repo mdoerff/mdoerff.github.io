@@ -443,50 +443,39 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       show(best);
     };
 
-    // Scrubbing and scrolling are the same gesture in the same strip, so the
-    // track no longer claims it. The track was 66px wide, the full height of
-    // the plot, pinned to the left edge and set touch-action:none, a sixth
-    // of the screen where a thumb swipe moved the timeline and the page stayed
-    // put. It read as the page refusing to scroll, because it was.
-    //
-    // So the track takes taps only, which need no gesture claim at all, and
-    // dragging moves to the handle. Vertical swipes anywhere on the track now
-    // belong to the page.
-    track.addEventListener('pointerdown', (e) => {
-      // The handle sits inside the track and runs its own drag.
-      if (e.target === handle) return;
-      pick((e as PointerEvent).clientY);
-    });
-
-    // The handle is the one thing that still claims the gesture, and it is the
-    // one thing small enough for that to be fair.
+    // The whole line is the drag target, and the track claims the vertical
+    // gesture outright. A drag-only-on-the-handle version was tried and felt
+    // broken in practice: pointerdown fires before the browser knows whether
+    // a touch is a tap or a scroll, so with the track set pan-y, scrolling
+    // past the timeline jumped the selection to wherever the finger grazed
+    // it, and dragging the line itself did nothing. Claiming a 66px strip is
+    // the honest cost of drag-anywhere, and it is the designed interaction.
     let dragging = false;
-    // The track cannot move or resize mid-drag, so its rect is read once here
-    // instead of on every pointermove. Read per move it forced a synchronous
-    // layout each time, because show() has just written to the handle, the lit
-    // bar and the card.
+    // The track cannot move or resize mid-drag, so its rect is read once per
+    // drag instead of on every pointermove. Read per move it forced a
+    // synchronous layout each time, because show() has just written to the
+    // handle, the lit bar and the card.
     let trackRect: DOMRect | null = null;
-    handle.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    track.addEventListener('pointerdown', (e) => {
       dragging = true;
       trackRect = track.getBoundingClientRect();
-      // Capture keeps the drag alive once the finger leaves the handle, but it
+      // Capture keeps the drag alive if the finger leaves the track, but it
       // throws on a pointer the browser no longer considers active. Not worth
       // failing the whole handler over.
-      try { handle.setPointerCapture((e as PointerEvent).pointerId); } catch {}
+      try { track.setPointerCapture((e as PointerEvent).pointerId); } catch {}
+      pick((e as PointerEvent).clientY);
     });
-    handle.addEventListener('pointermove', (e) => {
+    track.addEventListener('pointermove', (e) => {
       if (dragging) pick((e as PointerEvent).clientY);
     });
     const stop = (e: Event) => {
       dragging = false;
       trackRect = null;
       const id = (e as PointerEvent).pointerId;
-      try { if (id !== undefined && handle.hasPointerCapture(id)) handle.releasePointerCapture(id); } catch {}
+      try { if (id !== undefined && track.hasPointerCapture(id)) track.releasePointerCapture(id); } catch {}
     };
-    handle.addEventListener('pointerup', stop);
-    handle.addEventListener('pointercancel', stop);
+    track.addEventListener('pointerup', stop);
+    track.addEventListener('pointercancel', stop);
 
     // Keyboard, because the track is a slider and because the crawler list is
     // aria-hidden: this is the only route to the entries for anyone not using
@@ -680,12 +669,11 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
          dots sit in the remaining 44 so the touch target is still full size. */
       width: 66px;
       cursor: pointer;
-      /* pan-y, not none. This strip is 66px wide and the full height of the
-         plot, hard against the left edge, which is exactly where a thumb
-         lands. Claiming the gesture here meant a swipe scrubbed and the page
-         did not move. Taps do not need a claim, so the track keeps those and
-         the handle claims the drag. */
-      touch-action: pan-y;
+      /* The strip claims the vertical gesture: a swipe here scrubs, it does
+         not scroll. That is deliberate. pan-y with drag moved to the handle
+         was tried and shipped briefly, and it broke the feel both ways;
+         see the note above the pointer handlers. */
+      touch-action: none;
       -webkit-tap-highlight-color: transparent;
     }
     .scrub-track:focus-visible { outline: 2px solid var(--bone); outline-offset: 2px; border-radius: 4px; }
@@ -772,22 +760,8 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       background: #9DBFAA;
       border: 3px solid #1F332A;
       box-sizing: border-box;
-      /* The handle owns the drag now, so it has to receive events and claim
-         the vertical gesture. It is the one place on the track where taking it
-         from the page is the right call, because it is 20px rather than a
-         third of the screen. */
-      pointer-events: auto;
-      touch-action: none;
-      cursor: grab;
+      pointer-events: none;
       transition: top 0.12s var(--ease-mech);
-    }
-    .scrub-handle:active { cursor: grabbing; }
-    /* 20px is a fair dot and an unfair target. This takes the touch area to
-       44px without moving anything you can see. */
-    .scrub-handle::before {
-      content: '';
-      position: absolute;
-      inset: -12px;
     }
 
     /* Card sits beside the line and is clamped by the script so it can never
