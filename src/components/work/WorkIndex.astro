@@ -111,13 +111,18 @@ import { cases } from '../../data/cases';
 </script>
 
 <style>
+  /* No will-change. These three chapter fields spend most of the page at
+     opacity 0, and will-change pinned each one as a full-screen compositor
+     layer that was never released: about 5MB apiece at 2x, 11MB at 3x, for
+     three layers you cannot see. A phone short on GPU memory starts evicting
+     and repainting, which is the lag it was supposed to prevent. The browser
+     promotes them anyway the moment the opacity actually moves. */
   .green-field {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
     opacity: 0;
-    will-change: opacity;
     background:
       radial-gradient(70% 55% at 50% 6%, rgba(82, 118, 98, 0.32), transparent 72%),
       radial-gradient(130% 130% at 50% 48%, transparent 55%, rgba(9, 17, 13, 0.4) 100%),

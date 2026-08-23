@@ -108,7 +108,8 @@ const lanes = [
   <p class="stream-note" data-reveal>
     Each tool moves with the techniques underneath it: Power Query pulling ETL and schema
     normalization, Python pulling clustering and model evaluation, and so on across what I've
-    used in classes, internships, and personal projects. Rest on the stream to pause it.
+    used in classes, internships, and personal projects.
+    <span class="stream-note-hover">Rest on the stream to pause it.</span>
   </p>
 </section>
 
@@ -120,7 +121,6 @@ const lanes = [
     z-index: 1;
     pointer-events: none;
     opacity: 0;
-    will-change: opacity;
     background: var(--bone);
   }
 
@@ -131,7 +131,6 @@ const lanes = [
     z-index: 1;
     pointer-events: none;
     opacity: 0;
-    will-change: opacity;
     background-image:
       linear-gradient(rgba(41, 33, 23, 0.055) 1px, transparent 1px),
       linear-gradient(90deg, rgba(41, 33, 23, 0.055) 1px, transparent 1px);
@@ -337,7 +336,19 @@ const lanes = [
   @media (prefers-reduced-motion: no-preference) {
     .lane-inner { animation: lane-flow var(--dur) linear infinite; }
     .lane-rev .lane-inner { animation-direction: reverse; }
-    .stream:hover .lane-inner { animation-play-state: paused; }
+    /* Guarded, because a phone has no hover to rest with. Unguarded, a tap
+       could leave :hover stuck on and freeze the stream until you tapped
+       something else. */
+    @media (hover: hover) {
+      .stream:hover .lane-inner { animation-play-state: paused; }
+    }
+  }
+
+  /* The sentence goes with the interaction it describes: there is nothing to
+     rest on with a finger, so telling a phone to do it is an instruction that
+     cannot be followed. */
+  @media (hover: none) {
+    .stream-note-hover { display: none; }
   }
   @keyframes lane-flow {
     to { transform: translateX(-50%); }

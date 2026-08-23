@@ -277,7 +277,15 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
 </section>
 
 <script>
+  // Only one of the two plots is ever on screen, so only one should ever be
+  // wired. This one was arming on phones too: 22 markers inside a display:none
+  // subtree, five listeners each, plus a document-level click handler running a
+  // contains() check on every tap anywhere on the page. Re-checked on the
+  // breakpoint rather than at load, so a rotation or a resized window still
+  // arms the plot it lands on. dataset.armed keeps that idempotent.
+  const tlDesktop = window.matchMedia('(min-width: 721px)');
   function initTimeline() {
+    if (!tlDesktop.matches) return;
     const strip = document.getElementById('tl-strip');
     const card = document.getElementById('tl-card');
     if (!strip || !card || (strip as HTMLElement).dataset.armed) return;
@@ -360,13 +368,21 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTimeline, { once: true });
   else initTimeline();
+  // Both, deliberately. Crossing the breakpoint has to arm the plot you land
+  // on, and a phone rotated into landscape is wider than 720px, so getting
+  // this wrong leaves a visible plot with nothing wired to it. Arming is
+  // idempotent (dataset.armed), so the belt and the braces cost nothing.
+  tlDesktop.addEventListener('change', initTimeline);
+  window.addEventListener('resize', initTimeline, { passive: true });
 </script>
 
 <script>
   // The mobile plot's handle. Kept separate from initTimeline: that one drives
   // the horizontal SVG, this one drives the vertical track, and only ever one
   // of them is on screen.
+  const tlMobile = window.matchMedia('(max-width: 720px)');
   function initScrub() {
+    if (!tlMobile.matches) return;
     const track = document.getElementById('scrub-track');
     const card = document.getElementById('scrub-card');
     if (!track || !card) return;
@@ -388,19 +404,23 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
 
     const show = (i: number) => {
       if (i === active) return;
+      const prev = active;
       active = i;
       const d = dots[i];
       const p = pct[i];
       handle.style.top = p + '%';
       lit.style.height = p + '%';
-      dots.forEach((n, k) => (n.style.opacity = k === i ? '1' : ''));
+      // Two writes, not twenty-two: only the dot losing the highlight and the
+      // one gaining it actually change.
+      if (prev >= 0 && dots[prev]) dots[prev].style.opacity = '';
+      d.style.opacity = '1';
       elDates.textContent = d.dataset.dates || '';
       elTitle.textContent = d.dataset.title || '';
       elText.textContent = d.dataset.text || '';
       track.setAttribute('aria-valuenow', String(i + 1));
       track.setAttribute('aria-valuetext', `${d.dataset.title}. ${d.dataset.dates}.`);
       // Clamped so a card near either end cannot run past the block.
-      const h = track.getBoundingClientRect().height;
+      const h = (trackRect || track.getBoundingClientRect()).height;
       if (h) {
         const ch = card.getBoundingClientRect().height;
         const want = (p / 100) * h - ch / 2;
@@ -412,7 +432,7 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
     // the dots are 5 to 9px and the point of this design is that you never
     // have to hit one.
     const pick = (clientY: number) => {
-      const r = track.getBoundingClientRect();
+      const r = trackRect || track.getBoundingClientRect();
       if (!r.height) return;
       const p = ((clientY - r.top) / r.height) * 100;
       let best = 0, bestD = Infinity;
@@ -423,25 +443,50 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       show(best);
     };
 
-    let dragging = false;
+    // Scrubbing and scrolling are the same gesture in the same strip, so the
+    // track no longer claims it. The track was 66px wide, the full height of
+    // the plot, pinned to the left edge and set touch-action:none, a sixth
+    // of the screen where a thumb swipe moved the timeline and the page stayed
+    // put. It read as the page refusing to scroll, because it was.
+    //
+    // So the track takes taps only, which need no gesture claim at all, and
+    // dragging moves to the handle. Vertical swipes anywhere on the track now
+    // belong to the page.
     track.addEventListener('pointerdown', (e) => {
-      dragging = true;
-      // Capture keeps the drag alive if the finger leaves the track, but it
-      // throws on a pointer the browser no longer considers active. Not worth
-      // failing the whole handler over.
-      try { track.setPointerCapture((e as PointerEvent).pointerId); } catch {}
+      // The handle sits inside the track and runs its own drag.
+      if (e.target === handle) return;
       pick((e as PointerEvent).clientY);
     });
-    track.addEventListener('pointermove', (e) => {
+
+    // The handle is the one thing that still claims the gesture, and it is the
+    // one thing small enough for that to be fair.
+    let dragging = false;
+    // The track cannot move or resize mid-drag, so its rect is read once here
+    // instead of on every pointermove. Read per move it forced a synchronous
+    // layout each time, because show() has just written to the handle, the lit
+    // bar and the card.
+    let trackRect: DOMRect | null = null;
+    handle.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragging = true;
+      trackRect = track.getBoundingClientRect();
+      // Capture keeps the drag alive once the finger leaves the handle, but it
+      // throws on a pointer the browser no longer considers active. Not worth
+      // failing the whole handler over.
+      try { handle.setPointerCapture((e as PointerEvent).pointerId); } catch {}
+    });
+    handle.addEventListener('pointermove', (e) => {
       if (dragging) pick((e as PointerEvent).clientY);
     });
     const stop = (e: Event) => {
       dragging = false;
+      trackRect = null;
       const id = (e as PointerEvent).pointerId;
-      try { if (id !== undefined && track.hasPointerCapture(id)) track.releasePointerCapture(id); } catch {}
+      try { if (id !== undefined && handle.hasPointerCapture(id)) handle.releasePointerCapture(id); } catch {}
     };
-    track.addEventListener('pointerup', stop);
-    track.addEventListener('pointercancel', stop);
+    handle.addEventListener('pointerup', stop);
+    handle.addEventListener('pointercancel', stop);
 
     // Keyboard, because the track is a slider and because the crawler list is
     // aria-hidden: this is the only route to the entries for anyone not using
@@ -468,6 +513,8 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initScrub, { once: true });
   else initScrub();
+  tlMobile.addEventListener('change', initScrub);
+  window.addEventListener('resize', initScrub, { passive: true });
 </script>
 
 <style>
@@ -633,7 +680,12 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
          dots sit in the remaining 44 so the touch target is still full size. */
       width: 66px;
       cursor: pointer;
-      touch-action: none;
+      /* pan-y, not none. This strip is 66px wide and the full height of the
+         plot, hard against the left edge, which is exactly where a thumb
+         lands. Claiming the gesture here meant a swipe scrubbed and the page
+         did not move. Taps do not need a claim, so the track keeps those and
+         the handle claims the drag. */
+      touch-action: pan-y;
       -webkit-tap-highlight-color: transparent;
     }
     .scrub-track:focus-visible { outline: 2px solid var(--bone); outline-offset: 2px; border-radius: 4px; }
@@ -720,8 +772,22 @@ const years = [2021, 2022, 2023, 2024, 2025, 2026];
       background: #9DBFAA;
       border: 3px solid #1F332A;
       box-sizing: border-box;
-      pointer-events: none;
+      /* The handle owns the drag now, so it has to receive events and claim
+         the vertical gesture. It is the one place on the track where taking it
+         from the page is the right call, because it is 20px rather than a
+         third of the screen. */
+      pointer-events: auto;
+      touch-action: none;
+      cursor: grab;
       transition: top 0.12s var(--ease-mech);
+    }
+    .scrub-handle:active { cursor: grabbing; }
+    /* 20px is a fair dot and an unfair target. This takes the touch area to
+       44px without moving anything you can see. */
+    .scrub-handle::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
     }
 
     /* Card sits beside the line and is clamped by the script so it can never
