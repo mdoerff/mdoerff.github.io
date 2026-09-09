@@ -81,14 +81,15 @@ malformed sitemap. If the build fails, read its output: it names the page and th
   "Site not found" while the `github.io` address works.
 - **`public/CNAME` is not the authority** for the custom domain under GitHub Actions
   deployment. It ships with the build, but the setting above is what GitHub obeys.
-- **Analytics only counts the real site, and you can take yourself out of it.** The Plausible
-  tag in `src/layouts/Base.astro` is only rendered when Astro builds for production, so
-  `npm run dev` serves pages with no analytics in them at all, and the built tracker only
-  initializes when the page is served from rmtdco.com, which keeps `npm run preview` and the
-  Netlify preview silent. Your own visits to the live site do count until you opt out: open
-  rmtdco.com/?analytics=off once in each browser on each device, and ?analytics=on to undo it.
-  Custom events only appear in the dashboard if a goal with the exact same name exists in the
-  Plausible site settings.
+- **Analytics only counts the real site, and you can take yourself out of it.** Plausible and
+  Google Analytics 4 both run from `src/layouts/Base.astro`, behind the same gates: the block
+  is only rendered when Astro builds for production, so `npm run dev` serves pages with no
+  analytics in them at all, and neither tracker does anything unless the page is served from
+  rmtdco.com, which keeps `npm run preview` and the Netlify preview silent (GA's script is not
+  even fetched off-host). Your own visits to the live site do count until you opt out: open
+  rmtdco.com/?analytics=off once in each browser on each device, and ?analytics=on to undo it —
+  one switch covers both trackers. Custom events go to both dashboards, but only appear in
+  Plausible if a goal with the exact same name exists in the Plausible site settings.
 
 ## Branches
 

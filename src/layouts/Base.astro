@@ -96,6 +96,12 @@ const BING_SITE_VERIFICATION = '';
 const PLAUSIBLE_DOMAIN = new URL(SITE_URL).host;
 const PLAUSIBLE_SRC = 'https://plausible.io/js/pa-s_fRFBu_daUcEZGVVZpgL.js';
 
+// Google Analytics 4, restored alongside Plausible — but behind the same two
+// gates this time, so dev and preview visits never reach the property again.
+// Unlike Plausible, gtag has no host check or opt-out of its own, so its
+// script tag is injected at runtime only after both checks pass below.
+const GA_MEASUREMENT_ID = 'G-EZZY1FFJDJ';
+
 // Machine-readable twin of this page, emitted by scripts/make-machine-mirrors.mjs
 // after the build. Advertised so an agent can fetch clean markdown instead of
 // parsing styled HTML. Only the case and technical pages have one.
@@ -237,25 +243,25 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
          left to load on demand; almost nothing on this site needs them. -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/libre-baskerville-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin.woff2" crossorigin />
-    <!-- Plausible, in place of Google Analytics 4. GA shipped on the order of
-         a hundred kilobytes of JavaScript from two Google origins, set
-         two-year cookies, and was ungated, so every editing session and every
-         preview counted as a real visit on the real property. This tracker is
-         about six kilobytes from one origin and sets no cookies.
+    <!-- Analytics: Plausible and Google Analytics 4, side by side, both
+         behind the same two gates. The first gate is build time: this block
+         only renders when Astro builds for production, so the dev server
+         hands over pages with no analytics in them at all. The second is run
+         time: nothing tracks unless the page is served from the real host.
+         That second gate is not redundant, because `astro preview` and the
+         Netlify preview both serve a production build, so the first gate has
+         already passed by the time they are reached.
 
-         It is gated twice, and the gates are different in kind. The first is
-         build time: this block only renders when Astro builds for production,
-         so the dev server hands over pages with no analytics in them at all.
-         The second is run time: the tracker does nothing until init is
-         called, and init is only called when the page is served from the real
-         host. That second gate is not redundant, because `astro preview` and
-         the Netlify preview both serve a production build, so the first gate
-         has already passed by the time they are reached. The tracker also
-         refuses loopback hosts on its own and checks the opt-out flag below
-         on every event, both read from its source rather than assumed.
+         The two trackers pass the runtime gate differently. Plausible's
+         tracker does nothing until init is called, honors the opt-out flag
+         on every event, and refuses loopback hosts on its own (all read from
+         its source rather than assumed), so its script tag can render
+         statically. gtag has none of those behaviors, so its script tag is
+         not rendered at all: it is injected only after the host and opt-out
+         checks both pass, and otherwise Google's script is never fetched.
 
          The author's own visits: opening /?analytics=off once in a browser
-         sets a localStorage flag the tracker honors from then on, and
+         sets a localStorage flag both trackers respect from then on, and
          /?analytics=on clears it. Per browser and per device; the console
          line is the only confirmation, nothing is added to the page.
 
@@ -265,10 +271,11 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
          because a pageview already covers reading: the masthead call to
          action, which jumps within the page and so has never left a trace in
          anything, and the email address, which outbound-link tracking cannot
-         see because a mailto anchor has no host to compare. A goal with each
-         exact name must exist in Plausible or the events are accepted and
-         silently discarded. The click listener hangs off document because
-         this runs before the body is parsed. -->
+         see because a mailto anchor has no host to compare. Each event goes
+         to both trackers. A goal with each exact name must exist in
+         Plausible or the events are accepted and silently discarded. The
+         click listener hangs off document because this runs before the body
+         is parsed. -->
     {import.meta.env.PROD && (
       <Fragment>
         <script
@@ -288,12 +295,29 @@ const graph = { '@context': 'https://schema.org', '@graph': nodes };
   window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
   window.plausible.init = window.plausible.init || function (i) { window.plausible.o = i || {}; };
   if (location.hostname === '${PLAUSIBLE_DOMAIN}') window.plausible.init();
+  var optedOut = false;
+  try { optedOut = localStorage.getItem('plausible_ignore') === 'true'; } catch (e) {}
+  if (location.hostname === '${PLAUSIBLE_DOMAIN}' && !optedOut) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', '${GA_MEASUREMENT_ID}');
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}';
+    document.head.appendChild(s);
+  }
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
-    if (href.slice(-8) === '#contact') window.plausible('Contact CTA');
-    else if (href.indexOf('mailto:') === 0) window.plausible('Email click');
+    if (href.slice(-8) === '#contact') {
+      window.plausible('Contact CTA');
+      if (window.gtag) gtag('event', 'contact_cta');
+    } else if (href.indexOf('mailto:') === 0) {
+      window.plausible('Email click');
+      if (window.gtag) gtag('event', 'email_click');
+    }
   });
 })();`}
         />
